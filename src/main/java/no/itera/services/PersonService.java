@@ -2,13 +2,19 @@ package no.itera.services;
 
 import no.itera.model.Person;
 
-import java.util.ArrayList;
-
 public interface PersonService {
 
-    ArrayList<Person> getPersonsList();
+    Iterable<Person> getAll();
 
-    Person getPersonById(int id);
+    Person getById(int id);
+
+    Iterable<Person> getAllByLastName(String lastName);
+
+    Iterable<Person>  getAllByYearOfStudy(int yearOfStudy);
+
+    Iterable<Person>  getAllByInternship(String internship);
+
+    Iterable<Person>  getAllByPractice(String practice);
 
     boolean isPersonExists(Person person);
 
@@ -18,5 +24,5 @@ public interface PersonService {
 
     void updatePerson(Person person);
 
-    void deleteAllPersons();
+    void deleteAll();
 }

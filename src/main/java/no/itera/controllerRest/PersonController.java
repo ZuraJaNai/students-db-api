@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-
 @RestController("PersonControllerRest")
 @RequestMapping("/restapi")
 public class PersonController {
@@ -30,19 +28,19 @@ public class PersonController {
 
     //Get all persons
     @RequestMapping(value = "/person/", method = RequestMethod.GET)
-    public ResponseEntity<ArrayList<Person>> listAllPeople(){
-        ArrayList<Person> persons = personService.getPersonsList();
-        if (persons.isEmpty()){
+    public ResponseEntity<Iterable<Person>> listAllPeople(){
+        Iterable<Person> persons = personService.getAll();
+        if (persons.spliterator().getExactSizeIfKnown() > 0){
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<ArrayList<Person>>(persons, HttpStatus.OK);
+        return new ResponseEntity<>(persons, HttpStatus.OK);
     }
 
     //Get one person by id
     @RequestMapping(value = "/person/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPerson(@PathVariable("id") int id){
+    public ResponseEntity<?> getPersonById(@PathVariable("id") int id){
         logger.debug("Fetching person with id {}", id);
-        Person person = personService.getPersonById(id);
+        Person person = personService.getById(id);
         if(person == null){
             logger.error("Person with id {} not found", id);
             return new ResponseEntity(new CustomErrorType("User with id " + id +
@@ -65,6 +63,7 @@ public class PersonController {
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}").buildAndExpand(person.getId()).toUri());
+//        headers.setLocation(ucBuilder.path("/restapi/person/").buildAndExpand(person.getId()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 
@@ -72,16 +71,20 @@ public class PersonController {
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePerson(@PathVariable("id") int id, @RequestBody Person person) {
         logger.info("Updating person with id {}", id);
-        Person currentPerson = personService.getPersonById(id);
+        Person currentPerson = personService.getById(id);
         if (currentPerson == null) {
             logger.error("Unable to update. Person with id {} not found", id);
             return new ResponseEntity(new CustomErrorType("Unable to update user with id "
                     + id), HttpStatus.NOT_FOUND);
         }
-        currentPerson.setId(person.getId());
-        currentPerson.setName(person.getName());
-        currentPerson.setAge(person.getAge());
-
+        currentPerson.setLastName(person.getLastName());
+        currentPerson.setFirstName(person.getFirstName());
+        currentPerson.setPatronymic(person.getPatronymic());
+        currentPerson.setEmail(person.getEmail());
+        currentPerson.setYearOfStudy(person.getYearOfStudy());
+        currentPerson.setInternship(person.getInternship());
+        currentPerson.setPractice(person.getPractice());
+        currentPerson.setComment(person.getComment());
         personService.updatePerson(currentPerson);
         return new ResponseEntity<Person>(currentPerson, HttpStatus.OK);
     }
@@ -90,7 +93,7 @@ public class PersonController {
     @RequestMapping(value = "/person/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePerson(@PathVariable("id") int id){
         logger.info("Deleting person with id {}", id);
-        Person person = personService.getPersonById(id);
+        Person person = personService.getById(id);
         if(person == null){
             logger.error("Unable to delete. Person with id {} not found", id);
             return new ResponseEntity(new CustomErrorType("Unable to delete. Person with id "
@@ -104,8 +107,67 @@ public class PersonController {
     @RequestMapping(value = "/person/", method = RequestMethod.DELETE)
     public ResponseEntity<Person> deleteAllPersons(){
         logger.info("Deleting all persons");
-        personService.deleteAllPersons();
+        personService.deleteAll();
         return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
+    }
+
+    //    !!!!!
+//    search for course AND practice, lastName and course etc. ?????????
+//    !!!!!
+//    for dao
+//    @Query("SELECT a FROM Article a WHERE a.title=:title and a.category=:category")
+//    List<Article> fetchArticles(@Param("title") String title, @Param("category") String category);
+
+    //Get all persons by lastName
+    @RequestMapping(value = "/search/?lastName={lastName}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllByLastName(@PathVariable("lastName") String lastName){
+        logger.debug("Fetching person with lastName {}", lastName);
+        Iterable<Person> persons = personService.getAllByLastName(lastName);
+        if(persons.spliterator().getExactSizeIfKnown() < 1){
+            logger.error("Person with lastName {} not found", lastName);
+            return new ResponseEntity(new CustomErrorType("User with lastName "
+                    + lastName + " not found"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(persons, HttpStatus.OK);
+    }
+
+    //Get all persons by yearOfStudy
+    @RequestMapping(value = "/search/?yearOfStudy={yearOfStudy}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllByYearOfStudy(@PathVariable("yearOfStudy") int yearOfStudy){
+        logger.debug("Fetching person with yearOfStudy {}", yearOfStudy);
+        Iterable<Person> persons = personService.getAllByYearOfStudy(yearOfStudy);
+        if(persons.spliterator().getExactSizeIfKnown() < 1){
+            logger.error("Person with yearOfStudy {} not found", yearOfStudy);
+            return new ResponseEntity(new CustomErrorType("User with yearOfStudy "
+                    + yearOfStudy + " not found"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(persons, HttpStatus.OK);
+    }
+
+    //Get all persons by internship
+    @RequestMapping(value = "/search/?internship={internship}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllByInternship(@PathVariable("internship") String internship){
+        logger.debug("Fetching person with internship {}", internship);
+        Iterable<Person> persons = personService.getAllByInternship(internship);
+        if(persons.spliterator().getExactSizeIfKnown() < 1){
+            logger.error("Person with internship {} not found", internship);
+            return new ResponseEntity(new CustomErrorType("User with internship "
+                    + internship + " not found"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(persons, HttpStatus.OK);
+    }
+
+    //Get all persons by practice
+    @RequestMapping(value = "/search/?practice={practice}", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllByPractice(@PathVariable("practice") String practice){
+        logger.debug("Fetching person with practice {}", practice);
+        Iterable<Person> persons = personService.getAllByPractice(practice);
+        if(persons.spliterator().getExactSizeIfKnown() < 1){
+            logger.error("Person with practice {} not found", practice);
+            return new ResponseEntity(new CustomErrorType("User with practice "
+                    + practice + " not found"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(persons, HttpStatus.OK);
     }
 
 }

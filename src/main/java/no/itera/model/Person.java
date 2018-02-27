@@ -1,53 +1,164 @@
 package no.itera.model;
 
+import javax.persistence.*;
+import java.util.StringTokenizer;
 
+@Entity
+@Table(name = "PERSONS")
 public class Person {
 
+    @Id
+    @GeneratedValue//(generator = "ID_GENERATOR")
     private int id;
-    private String name;
-    private int age;
 
-    public Person(int id, String name, int age){
-        this.id = id;
-        this.name = name;
-        this.age = age;
+    @Column(nullable = false,name = "LASTNAME")
+    private String lastName;
+
+    @Column(nullable = false,name = "FIRSTNAME")
+    private String firstName;
+
+    @Column(nullable = false,name = "PATRONYMIC")
+    private String patronymic;
+
+    @Column(name = "EMAIL")
+    private String email;
+
+    @Column(nullable = false,name = "YEAR")
+    private int yearOfStudy;
+
+    @Column(name = "INTERNSHIP")
+    private String internship;
+
+    @Column(name = "PRACTICE")
+    private String practice;
+
+//    @Embedded // Not necessary...
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "comment",
+//                    column = @Column(name = "COMMENT"))
+//    })
+//    private Comment comment;
+    private String comment;
+
+    public Person(String lastName, String firstName, String patronymic,
+                  String email, int yearOfStudy, String internship, String practice,
+                  String comment){
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.patronymic = patronymic;
+        this.email = email;
+        this.yearOfStudy = yearOfStudy;
+        this.internship = internship;
+        this.practice = practice;
+        this.comment = comment;
     }
 
     public Person(int id){
         this.id = id;
-        this.name = "default";
-        this.age = 0;
+        this.lastName = "default";
+        this.firstName = "default";
+        this.patronymic = "default";
+        this.email = "default@mail.com";
+        this.yearOfStudy = 0;
+        this.internship = "default";
+        this.practice = "default";
+        this.comment = null;
     }
 
     public Person() {
 
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getId() {
         return id;
     }
 
-    public void setId(int ID) {
-        this.id = ID;
+    public String getName() {
+        return lastName + ' ' + firstName + ' ' + patronymic;
+    }
+//
+//    public void setName(String name) {
+//        StringTokenizer t = new StringTokenizer(name);
+//        if(t.countTokens() == 3) {
+//            this.lastName = t.nextToken();
+//            this.firstName = t.nextToken();
+//            this.patronymic = t.nextToken();
+//        }
+//        else {
+//            //exception
+//        }
+//    }
+
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getInfo() {
-        return String.format("ID: %d,Name: %s, Age %d.", this.id, this.name, this.age);
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getYearOfStudy() {
+        return yearOfStudy;
+    }
+
+    public void setYearOfStudy(int yearOfStudy) {
+        this.yearOfStudy = yearOfStudy;
+    }
+
+    public String getInternship() {
+        return internship;
+    }
+
+    public void setInternship(String internship) {
+        this.internship = internship;
+    }
+
+    public String getPractice() {
+        return practice;
+    }
+
+    public void setPractice(String practice) {
+        this.practice = practice;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d\nName: %s\nEmail: %s\nYear of study: %d\n" +
+                        "Internship: %s\nPractice: %s\n", this.id, this.getName(),
+                this.email,this.yearOfStudy,this.internship,this.practice);
+    }
+
 }

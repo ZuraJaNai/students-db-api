@@ -23,13 +23,13 @@ public class PersonController {
 
     @RequestMapping(value = "/")
     public String homepage(Model model) {
-        model.addAttribute("persons", personService.getPersonsList());
+        model.addAttribute("persons", personService.getAll());
         return "homepage";
     }
 
     @RequestMapping(value = "/person/{id}")
     public String showPerson(@PathVariable int id, Model model) {
-        model.addAttribute("person", personService.getPersonById(id));
+        model.addAttribute("person", personService.getById(id));
         return "personInfoView";
     }
 
@@ -48,8 +48,8 @@ public class PersonController {
 //
 //    @RequestMapping(value = "/person/delete/{id}")
 //    public String deletePerson(@PathVariable int id, Model model){
-//        model.addAttribute("person", this.personService.getPersonById(id));
-//        logger.debug("Deleted person: {}", personService.getPersonById(id).getInfo());
+//        model.addAttribute("person", this.personService.getById(id));
+//        logger.debug("Deleted person: {}", personService.getById(id).getInfo());
 //        this.personService.deletePerson(id);
 //        return "deletedPerson";
 //    }

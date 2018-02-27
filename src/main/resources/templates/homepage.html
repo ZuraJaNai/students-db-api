@@ -10,7 +10,7 @@
         <td>Age</td>
     </tr>
     <tr th:each="person : ${persons}">
-        <td th:text="${person.name}">Name</td>
+        <td th:text="${person.firstName}">Name</td>
         <td th:text="${person.age}">Person age</td>
         <td><a th:href="${'/views/person/' + person.id}">View info</a></td>
         <td><a th:href="${'/views/person/delete/' + person.id}">Delete</a></td>
