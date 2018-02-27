@@ -2,11 +2,11 @@
 <Configuration>
     <Appenders>
         <!-- Console Appender -->
-        <Console firstName="Console" target="SYSTEM_OUT">
+        <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %highlight{%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green} %logger{36} - %msg%n" />
         </Console>
         <!-- File Appender -->
-        <File firstName="File" fileName="logs\students-db.log">
+        <File name="File" fileName="logs\students-db.log">
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
         </File>
 
@@ -14,37 +14,32 @@
 
     <Loggers>
         <!-- Log everything in custom package -->
-        <Logger firstName="no" level="debug" additivity="false">
+        <Logger name="no" level="debug" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="File" />
         </Logger>
 
         <!-- Log everything in Spring Boot -->
-        <Logger firstName="org.springframework.boot" level="debug" additivity="false">
+        <Logger name="org.springframework.boot" level="debug" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="File" />
         </Logger>
 
-        <Logger firstName="org.hibernate.SQLQuery" level="finest" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="File" />
-        </Logger>
-
-        <Logger firstName="org.hibernate.type.descriptor.sql.BasicBinder" level="finest" additivity="false">
+        <Logger name="org.hibernate" level="debug" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="File" />
         </Logger>
 
         <!--&lt;!&ndash; Log everything in Spring Core &ndash;&gt;-->
-        <!--<Logger firstName="org.springframework.core" level="debug" additivity="false">-->
+        <!--<Logger name="org.springframework.core" level="debug" additivity="false">-->
         <!--<AppenderRef ref="Console" />-->
         <!--<AppenderRef ref="File" />-->
         <!--</Logger>-->
 
         <!-- Log everything in Spring Test -->
-        <Logger firstName="org.springframework.test" level="debug" additivity="false">
-        <AppenderRef ref="Console" />
-        <AppenderRef ref="File" />
+        <Logger name="org.springframework.test" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
         </Logger>
 
         <Root level="error">

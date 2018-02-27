@@ -82,7 +82,7 @@ public class PersonServiceTest {
         Person person = personService.getById(1);
         person.setLastName("lastName");
         personService.updatePerson(person);
-        assertEquals(person.getName(),personService.getById(person.getId()).getLastName());
+        assertEquals(person.personName(),personService.getById(person.getId()).getLastName());
     }
 
     @Test

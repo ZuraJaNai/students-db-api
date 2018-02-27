@@ -30,7 +30,7 @@ public class PersonController {
     @RequestMapping(value = "/person/", method = RequestMethod.GET)
     public ResponseEntity<Iterable<Person>> listAllPeople(){
         Iterable<Person> persons = personService.getAll();
-        if (persons.spliterator().getExactSizeIfKnown() > 0){
+        if (persons.spliterator().getExactSizeIfKnown() < 1){
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(persons, HttpStatus.OK);

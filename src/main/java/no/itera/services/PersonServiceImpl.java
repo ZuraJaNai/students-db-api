@@ -13,15 +13,19 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     public void PersonServiceImpl(){
-        personDao.save(new Person("dafault","dafault","dafault",
-                "dafault",3,"dafault","dafault","dafault"));
+        personDao.save(new Person("1","1","1",
+                "default",1,"default","default","default"));
+        personDao.save(new Person("2","2","2",
+                "default",2,"default","default","default"));
+        personDao.save(new Person("3","3","3",
+                "default",3,"default","default","default"));
     }
     @Autowired
     private PersonDao personDao;
 
     @Override
     public Iterable<Person> getAll() {
-        return personDao.findAll();
+            return personDao.findAll();
     }
 
     @Override
@@ -98,7 +102,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void updatePerson(Person person) {
-        personDao.delete(person.getId());
+        personDao.save(person);
 //        personsList.set(personsList.indexOf(person),person);
     }
 

@@ -1,14 +1,28 @@
 package no.itera.model;
 
 import javax.persistence.*;
-import java.util.StringTokenizer;
+
+@org.hibernate.annotations.GenericGenerator(
+        name = "ID_GENERATOR",
+        strategy = "enhanced-sequence",
+        parameters = {
+                @org.hibernate.annotations.Parameter(
+                        name = "sequence_name",
+                        value = "JPWH_SEQUENCE"
+                ),
+                @org.hibernate.annotations.Parameter(
+                        name = "initial_value",
+                        value = "1000"
+                )
+        }
+)
 
 @Entity
 @Table(name = "PERSONS")
 public class Person {
 
     @Id
-    @GeneratedValue//(generator = "ID_GENERATOR")
+    @GeneratedValue(generator = "ID_GENERATOR")
     private int id;
 
     @Column(nullable = false,name = "LASTNAME")
@@ -73,7 +87,8 @@ public class Person {
         return id;
     }
 
-    public String getName() {
+    @Transient
+    public String personName() {
         return lastName + ' ' + firstName + ' ' + patronymic;
     }
 //
@@ -157,7 +172,7 @@ public class Person {
     @Override
     public String toString() {
         return String.format("ID: %d\nName: %s\nEmail: %s\nYear of study: %d\n" +
-                        "Internship: %s\nPractice: %s\n", this.id, this.getName(),
+                        "Internship: %s\nPractice: %s\n", this.id, this.personName(),
                 this.email,this.yearOfStudy,this.internship,this.practice);
     }
 
