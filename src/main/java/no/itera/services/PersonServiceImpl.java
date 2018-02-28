@@ -5,6 +5,10 @@ import no.itera.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 
 @Service
@@ -13,19 +17,21 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     public void PersonServiceImpl(){
-        personDao.save(new Person("1","1","1",
-                "default",1,"default","default","default"));
-        personDao.save(new Person("2","2","2",
-                "default",2,"default","default","default"));
-        personDao.save(new Person("3","3","3",
-                "default",3,"default","default","default"));
+//        personDao.save(new Person("1","1","1",
+//                "default",1,"default","default","default"));
+//        personDao.save(new Person("2","2","2",
+//                "default",2,"default","default","default"));
+//        personDao.save(new Person("3","3","3",
+//                "default",3,"default","default","default"));
+
     }
     @Autowired
     private PersonDao personDao;
 
+
     @Override
     public Iterable<Person> getAll() {
-            return personDao.findAll();
+        return personDao.findAll();
     }
 
     @Override

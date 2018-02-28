@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
+
 @Controller("PersonControllerView")
 @RequestMapping(value = "/views")
 public class PersonController {
@@ -22,7 +24,7 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/")
-    public String homepage(Model model) {
+    public String homepage(Model model) throws SQLException {
         model.addAttribute("persons", personService.getAll());
         return "homepage";
     }

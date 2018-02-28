@@ -3,6 +3,9 @@ import no.itera.services.PersonService;
 import no.itera.services.PersonServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -11,7 +14,7 @@ public class PersonServiceTest {
     private PersonService personService = new PersonServiceImpl();
 
     @BeforeEach
-    public void init(){
+    public void init() throws SQLException {
         personService.deleteAll();
         personService.addPerson(new Person(1));
         personService.addPerson(new Person(2));
@@ -44,13 +47,13 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void checkPersonAdditionIfPersonNotExists() {
+    public void checkPersonAdditionIfPersonNotExists() throws SQLException {
         Person person = new Person(10);
         assertEquals(true, personService.addPerson(person));
     }
 
     @Test
-    public void checkPersonAdditionIfPersonExists(){
+    public void checkPersonAdditionIfPersonExists() throws SQLException {
         Person person = new Person(2);
         assertEquals(false,personService.addPerson(person));
     }
@@ -71,7 +74,7 @@ public class PersonServiceTest {
 
 
     @Test
-    public void checkAllPersonsDeletion(){
+    public void checkAllPersonsDeletion() throws SQLException {
         assertTrue(0 < personService.getAll().spliterator().getExactSizeIfKnown());
         personService.deleteAll();
         assertEquals(0,(personService.getAll().spliterator().getExactSizeIfKnown()));

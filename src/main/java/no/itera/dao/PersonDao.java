@@ -15,4 +15,5 @@ public interface PersonDao extends CrudRepository<Person,Integer>{
     Iterable<Person>  findByInternship(String internship);
 
     Iterable<Person>  findByPractice(String practice);
+
 }
