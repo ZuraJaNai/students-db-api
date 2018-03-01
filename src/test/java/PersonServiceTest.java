@@ -3,6 +3,9 @@ import no.itera.services.PersonService;
 import no.itera.services.PersonServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -11,8 +14,8 @@ public class PersonServiceTest {
     private PersonService personService = new PersonServiceImpl();
 
     @BeforeEach
-    public void init(){
-        personService.deleteAllPersons();
+    public void init() throws SQLException {
+        personService.deleteAll();
         personService.addPerson(new Person(1));
         personService.addPerson(new Person(2));
         personService.addPerson(new Person(3));
@@ -35,22 +38,22 @@ public class PersonServiceTest {
 
     @Test
     public void checkGetExistingPersonById() {
-        assertEquals(1, personService.getPersonById(1).getId());
+        assertEquals(1, personService.getById(1).getId());
     }
 
     @Test
     public void checkGetNonExistingPersonById(){
-        assertEquals(null,personService.getPersonById(55));
+        assertEquals(null,personService.getById(55));
     }
 
     @Test
-    public void checkPersonAdditionIfPersonNotExists() {
+    public void checkPersonAdditionIfPersonNotExists() throws SQLException {
         Person person = new Person(10);
         assertEquals(true, personService.addPerson(person));
     }
 
     @Test
-    public void checkPersonAdditionIfPersonExists(){
+    public void checkPersonAdditionIfPersonExists() throws SQLException {
         Person person = new Person(2);
         assertEquals(false,personService.addPerson(person));
     }
@@ -71,18 +74,18 @@ public class PersonServiceTest {
 
 
     @Test
-    public void checkAllPersonsDeletion(){
-        assertTrue(0 < personService.getPersonsList().size());
-        personService.deleteAllPersons();
-        assertEquals(0,(personService.getPersonsList().size()));
+    public void checkAllPersonsDeletion() throws SQLException {
+        assertTrue(0 < personService.getAll().spliterator().getExactSizeIfKnown());
+        personService.deleteAll();
+        assertEquals(0,(personService.getAll().spliterator().getExactSizeIfKnown()));
     }
 
     @Test
     public void checkExistingPersonUpdate(){
-        Person person = personService.getPersonById(1);
-        person.setName("New one");
+        Person person = personService.getById(1);
+        person.setLastName("lastName");
         personService.updatePerson(person);
-        assertEquals(person.getName(),personService.getPersonById(person.getId()).getName());
+        assertEquals(person.personName(),personService.getById(person.getId()).getLastName());
     }
 
     @Test

@@ -25,6 +25,11 @@
             <AppenderRef ref="File" />
         </Logger>
 
+        <Logger name="org.hibernate" level="debug" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
         <!--&lt;!&ndash; Log everything in Spring Core &ndash;&gt;-->
         <!--<Logger name="org.springframework.core" level="debug" additivity="false">-->
         <!--<AppenderRef ref="Console" />-->
@@ -33,8 +38,8 @@
 
         <!-- Log everything in Spring Test -->
         <Logger name="org.springframework.test" level="debug" additivity="false">
-        <AppenderRef ref="Console" />
-        <AppenderRef ref="File" />
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
         </Logger>
 
         <Root level="error">
