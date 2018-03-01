@@ -2,6 +2,10 @@ package no.itera.services;
 
 import no.itera.dao.PersonDao;
 import no.itera.model.Person;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,40 +18,128 @@ import java.util.Iterator;
 @Service
 public class PersonServiceImpl implements PersonService {
 
+    @Autowired
+    private PersonDao personDao;
+
+    private SessionFactory factory;
 
     @Autowired
-    public void PersonServiceImpl(){
+    public void PersonServiceImpl() {
 //        personDao.save(new Person("1","1","1",
 //                "default",1,"default","default","default"));
 //        personDao.save(new Person("2","2","2",
 //                "default",2,"default","default","default"));
 //        personDao.save(new Person("3","3","3",
 //                "default",3,"default","default","default"));
-
+        factory = new Configuration().configure().buildSessionFactory();
     }
-    @Autowired
-    private PersonDao personDao;
-
 
     @Override
     public Iterable<Person> getAll() {
-        return personDao.findAll();
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Iterable<Person> persons = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            persons = personDao.findAll();
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return persons;
     }
 
     @Override
     public Person getById(int id) {
-        return personDao.findOne(id);
-//        if(personsList.isEmpty()){
-//            return null;
-//        }
-//        Person tempPerson = null;
-//        for (Person person :
-//                this.personsList) {
-//            if (person.getId() == id) {
-//                tempPerson = person;
-//            }
-//        }
-//        return tempPerson;
+        Session session = factory.openSession();
+        Transaction tx = null;
+        Person person = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            person = personDao.findOne(id);
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return person;
+    }
+
+
+    @Override
+    public boolean isPersonExists(Person person) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        boolean isExists =false;
+
+        try {
+            tx = session.beginTransaction();
+
+            isExists = personDao.exists(person.getId());
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return isExists;
+    }
+
+    @Override
+    public boolean addPerson(Person person) {
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            personDao.save(person);
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deletePerson(int id) {
+        personDao.delete(id);
+        return true;
+    }
+
+    @Override
+    public void updatePerson(Person person) {
+        personDao.save(person);
+    }
+
+    @Override
+    public void deleteAll() {
+        personDao.deleteAll();
     }
 
     @Override
@@ -70,51 +162,4 @@ public class PersonServiceImpl implements PersonService {
         return personDao.findByPractice(practice);
     }
 
-    @Override
-    public boolean isPersonExists(Person person) {
-        return personDao.exists(person.getId());
-//        return getById(person.getId()) != null;
-    }
-
-    @Override
-    public boolean addPerson(Person person){
-        personDao.save(person);
-        return true;
-//        try {
-//            if (this.getById(person.getId()) == null){
-//                this.personsList.add(person);
-//                return true;
-//            }
-//        }
-//        catch (NullPointerException e){
-//            return false;
-//        }
-//        return false;
-    }
-
-    @Override
-    public boolean deletePerson(int id){
-        personDao.delete(id);
-        return true;
-//        for(Iterator<Person> iterator = personsList.iterator(); iterator.hasNext();){
-//            Person person = iterator.next();
-//            if (person.getId() == id){
-//                iterator.remove();
-//                return true;
-//            }
-//        }
-//        return false;
-    }
-
-    @Override
-    public void updatePerson(Person person) {
-        personDao.save(person);
-//        personsList.set(personsList.indexOf(person),person);
-    }
-
-    @Override
-    public void deleteAll() {
-        personDao.deleteAll();
-//        personsList.clear();
-    }
 }

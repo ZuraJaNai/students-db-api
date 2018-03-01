@@ -7,9 +7,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotatedClassType;
 import org.hibernate.cfg.Configuration;
-import org.hsqldb.Server;
-import org.hsqldb.persist.HsqlProperties;
-import org.hsqldb.server.ServerAcl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -24,7 +21,7 @@ public class Application {
 
     private static Logger logger = LogManager.getLogger(Application.class);
 
-    public static void main(String[] args) throws SQLException, IOException, ServerAcl.AclFormatException {
+    public static void main(String[] args) {
 //        HsqlProperties p = new HsqlProperties();
 //        p.setProperty("server.database.0","file:\\opt\\db\\students");
 //        p.setProperty("server.dbname.0","students");
@@ -42,7 +39,7 @@ public class Application {
 //            return;
 //        }
 //
-        Connection c = DriverManager.getConnection("jdbc:hsqldb:file:C:/Users/mykola.kovtun/IdeaProjects/studentsdb/opt/db/students;shutdown=true;hsqldb.write_delay=false", "SA", "");
+        //Connection c = DriverManager.getConnection("jdbc:hsqldb:file:C:/Users/mykola.kovtun/IdeaProjects/studentsdb/opt/db/students;shutdown=true;hsqldb.write_delay=false", "SA", "");
 
         SpringApplication.run(Application.class);
     }

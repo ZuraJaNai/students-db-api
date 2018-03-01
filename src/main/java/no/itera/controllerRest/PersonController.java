@@ -121,22 +121,22 @@ public class PersonController {
 //    for dao
 //    @Query("SELECT a FROM Article a WHERE a.title=:title and a.category=:category")
 //    List<Article> fetchArticles(@Param("title") String title, @Param("category") String category);
-
-    //Get all persons by lastName
-    @RequestMapping(value = "/search",params = {"lastName","yearOfStudy","internship","practice"},method = RequestMethod.GET)
-    public ResponseEntity<?> getAllByLastName(@RequestParam(value = "lastName",required = false) String lastName,
-                                              @RequestParam(value = "yearOfStudy",required = false) int yearOfStudy,
-                                              @RequestParam(value = "internship",required = false) String internship,
-                                              @RequestParam(value = "practice",required = false) String practice){
-        logger.debug("Fetching person with lastName {}", lastName);
-        Iterable<Person> persons = personService.getAllByLastName(lastName);
-        if(persons.spliterator().getExactSizeIfKnown() < 1){
-            logger.error("Person with lastName {} not found", lastName);
-            return new ResponseEntity(new CustomErrorType("User with lastName "
-                    + lastName + " not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(persons, HttpStatus.OK);
-    }
+//
+//    //Get all persons by lastName
+//    @RequestMapping(value = "/search",method = RequestMethod.GET)
+//    public ResponseEntity<?> getAllByLastName(@RequestParam(value = "lastName",required = false) String lastName,
+//                                              @RequestParam(value = "yearOfStudy",required = false) int yearOfStudy,
+//                                              @RequestParam(value = "internship",required = false) String internship,
+//                                              @RequestParam(value = "practice",required = false) String practice){
+//        logger.debug("Fetching person with lastName {}", lastName);
+//        Iterable<Person> persons = personService.getAllByLastName(lastName);
+//        if(persons.spliterator().getExactSizeIfKnown() < 1){
+//            logger.error("Person with lastName {} not found", lastName);
+//            return new ResponseEntity(new CustomErrorType("User with lastName "
+//                    + lastName + " not found"), HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(persons, HttpStatus.OK);
+//    }
 
 //    //Get all persons by lastName
 //    @RequestMapping(value = "/search", method = RequestMethod.GET)
