@@ -118,24 +118,5 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-//    @Override
-//    public Iterable<Person> getAllByLastName(String lastName) {
-//        return personDao.findByLastName(lastName);
-//    }
-//
-//    @Override
-//    public Iterable<Person> getAllByYearOfStudy(int yearOfStudy) {
-//        return personDao.findByYearOfStudy(yearOfStudy);
-//    }
-//
-//    @Override
-//    public Iterable<Person> getAllByInternship(String internship) {
-//        return personDao.findByInternship(internship);
-//    }
-//
-//    @Override
-//    public Iterable<Person> getAllByPractice(String practice) {
-//        return personDao.findByPractice(practice);
-//    }
 
 }

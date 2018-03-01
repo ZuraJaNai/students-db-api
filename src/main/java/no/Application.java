@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.sql.*;
 
@@ -40,7 +41,6 @@ public class Application {
 //        }
 //
         //Connection c = DriverManager.getConnection("jdbc:hsqldb:file:C:/Users/mykola.kovtun/IdeaProjects/studentsdb/opt/db/students;shutdown=true;hsqldb.write_delay=false", "SA", "");
-
         SpringApplication.run(Application.class);
     }
 

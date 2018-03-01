@@ -10,14 +10,6 @@ public interface PersonService {
 
     Iterable<Person> findAllPersons(Person filter);
 
-//    Iterable<Person> getAllByLastName(String lastName);
-//
-//    Iterable<Person>  getAllByYearOfStudy(int yearOfStudy);
-//
-//    Iterable<Person>  getAllByInternship(String internship);
-//
-//    Iterable<Person>  getAllByPractice(String practice);
-
     boolean isPersonExists(Person person);
 
     boolean addPerson(Person person);
