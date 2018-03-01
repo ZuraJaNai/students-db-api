@@ -46,7 +46,6 @@ GRANT DBA TO "root"
 SET SCHEMA SYSTEM_LOBS
 INSERT INTO BLOCKS VALUES(0,2147483647,0)
 SET SCHEMA PUBLIC
-INSERT INTO PERSONS VALUES(1000,'default','default','n','default','n','n','default','1')
 INSERT INTO PERSONS VALUES(1001,'default','default','123','default','123','123','default','1')
 INSERT INTO PERSONS VALUES(1002,'default','default','123','default','123','123','default','1')
 INSERT INTO PERSONS VALUES(1003,'default','default','123','default','123','123','default','1')

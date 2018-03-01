@@ -110,13 +110,4 @@ public class PersonController {
         personService.deleteAll();
         return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
     }
-
-    //Search
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody Person person){
-        Iterable<Person> persons = personService.findAllPersons(person);
-        return new ResponseEntity<>(persons,HttpStatus.FOUND);
-    }
-
-
 }

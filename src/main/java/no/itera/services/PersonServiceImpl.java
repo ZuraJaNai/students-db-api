@@ -2,6 +2,7 @@ package no.itera.services;
 
 import no.itera.dao.PersonDao;
 import no.itera.model.Person;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -76,37 +77,37 @@ public class PersonServiceImpl implements PersonService {
 
                 List<Predicate> predicates = new ArrayList<>();
 
-                if (filter.getLastName() != null) {
+                if (StringUtils.isNoneEmpty(filter.getLastName())) {
                     predicates.add(cb.like(cb.lower(root.get("lastName")),
                             filter.getLastName().toLowerCase() + "%"));
                 }
 
-                if (filter.getFirstName() != null) {
+                if (StringUtils.isNoneEmpty(filter.getFirstName())) {
                     predicates.add(cb.like(cb.lower(root.get("firstName")),
                              "%" +filter.getFirstName().toLowerCase() + "%"));
                 }
 
-                if (filter.getPatronymic() != null) {
+                if (StringUtils.isNoneEmpty(filter.getPatronymic())) {
                     predicates.add(cb.like(cb.lower(root.get("patronymic")),
                             "%" + filter.getPatronymic().toLowerCase() + "%"));
                 }
 
-                if (filter.getEmail() != null) {
+                if (StringUtils.isNoneEmpty(filter.getEmail())) {
                     predicates.add(cb.like(cb.lower(root.get("email")),
                             "%" + filter.getEmail().toLowerCase() + "%"));
                 }
 
-                if (filter.getYearOfStudy() != null) {
+                if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
                     predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
                             "%" + filter.getYearOfStudy().toLowerCase() + "%"));
                 }
 
-                if (filter.getInternship() != null) {
+                if (StringUtils.isNoneEmpty(filter.getInternship())) {
                     predicates.add(cb.like(cb.lower(root.get("internship")),
                             "%" + filter.getInternship().toLowerCase() + "%"));
                 }
 
-                if (filter.getPractice() != null) {
+                if (StringUtils.isNoneEmpty(filter.getPractice())) {
                     predicates.add(cb.like(cb.lower(root.get("practice")),
                             "%" + filter.getPractice().toLowerCase() + "%"));
                 }
