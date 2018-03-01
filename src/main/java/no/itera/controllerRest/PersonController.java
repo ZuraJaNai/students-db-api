@@ -8,14 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.sql.SQLException;
 
 @RestController("PersonControllerRest")
 @RequestMapping("/restapi")
@@ -114,6 +111,12 @@ public class PersonController {
         return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
     }
 
+    //Search
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody Person person){
+        Iterable<Person> persons = personService.findAllPersons(person);
+        return new ResponseEntity<>(persons,HttpStatus.FOUND);
+    }
     //    !!!!!
 //    search for course AND practice, lastName and course etc. ?????????
 //    !!!!!

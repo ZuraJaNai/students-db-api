@@ -2,26 +2,22 @@ package no.itera.services;
 
 import no.itera.dao.PersonDao;
 import no.itera.model.Person;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Iterator;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonDao personDao;
-
-    private SessionFactory factory;
 
     @Autowired
     public void PersonServiceImpl() {
@@ -31,164 +27,96 @@ public class PersonServiceImpl implements PersonService {
 //                "default",2,"default","default","default"));
 //        personDao.save(new Person("3","3","3",
 //                "default",3,"default","default","default"));
-        factory = new Configuration().configure().buildSessionFactory();
     }
 
     @Override
     public Iterable<Person> getAll() {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        Iterable<Person> persons = null;
-
-        try {
-            tx = session.beginTransaction();
-
-            persons = personDao.findAll();
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return persons;
+        return personDao.findAll();
     }
 
     @Override
     public Person getById(int id) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        Person person = null;
-
-        try {
-            tx = session.beginTransaction();
-
-            person = personDao.findOne(id);
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return person;
+        return personDao.findOne(id);
     }
 
 
     @Override
     public boolean isPersonExists(Person person) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        boolean isExists =false;
-
-        try {
-            tx = session.beginTransaction();
-
-            isExists = personDao.exists(person.getId());
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return isExists;
+        return personDao.exists(person.getId());
     }
 
     @Override
     public boolean addPerson(Person person) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-
-            personDao.save(person);
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+        personDao.save(person);
         return true;
     }
 
     @Override
     public boolean deletePerson(int id) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-
             personDao.delete(id);
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return true;
+            return true;
     }
 
     @Override
     public void updatePerson(Person person) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-
             personDao.save(person);
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
     }
 
     @Override
     public void deleteAll() {
-        Session session = factory.openSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-
             personDao.deleteAll();
-
-            tx.commit();
-        }
-
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
     }
+
+    public Iterable<Person> findAllPersons(Person filter) {
+
+        List<Person> persons = personDao.findAll(new Specification<Person>() {
+
+            @Override
+            public Predicate toPredicate(Root<Person> root, CriteriaQuery< ?> query, CriteriaBuilder cb) {
+
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (filter.getLastName() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("lastName")),
+                            filter.getLastName().toLowerCase() + "%"));
+                }
+
+                if (filter.getFirstName() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("firstName")),
+                             "%" +filter.getFirstName().toLowerCase() + "%"));
+                }
+
+                if (filter.getPatronymic() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("patronymic")),
+                            "%" + filter.getPatronymic().toLowerCase() + "%"));
+                }
+
+                if (filter.getEmail() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("email")),
+                            "%" + filter.getEmail().toLowerCase() + "%"));
+                }
+
+                if (filter.getYearOfStudy() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
+                            "%" + filter.getYearOfStudy().toLowerCase() + "%"));
+                }
+
+                if (filter.getInternship() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("internship")),
+                            "%" + filter.getInternship().toLowerCase() + "%"));
+                }
+
+                if (filter.getPractice() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("practice")),
+                            "%" + filter.getPractice().toLowerCase() + "%"));
+                }
+
+                return cb.and(predicates.toArray(new Predicate[0]));
+            }
+        });
+        return persons;
+    }
+
 
 //    @Override
 //    public Iterable<Person> getAllByLastName(String lastName) {

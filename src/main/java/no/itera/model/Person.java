@@ -38,7 +38,7 @@ public class Person {
     private String email;
 
     @Column(nullable = false,name = "YEAR")
-    private int yearOfStudy;
+    private String yearOfStudy;
 
     @Column(name = "INTERNSHIP")
     private String internship;
@@ -55,7 +55,7 @@ public class Person {
     private String comment;
 
     public Person(String lastName, String firstName, String patronymic,
-                  String email, int yearOfStudy, String internship, String practice,
+                  String email, String yearOfStudy, String internship, String practice,
                   String comment){
         this.lastName = lastName;
         this.firstName = firstName;
@@ -73,7 +73,7 @@ public class Person {
         this.firstName = "default";
         this.patronymic = "default";
         this.email = "default@mail.com";
-        this.yearOfStudy = 0;
+        this.yearOfStudy = "0";
         this.internship = "default";
         this.practice = "default";
         this.comment = null;
@@ -137,11 +137,11 @@ public class Person {
         this.email = email;
     }
 
-    public int getYearOfStudy() {
+    public String getYearOfStudy() {
         return yearOfStudy;
     }
 
-    public void setYearOfStudy(int yearOfStudy) {
+    public void setYearOfStudy(String yearOfStudy) {
         this.yearOfStudy = yearOfStudy;
     }
 
@@ -171,7 +171,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return String.format("ID: %d\nName: %s\nEmail: %s\nYear of study: %d\n" +
+        return String.format("ID: %d\nName: %s\nEmail: %s\nYear of study: %s\n" +
                         "Internship: %s\nPractice: %s\n", this.id, this.personName(),
                 this.email,this.yearOfStudy,this.internship,this.practice);
     }
