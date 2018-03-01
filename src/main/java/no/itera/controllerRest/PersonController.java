@@ -23,7 +23,6 @@ public class PersonController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
     private PersonService personService;
-    //ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
 
     @Autowired
     public void setPersonService(PersonService personService) {
@@ -32,7 +31,7 @@ public class PersonController {
 
     //Get all persons
     @RequestMapping(value = "/person", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Person>> listAllPeople() throws SQLException {
+    public ResponseEntity<Iterable<Person>> listAllPeople(){
         Iterable<Person> persons = personService.getAll();
         if (persons.spliterator().getExactSizeIfKnown() < 1){
             return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -56,7 +55,7 @@ public class PersonController {
     //Create person
     @RequestMapping(value = "/person", method = RequestMethod.POST)
     public ResponseEntity<?> createPerson(@RequestBody Person person,
-                                          UriComponentsBuilder ucBuilder) throws SQLException {
+                                          UriComponentsBuilder ucBuilder){
         logger.info("Creating person: {}", person);
         if(personService.isPersonExists(person)){
             logger.error("Unable to create. Person with id {} already exists",

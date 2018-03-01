@@ -128,38 +128,86 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public boolean deletePerson(int id) {
-        personDao.delete(id);
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            personDao.delete(id);
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
         return true;
     }
 
     @Override
     public void updatePerson(Person person) {
-        personDao.save(person);
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            personDao.save(person);
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
     public void deleteAll() {
-        personDao.deleteAll();
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            personDao.deleteAll();
+
+            tx.commit();
+        }
+
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
-    @Override
-    public Iterable<Person> getAllByLastName(String lastName) {
-        return personDao.findByLastName(lastName);
-    }
-
-    @Override
-    public Iterable<Person> getAllByYearOfStudy(int yearOfStudy) {
-        return personDao.findByYearOfStudy(yearOfStudy);
-    }
-
-    @Override
-    public Iterable<Person> getAllByInternship(String internship) {
-        return personDao.findByInternship(internship);
-    }
-
-    @Override
-    public Iterable<Person> getAllByPractice(String practice) {
-        return personDao.findByPractice(practice);
-    }
+//    @Override
+//    public Iterable<Person> getAllByLastName(String lastName) {
+//        return personDao.findByLastName(lastName);
+//    }
+//
+//    @Override
+//    public Iterable<Person> getAllByYearOfStudy(int yearOfStudy) {
+//        return personDao.findByYearOfStudy(yearOfStudy);
+//    }
+//
+//    @Override
+//    public Iterable<Person> getAllByInternship(String internship) {
+//        return personDao.findByInternship(internship);
+//    }
+//
+//    @Override
+//    public Iterable<Person> getAllByPractice(String practice) {
+//        return personDao.findByPractice(practice);
+//    }
 
 }

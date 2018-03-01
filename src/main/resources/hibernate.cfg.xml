@@ -29,9 +29,6 @@
 
         <property name="hbm2ddl.auto">update</property>
 
-        <!--&lt;!&ndash; List of XML mapping files &ndash;&gt;-->
-        <!--<mapping resource = "Person.hbm.xml"/>-->
-
     </session-factory>
 </hibernate-configuration>
 <!--<hibernate-configuration>-->

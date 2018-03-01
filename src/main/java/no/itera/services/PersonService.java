@@ -8,13 +8,13 @@ public interface PersonService {
 
     Person getById(int id);
 
-    Iterable<Person> getAllByLastName(String lastName);
-
-    Iterable<Person>  getAllByYearOfStudy(int yearOfStudy);
-
-    Iterable<Person>  getAllByInternship(String internship);
-
-    Iterable<Person>  getAllByPractice(String practice);
+//    Iterable<Person> getAllByLastName(String lastName);
+//
+//    Iterable<Person>  getAllByYearOfStudy(int yearOfStudy);
+//
+//    Iterable<Person>  getAllByInternship(String internship);
+//
+//    Iterable<Person>  getAllByPractice(String practice);
 
     boolean isPersonExists(Person person);
 
