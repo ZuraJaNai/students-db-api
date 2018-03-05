@@ -26,7 +26,10 @@ public class PersonController {
         this.personService = personService;
     }
 
-    //Get all persons
+//    @ApiOperation(httpMethod = "GET", value = "Get all existing persons",
+//            response = Person.class, responseContainer = "Iterable")
+//    @ApiResponses(value = {@ApiResponse(code = 204, message = "No content"),
+//                            @ApiResponse(code = 200, message = "OK")})
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     public ResponseEntity<Iterable<Person>> listAllPeople(){
         Iterable<Person> persons = personService.getAll();

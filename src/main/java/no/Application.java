@@ -1,5 +1,6 @@
 package no;
 
+import no.itera.util.SwaggerConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -23,25 +24,7 @@ public class Application {
     private static Logger logger = LogManager.getLogger(Application.class);
 
     public static void main(String[] args) {
-//        HsqlProperties p = new HsqlProperties();
-//        p.setProperty("server.database.0","file:\\opt\\db\\students");
-//        p.setProperty("server.dbname.0","students");
-//        Server server = new Server();
-//        server.setProperties(p);
-//        server.setLogWriter(null); // can use custom writer
-//        server.setErrWriter(null); // can use custom writer
-//        server.start();
-//
-//        try {
-//            Class.forName("org.hsqldb.jdbc.JDBCDriver" );
-//        } catch (Exception e) {
-//            System.err.println("ERROR: failed to load HSQLDB JDBC driver.");
-//            e.printStackTrace();
-//            return;
-//        }
-//
-        //Connection c = DriverManager.getConnection("jdbc:hsqldb:file:C:/Users/mykola.kovtun/IdeaProjects/studentsdb/opt/db/students;shutdown=true;hsqldb.write_delay=false", "SA", "");
-        SpringApplication.run(Application.class);
+        SpringApplication.run(Application.class, args);
     }
 
 }

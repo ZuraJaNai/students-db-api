@@ -1,8 +1,14 @@
+import no.itera.dao.PersonDao;
 import no.itera.model.Person;
 import no.itera.services.PersonService;
 import no.itera.services.PersonServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
 
@@ -11,10 +17,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonServiceTest {
 
-    private PersonService personService = new PersonServiceImpl();
+
+    @Mock
+    private PersonDao daoMock;
+
+    @InjectMocks
+    private PersonServiceImpl personService;
 
     @BeforeEach
-    public void init() throws SQLException {
+    public void init(){
+        MockitoAnnotations.initMocks(this);
         personService.deleteAll();
         personService.addPerson(new Person(1));
         personService.addPerson(new Person(2));
