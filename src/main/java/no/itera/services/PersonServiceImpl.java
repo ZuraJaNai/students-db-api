@@ -4,6 +4,8 @@ import no.itera.dao.PersonDao;
 import no.itera.model.Person;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,11 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Iterable<Person> getAll() {
         return personDao.findAll();
+    }
+
+    @Override
+    public Page getAll(PageRequest pageRequest) {
+        return personDao.findAll(pageRequest);
     }
 
     @Override

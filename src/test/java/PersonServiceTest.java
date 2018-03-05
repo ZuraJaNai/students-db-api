@@ -5,14 +5,18 @@ import no.itera.services.PersonServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 
 public class PersonServiceTest {
@@ -24,32 +28,34 @@ public class PersonServiceTest {
     @InjectMocks
     private PersonServiceImpl personService;
 
+    @Captor
+    private ArgumentCaptor<Person> personArgumentCaptor;
+
     @BeforeEach
     public void init(){
         MockitoAnnotations.initMocks(this);
-        personService.deleteAll();
-        personService.addPerson(new Person(1));
-        personService.addPerson(new Person(2));
-        personService.addPerson(new Person(3));
     }
 
     @Test
     public void checkIfExistingPersonExists() {
-        Person person = new Person(1);
-        assertEquals(true, personService.isPersonExists(person));
+        when(daoMock.exists(1)).thenReturn(true);
+        assertEquals(true, personService.isPersonExists(new Person(1)));
     }
 
     @Test
     public void checkIfNonExistingPersonExists(){
+        when(daoMock.exists(41)).thenReturn(false);
         Person person = new Person(41);
         assertEquals(false,personService.isPersonExists(person));
 
+        when(daoMock.exists(-3)).thenReturn(false);
         person = new Person(-3);
         assertEquals(false,personService.isPersonExists(person));
     }
 
     @Test
     public void checkGetExistingPersonById() {
+        when(daoMock.findOne(1)).thenReturn(new Person(1));
         assertEquals(1, personService.getById(1).getId());
     }
 
@@ -64,44 +70,20 @@ public class PersonServiceTest {
         assertEquals(true, personService.addPerson(person));
     }
 
-    @Test
-    public void checkPersonAdditionIfPersonExists() throws SQLException {
-        Person person = new Person(2);
-        assertEquals(false,personService.addPerson(person));
-    }
-
-    @Test
-    public void checkPersonDeletionIfPersonExists(){
-        assertEquals(true,personService.deletePerson(1));
-        assertEquals(true,personService.deletePerson(3));
-        assertEquals(true,personService.deletePerson(2));
-    }
-
-    @Test
-    public void checkPersonDeletionIfPersonNotExists() {
-        assertEquals(false,personService.deletePerson(55));
-        personService.deletePerson(3);
-        assertEquals(false,personService.deletePerson(3));
-    }
-
 
     @Test
     public void checkAllPersonsDeletion() throws SQLException {
+        when(daoMock.findAll()).thenReturn(Arrays.asList(new Person(1), new Person(2)));
         assertTrue(0 < personService.getAll().spliterator().getExactSizeIfKnown());
-        personService.deleteAll();
+        when(daoMock.findAll()).thenReturn(Arrays.asList());
         assertEquals(0,(personService.getAll().spliterator().getExactSizeIfKnown()));
     }
 
-    @Test
-    public void checkExistingPersonUpdate(){
-        Person person = personService.getById(1);
-        person.setLastName("lastName");
-        personService.updatePerson(person);
-        assertEquals(person.personName(),personService.getById(person.getId()).getLastName());
-    }
 
     @Test
     public void checkNonExistingPersonUpdate(){
-        assertThrows(ArrayIndexOutOfBoundsException.class, () ->personService.updatePerson( new Person(41)));
+        Person person =  new Person(41);
+        when(daoMock.save(person)).thenThrow(new ArrayIndexOutOfBoundsException() );
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> personService.updatePerson( person));
     }
 }

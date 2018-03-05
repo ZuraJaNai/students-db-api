@@ -8,11 +8,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+
+import com.google.common.base.Preconditions;
 
 @RestController("PersonControllerRest")
 @RequestMapping("/restapi")
@@ -26,12 +31,48 @@ public class PersonController {
         this.personService = personService;
     }
 
-//    @ApiOperation(httpMethod = "GET", value = "Get all existing persons",
-//            response = Person.class, responseContainer = "Iterable")
-//    @ApiResponses(value = {@ApiResponse(code = 204, message = "No content"),
-//                            @ApiResponse(code = 200, message = "OK")})
+    //get all with pagination
+    @RequestMapping(value = "/person",params = {"page","limit"},method = RequestMethod.GET)
+    public ResponseEntity<Iterable<Person>> listAllPersons(@RequestParam("page") int pageNum,@RequestParam("limit") int limit){
+        Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
+        if(!page.hasContent()) {
+            return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
+                    " not found"), HttpStatus.NOT_FOUND);
+        }
+        //HttpHeaders headers = createHeadersForPagination(page, pageNum, UriComponentsBuilder.newInstance());
+        return new ResponseEntity<>(page.getContent(), HttpStatus.OK);
+        //add headers
+    }
+
+//    private HttpHeaders createHeadersForPagination(Page page,int currentPageNum, UriComponentsBuilder ucBuilder){
+//        HttpHeaders headers = new HttpHeaders();
+//        int pageNum;
+//        pageNum = page.getTotalPages() - 1;
+//        String lastPageUri = ucBuilder.path("/restapi/person/page/{number}")
+//                .buildAndExpand(pageNum).toUri().toString();
+//        headers.add("last", lastPageUri);
+//        pageNum = 0;
+//        String firstPageUri = ucBuilder.path("/restapi/person/page/{number}")
+//                .buildAndExpand(pageNum).toUri().toString();
+//        headers.add("first",firstPageUri);
+//        if(page.hasNext()){
+//            pageNum = currentPageNum + 1;
+//            String nextPageUri = ucBuilder.path("/restapi/person/page/{number}")
+//                    .buildAndExpand(pageNum).toUri().toString();
+//            headers.add("next",nextPageUri);
+//        }
+//        if(page.hasPrevious()){
+//            pageNum = currentPageNum - 1;
+//            String prevPageUri = ucBuilder.path("/restapi/person/page/{number}")
+//                    .buildAndExpand(pageNum).toUri().toString();
+//            headers.add("prev",prevPageUri);
+//        }
+//        return headers;
+//    }
+
+    //get all
     @RequestMapping(value = "/person", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Person>> listAllPeople(){
+    public ResponseEntity<Iterable<Person>> listAllPersons(){
         Iterable<Person> persons = personService.getAll();
         if (persons.spliterator().getExactSizeIfKnown() < 1){
             return new ResponseEntity(HttpStatus.NO_CONTENT);
