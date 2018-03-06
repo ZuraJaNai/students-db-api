@@ -46,13 +46,14 @@ public class Person {
     @Column(name = "PRACTICE")
     private String practice;
 
+    @Column(name = "COMMENT")
+    private String comment;
 //    @Embedded // Not necessary...
 //    @AttributeOverrides({
-//            @AttributeOverride(name = "comment",
-//                    column = @Column(name = "COMMENT"))
+//            @AttributeOverride(name = "attachments",
+//                    column = @Column(name = "ATTACHMENTS"))
 //    })
-//    private Comment comment;
-    private String comment;
+//    private ArrayList<Attachment> attachments;
 
     public Person(String lastName, String firstName, String patronymic,
                   String email, String yearOfStudy, String internship, String practice,
@@ -91,18 +92,6 @@ public class Person {
     public String personName() {
         return lastName + ' ' + firstName + ' ' + patronymic;
     }
-//
-//    public void setName(String name) {
-//        StringTokenizer t = new StringTokenizer(name);
-//        if(t.countTokens() == 3) {
-//            this.lastName = t.nextToken();
-//            this.firstName = t.nextToken();
-//            this.patronymic = t.nextToken();
-//        }
-//        else {
-//            //exception
-//        }
-//    }
 
     public String getLastName() {
         return lastName;

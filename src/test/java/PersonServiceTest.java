@@ -28,8 +28,8 @@ public class PersonServiceTest {
     @InjectMocks
     private PersonServiceImpl personService;
 
-    @Captor
-    private ArgumentCaptor<Person> personArgumentCaptor;
+//    @Captor
+//    private ArgumentCaptor<Person> personArgumentCaptor;
 
     @BeforeEach
     public void init(){
@@ -61,13 +61,8 @@ public class PersonServiceTest {
 
     @Test
     public void checkGetNonExistingPersonById(){
+        when(daoMock.findOne(55)).thenReturn(null);
         assertEquals(null,personService.getById(55));
-    }
-
-    @Test
-    public void checkPersonAdditionIfPersonNotExists() throws SQLException {
-        Person person = new Person(10);
-        assertEquals(true, personService.addPerson(person));
     }
 
 
@@ -86,4 +81,5 @@ public class PersonServiceTest {
         when(daoMock.save(person)).thenThrow(new ArrayIndexOutOfBoundsException() );
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> personService.updatePerson( person));
     }
+
 }

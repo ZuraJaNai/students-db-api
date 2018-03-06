@@ -40,20 +40,5 @@ public class PersonController {
         model.addAttribute("person", new Person());
         return "addPersonView";
     }
-//
-//    @RequestMapping(value = "/person", method = RequestMethod.POST)
-//    public String savePerson(Person person) {
-//        logger.debug("Created person: {}", person.getInfo());
-//        this.personService.addPerson(person);
-//        return "personInfoView";
-//    }
-//
-//    @RequestMapping(value = "/person/delete/{id}")
-//    public String deletePerson(@PathVariable int id, Model model){
-//        model.addAttribute("person", this.personService.getById(id));
-//        logger.debug("Deleted person: {}", personService.getById(id).getInfo());
-//        this.personService.deletePerson(id);
-//        return "deletedPerson";
-//    }
 
 }

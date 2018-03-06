@@ -22,16 +22,6 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDao personDao;
 
-    @Autowired
-    public void PersonServiceImpl() {
-//        personDao.save(new Person("1","1","1",
-//                "default",1,"default","default","default"));
-//        personDao.save(new Person("2","2","2",
-//                "default",2,"default","default","default"));
-//        personDao.save(new Person("3","3","3",
-//                "default",3,"default","default","default"));
-    }
-
     @Override
     public Iterable<Person> getAll() {
         return personDao.findAll();

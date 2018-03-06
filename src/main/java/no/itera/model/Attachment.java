@@ -7,11 +7,11 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class Comment {
+public class Attachment {
 
     private String comment;
 
-    public Comment(String comment){
+    public Attachment(String comment){
         this.comment = comment;
     }
 
