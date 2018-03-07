@@ -17,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
+/**
+ *  REST controller for Person class
+ */
 @RestController("PersonControllerRest")
 @RequestMapping("/restapi")
 public class PersonController {
@@ -33,24 +35,37 @@ public class PersonController {
     @Value( "${userProperties.objectsPerPageLimit}" )
     private int limit;
 
-    //get all with pagination
     /**
-    *   @param limit
-     *
+     *  Method for getting all existing persons with pagination
+     *  @param pageNum number of page,which you want to get (starts with 1)
+     *  @param limit number of elements on one page
+     *  @return ResponseEntity containing list of persons and httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     public ResponseEntity<Iterable<Person>> listAllPersonsPageable(
-            @RequestParam(value = "page", required = false,defaultValue = "1") int pageNum,
-            @RequestParam(value = "limit", required = false,defaultValue = "4") int limit){
+            @RequestParam(value = "page", required = false) Integer pageNum,
+            @RequestParam(value = "limit", required = false) Integer limit){
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(limit == null){
+            limit = this.limit;
+        }
+        logger.debug("Getting list of persons.Page {}.Limit {}", pageNum, limit);
         Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
         if(!page.hasContent()) {
+            logger.error("Page number {} not found", pageNum);
             return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
                     " not found"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(page.getContent(), HttpStatus.OK);
     }
 
-    //Get one person by id
+    /**
+     * Method for getting person specified by ID
+     * @param id path variable containing person's ID
+     * @return ResponseEntity with person(with specified ID) and httpStatus
+     */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPersonById(@PathVariable("id") int id){
         logger.debug("Fetching person with id {}", id);
@@ -63,7 +78,13 @@ public class PersonController {
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
-    //Create person
+    /**
+     * Method for person creation
+     * @param person the person to be created
+     * @param ucBuilder object for creating URI
+     * @return ResposneEntity containing header with URL to created person and
+     * httpStatus
+     */
     @RequestMapping(value = "/person", method = RequestMethod.POST)
     public ResponseEntity<?> createPerson(@RequestBody Person person,
                                           UriComponentsBuilder ucBuilder){
@@ -80,7 +101,12 @@ public class PersonController {
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 
-    //Update person by id
+    /**
+     * Method for updating existing person be specified ID
+     * @param id  path variable containing person's ID
+     * @param person Person containing new data
+     * @return Person with new data and httpStatus
+     */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePerson(@PathVariable("id") int id, @RequestBody Person person) {
         logger.info("Updating person with id {}", id);
@@ -102,7 +128,11 @@ public class PersonController {
         return new ResponseEntity<>(currentPerson, HttpStatus.OK);
     }
 
-    //Delete person by id
+    /**
+     * Method for deletion of existing person by specified ID
+     * @param id path variable containing person's ID
+     * @return ResponseEntity containing httpStatus
+     */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePerson(@PathVariable("id") int id){
         logger.info("Deleting person with id {}", id);
@@ -116,7 +146,10 @@ public class PersonController {
         return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
     }
 
-    //Delete all persons
+    /**
+     * Method for deletion of all existing persons
+     * @return ResponseEntity containing httpStatus
+     */
     @RequestMapping(value = "/person", method = RequestMethod.DELETE)
     public ResponseEntity<Person> deleteAllPersons(){
         logger.info("Deleting all persons");

@@ -2,6 +2,9 @@ package no.itera.model;
 
 import javax.persistence.*;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils.*;
+
 @org.hibernate.annotations.GenericGenerator(
         name = "ID_GENERATOR",
         strategy = "enhanced-sequence",
@@ -88,11 +91,6 @@ public class Person {
         return id;
     }
 
-    @Transient
-    public String personName() {
-        return lastName + ' ' + firstName + ' ' + patronymic;
-    }
-
     public String getLastName() {
         return lastName;
     }
@@ -160,9 +158,30 @@ public class Person {
 
     @Override
     public String toString() {
-        return String.format("ID: %d\nName: %s\nEmail: %s\nYear of study: %s\n" +
-                        "Internship: %s\nPractice: %s\n", this.id, this.personName(),
-                this.email,this.yearOfStudy,this.internship,this.practice);
+        StringBuilder info = new StringBuilder();
+        info.append(String.format("ID: %d\n", id));
+        if(StringUtils.isNoneEmpty(lastName)){
+            info.append(String.format("Last name: %s\n",lastName));
+        }
+        if(StringUtils.isNoneEmpty(firstName)){
+            info.append(String.format("First name: %s\n",firstName));
+        }
+        if(StringUtils.isNoneEmpty(patronymic)){
+            info.append(String.format("Patronymic: %s\n",patronymic));
+        }
+        if(StringUtils.isNoneEmpty(email)){
+            info.append(String.format("Email: %s\n",email));
+        }
+        if(StringUtils.isNoneEmpty(yearOfStudy)){
+            info.append(String.format("Year of study: %s\n",yearOfStudy));
+        }
+        if(StringUtils.isNoneEmpty(internship)){
+            info.append(String.format("Internship: %s\n",internship));
+        }
+        if(StringUtils.isNoneEmpty(practice)){
+            info.append(String.format("Practice: %s\n",practice));
+        }
+        return info.toString();
     }
 
 }

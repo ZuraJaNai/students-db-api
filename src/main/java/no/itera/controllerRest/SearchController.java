@@ -25,11 +25,18 @@ public class SearchController {
     }
 
 
-    //Search
+    /**
+     * Method for searching persons by different parameters(lastname,internship,
+     * course,practice, etc.)
+     * @param person Person object containing fields and values to be searched by
+     * @return ResponseEntity containing list of found persons and httpStatus
+     */
     @RequestMapping(value = "/person", method = RequestMethod.POST)
     public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody Person person){
+        logger.debug("Searching for persons with parameters {}", person);
         Iterable<Person> persons = personService.findAllPersons(person);
         if (persons.spliterator().getExactSizeIfKnown() < 1){
+            logger.error("Nothing found by this parameter(s): {}", person);
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(persons, HttpStatus.FOUND);
