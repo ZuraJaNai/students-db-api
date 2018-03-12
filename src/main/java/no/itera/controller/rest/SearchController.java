@@ -1,4 +1,4 @@
-package no.itera.controllerRest;
+package no.itera.controller.rest;
 
 import no.itera.model.Person;
 import no.itera.services.PersonService;

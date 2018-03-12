@@ -1,4 +1,4 @@
-package no.itera.controllerView;
+package no.itera.controller.view;
 
 import no.itera.model.Person;
 import no.itera.services.PersonService;
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 @RequestMapping(value = "/views")
 public class PersonController {
 
-    private Logger logger = LogManager.getLogger(PersonController.class);
     private PersonService personService;
 
     @Autowired
@@ -24,7 +23,7 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/")
-    public String homepage(Model model) throws SQLException {
+    public String homepage(Model model){
         model.addAttribute("persons", personService.getAll());
         return "homepage";
     }

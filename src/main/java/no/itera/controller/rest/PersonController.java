@@ -1,4 +1,4 @@
-package no.itera.controllerRest;
+package no.itera.controller.rest;
 
 import no.itera.model.Person;
 import no.itera.services.PersonService;
@@ -67,7 +67,7 @@ public class PersonController {
      * @return ResponseEntity with person(with specified ID) and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPersonById(@PathVariable("id") int id){
+    public ResponseEntity<Person> getPersonById(@PathVariable("id") int id){
         logger.debug("Fetching person with id {}", id);
         Person person = personService.getById(id);
         if(person == null){
@@ -86,7 +86,7 @@ public class PersonController {
      * httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<?> createPerson(@RequestBody Person person,
+    public ResponseEntity<String> createPerson(@RequestBody Person person,
                                           UriComponentsBuilder ucBuilder){
         logger.info("Creating person: {}", person);
         if(personService.isPersonExists(person)){
@@ -98,7 +98,7 @@ public class PersonController {
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}").buildAndExpand(person.getId()).toUri());
-        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     /**
@@ -108,7 +108,7 @@ public class PersonController {
      * @return Person with new data and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> updatePerson(@PathVariable("id") int id, @RequestBody Person person) {
+    public ResponseEntity<Person> updatePerson(@PathVariable("id") int id, @RequestBody Person person) {
         logger.info("Updating person with id {}", id);
         Person currentPerson = personService.getById(id);
         if (currentPerson == null) {
@@ -134,7 +134,7 @@ public class PersonController {
      * @return ResponseEntity containing httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePerson(@PathVariable("id") int id){
+    public ResponseEntity<Person> deletePerson(@PathVariable("id") int id){
         logger.info("Deleting person with id {}", id);
         Person person = personService.getById(id);
         if(person == null){
@@ -143,7 +143,7 @@ public class PersonController {
                     + id + " not found"), HttpStatus.NOT_FOUND);
         }
         personService.deletePerson(id);
-        return new ResponseEntity<Person>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**

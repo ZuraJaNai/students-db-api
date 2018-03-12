@@ -67,50 +67,46 @@ public class PersonServiceImpl implements PersonService {
 
     public Iterable<Person> findAllPersons(Person filter) {
 
-        List<Person> persons = personDao.findAll(new Specification<Person>() {
+        List<Person> persons = personDao.findAll((root, query, cb) -> {
 
-            @Override
-            public Predicate toPredicate(Root<Person> root, CriteriaQuery< ?> query, CriteriaBuilder cb) {
+            List<Predicate> predicates = new ArrayList<>();
 
-                List<Predicate> predicates = new ArrayList<>();
-
-                if (StringUtils.isNoneEmpty(filter.getLastName())) {
-                    predicates.add(cb.like(cb.lower(root.get("lastName")),
-                            filter.getLastName().toLowerCase() + "%"));
-                }
-
-                if (StringUtils.isNoneEmpty(filter.getFirstName())) {
-                    predicates.add(cb.like(cb.lower(root.get("firstName")),
-                             "%" +filter.getFirstName().toLowerCase() + "%"));
-                }
-
-                if (StringUtils.isNoneEmpty(filter.getPatronymic())) {
-                    predicates.add(cb.like(cb.lower(root.get("patronymic")),
-                            "%" + filter.getPatronymic().toLowerCase() + "%"));
-                }
-
-                if (StringUtils.isNoneEmpty(filter.getEmail())) {
-                    predicates.add(cb.like(cb.lower(root.get("email")),
-                            "%" + filter.getEmail().toLowerCase() + "%"));
-                }
-
-                if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
-                    predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
-                            "%" + filter.getYearOfStudy().toLowerCase() + "%"));
-                }
-
-                if (StringUtils.isNoneEmpty(filter.getInternship())) {
-                    predicates.add(cb.like(cb.lower(root.get("internship")),
-                            "%" + filter.getInternship().toLowerCase() + "%"));
-                }
-
-                if (StringUtils.isNoneEmpty(filter.getPractice())) {
-                    predicates.add(cb.like(cb.lower(root.get("practice")),
-                            "%" + filter.getPractice().toLowerCase() + "%"));
-                }
-
-                return cb.and(predicates.toArray(new Predicate[0]));
+            if (StringUtils.isNoneEmpty(filter.getLastName())) {
+                predicates.add(cb.like(cb.lower(root.get("lastName")),
+                        filter.getLastName().toLowerCase() + "%"));
             }
+
+            if (StringUtils.isNoneEmpty(filter.getFirstName())) {
+                predicates.add(cb.like(cb.lower(root.get("firstName")),
+                         "%" +filter.getFirstName().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getPatronymic())) {
+                predicates.add(cb.like(cb.lower(root.get("patronymic")),
+                        "%" + filter.getPatronymic().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getEmail())) {
+                predicates.add(cb.like(cb.lower(root.get("email")),
+                        "%" + filter.getEmail().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
+                predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
+                        "%" + filter.getYearOfStudy().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getInternship())) {
+                predicates.add(cb.like(cb.lower(root.get("internship")),
+                        "%" + filter.getInternship().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getPractice())) {
+                predicates.add(cb.like(cb.lower(root.get("practice")),
+                        "%" + filter.getPractice().toLowerCase() + "%"));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
         });
         return persons;
     }

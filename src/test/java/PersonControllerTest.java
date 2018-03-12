@@ -1,4 +1,4 @@
-import no.itera.controllerRest.PersonController;
+import no.itera.controller.rest.PersonController;
 import no.itera.model.Person;
 import no.itera.services.PersonServiceImpl;
 import org.junit.Assert;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -20,13 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyByte;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,29 +66,6 @@ public class PersonControllerTest {
                 "/restapi/person/1").accept(MediaType.APPLICATION_JSON);
         mockMvc.perform(requestBuilder).andExpect(status().isNotFound());
     }
-
-//    @Test
-//    public void retrieveAllPersons() throws Exception {
-//            String expected = "[{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-//                    "\"default\",\"patronymic\":\"default\",\"email\":\"default@mail.com" +
-//                    "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-//                    "\"default\",\"comment\":null}]";
-//        Iterable<Person> persons = Arrays.asList(new Person(1));
-//        Mockito.when(personService.getAll()).thenReturn(persons);
-//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-//                "/restapi/person").accept(MediaType.APPLICATION_JSON);
-//        MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
-//        JSONAssert.assertEquals(expected,result.getResponse().getContentAsString(),false);
-//    }
-//
-//    @Test
-//    public void retrieveAllPersonsWhenDontExist() throws Exception {
-//        Iterable<Person> persons = Arrays.asList();
-//        Mockito.when(personService.getAll()).thenReturn(persons);
-//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-//                "/restapi/person").accept(MediaType.APPLICATION_JSON);
-//        mockMvc.perform(requestBuilder).andExpect(status().isNotFound());
-//    }
 
     @Test
     public void checkPersonCreation() throws Exception{

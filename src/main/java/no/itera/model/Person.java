@@ -3,7 +3,8 @@ package no.itera.model;
 import javax.persistence.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.StringUtils.*;
+
+import java.util.ArrayList;
 
 @org.hibernate.annotations.GenericGenerator(
         name = "ID_GENERATOR",
@@ -51,12 +52,13 @@ public class Person {
 
     @Column(name = "COMMENT")
     private String comment;
-//    @Embedded // Not necessary...
-//    @AttributeOverrides({
-//            @AttributeOverride(name = "attachments",
-//                    column = @Column(name = "ATTACHMENTS"))
-//    })
-//    private ArrayList<Attachment> attachments;
+
+    @Embedded // Not necessary...
+    @AttributeOverrides({
+            @AttributeOverride(name = "attachments",
+                    column = @Column(name = "ATTACHMENTS"))
+    })
+    private ArrayList<Attachment> attachments;
 
     public Person(String lastName, String firstName, String patronymic,
                   String email, String yearOfStudy, String internship, String practice,
@@ -72,15 +74,16 @@ public class Person {
     }
 
     public Person(int id){
+        String byDefalt = "default";
         this.id = id;
-        this.lastName = "default";
-        this.firstName = "default";
-        this.patronymic = "default";
-        this.email = "default@mail.com";
-        this.yearOfStudy = "0";
-        this.internship = "default";
-        this.practice = "default";
-        this.comment = null;
+        this.lastName = byDefalt;
+        this.firstName = byDefalt;
+        this.patronymic = byDefalt;
+        this.email = byDefalt;
+        this.yearOfStudy = byDefalt;
+        this.internship = byDefalt;
+        this.practice = byDefalt;
+        this.comment = byDefalt;
     }
 
     public Person() {
@@ -159,29 +162,36 @@ public class Person {
     @Override
     public String toString() {
         StringBuilder info = new StringBuilder();
-        info.append(String.format("ID: %d\n", id));
+        info.append(String.format("ID: %d%n", id));
         if(StringUtils.isNoneEmpty(lastName)){
-            info.append(String.format("Last name: %s\n",lastName));
+            info.append(String.format("Last name: %s%n",lastName));
         }
         if(StringUtils.isNoneEmpty(firstName)){
-            info.append(String.format("First name: %s\n",firstName));
+            info.append(String.format("First name: %s%n",firstName));
         }
         if(StringUtils.isNoneEmpty(patronymic)){
-            info.append(String.format("Patronymic: %s\n",patronymic));
+            info.append(String.format("Patronymic: %s%n",patronymic));
         }
         if(StringUtils.isNoneEmpty(email)){
-            info.append(String.format("Email: %s\n",email));
+            info.append(String.format("Email: %s%n",email));
         }
         if(StringUtils.isNoneEmpty(yearOfStudy)){
-            info.append(String.format("Year of study: %s\n",yearOfStudy));
+            info.append(String.format("Year of study: %s%n",yearOfStudy));
         }
         if(StringUtils.isNoneEmpty(internship)){
-            info.append(String.format("Internship: %s\n",internship));
+            info.append(String.format("Internship: %s%n",internship));
         }
         if(StringUtils.isNoneEmpty(practice)){
-            info.append(String.format("Practice: %s\n",practice));
+            info.append(String.format("Practice: %s%n",practice));
         }
         return info.toString();
     }
 
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+    }
 }
