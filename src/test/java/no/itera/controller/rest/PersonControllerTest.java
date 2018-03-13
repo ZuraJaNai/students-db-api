@@ -1,4 +1,4 @@
-package no.itera;
+package no.itera.controller.rest;
 
 import no.itera.controller.rest.PersonController;
 import no.itera.model.Person;
