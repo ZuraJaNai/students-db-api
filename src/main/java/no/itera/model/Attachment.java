@@ -15,7 +15,6 @@ public class Attachment {
         this.comment = comment;
     }
 
-    @Column(name = "COMMENT")
     public String getComment() {
         return comment;
     }

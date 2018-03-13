@@ -1,3 +1,5 @@
+package no.itera;
+
 import no.itera.dao.PersonDao;
 import no.itera.model.Person;
 import no.itera.services.PersonService;

@@ -1,3 +1,5 @@
+package no.itera;
+
 import no.itera.controller.rest.PersonController;
 import no.itera.model.Person;
 import no.itera.services.PersonServiceImpl;
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,17 +43,13 @@ public class PersonControllerTest {
     @MockBean
     private PersonServiceImpl personService;
 
-//    String expected = "[{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-//            "\"default\",\"patronymic\":\"default\",\"email\":\"default@mail.com" +
-//            "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-//            "\"default\",\"comment\":null}]";
 
     @Test
     public void checkGetExistingPeronById() throws Exception {
         String expected = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default@mail.com" +
-                "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":null}";
+                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
+                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
+                "\"default\",\"comment\":\"default\"}";
         Person person = new Person(1);
         when(personService.getById(1)).thenReturn(person);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
@@ -69,10 +68,10 @@ public class PersonControllerTest {
 
     @Test
     public void checkPersonCreation() throws Exception{
-        String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default@mail.com" +
-                "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":null}";
+        String contentJson =  "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
+                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
+                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
+                "\"default\",\"comment\":\"default\"}";
         Person person = new Person(1);
         Mockito.when(personService.addPerson(person)).thenReturn(true);
         Mockito.when(personService.isPersonExists(person)).thenReturn(false);
@@ -87,9 +86,9 @@ public class PersonControllerTest {
     @Test
     public void checkPersonCreationIfPersonExists() throws Exception{
         String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default@mail.com" +
-                "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":null}";
+                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
+                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
+                "\"default\",\"comment\":\"default\"}";
         Mockito.when(personService.isPersonExists(any(Person.class))).thenReturn(true);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/person").accept(MediaType.APPLICATION_JSON)
@@ -122,10 +121,10 @@ public class PersonControllerTest {
 
     @Test
     public void checkUpdatingPersonIfExists() throws Exception{
-        String contentJson = "{\"id\":1,\"lastName\":\"lastName\",\"firstName\":" +
-                "\"firstName\",\"patronymic\":\"patronymic\",\"email\":\"default@mail.com" +
-                "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":null}";
+        String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
+                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
+                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
+                "\"default\",\"comment\":\"default\"}";
         Person person = new Person(1);
         Mockito.when(personService.getById(1)).thenReturn(person);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put(
@@ -137,10 +136,10 @@ public class PersonControllerTest {
 
     @Test
     public void checkUpdatingPersonIfNotExists() throws Exception{
-        String contentJson = "{\"id\":1,\"lastName\":\"lastName\",\"firstName\":" +
-                "\"firstName\",\"patronymic\":\"patronymic\",\"email\":\"default@mail.com" +
-                "\",\"yearOfStudy\":\"0\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":null}";
+        String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
+                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
+                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
+                "\"default\",\"comment\":\"default\"}";
         Person person = new Person(1);
         Mockito.when(personService.getById(any(Integer.class))).thenReturn(null);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put(
@@ -188,4 +187,6 @@ public class PersonControllerTest {
                 "/restapi/person").accept(MediaType.APPLICATION_JSON);
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
     }
+
+
 }
