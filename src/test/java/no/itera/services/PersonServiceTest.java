@@ -4,16 +4,14 @@ import no.itera.dao.PersonDao;
 import no.itera.model.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 
+import static org.mockito.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -74,8 +72,8 @@ public class PersonServiceTest {
     @Test
     public void checkNonExistingPersonUpdate(){
         Person person =  new Person(41);
-        when(daoMock.save(person)).thenThrow(new ArrayIndexOutOfBoundsException() );
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> personService.updatePerson( person));
+        when(daoMock.save(any(Person.class))).thenThrow(new NullPointerException() );
+        assertThrows(NullPointerException.class, () -> personService.updatePerson(person.getId(), person));
     }
 
 }

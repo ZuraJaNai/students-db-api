@@ -53,12 +53,7 @@ public class Person {
     @Column(name = "COMMENT")
     private String comment;
 
-//    @Embedded // Not necessary...
-//    @AttributeOverrides({
-//            @AttributeOverride(name = "attachments",
-//                    column = @Column(name = "ATTACHMENTS"))
-//    })
-//    private ArrayList<Attachment> attachments;
+    private ArrayList<Attachment> attachments;
 
     public Person(String lastName, String firstName, String patronymic,
                   String email, String yearOfStudy, String internship, String practice,
@@ -186,12 +181,20 @@ public class Person {
         }
         return info.toString();
     }
-//
-//    public ArrayList<Attachment> getAttachments() {
-//        return attachments;
-//    }
-//
-//    public void setAttachments(ArrayList<Attachment> attachments) {
-//        this.attachments = attachments;
-//    }
+
+    public void addAttachment(byte[] buffer, String originalFilename) {
+        Attachment attachment = new Attachment(buffer,originalFilename);
+        if(this.attachments == null){
+            this.attachments = new ArrayList<>();
+        }
+        this.attachments.add(attachment);
+    }
+
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+    }
 }

@@ -116,15 +116,7 @@ public class PersonController {
             return new ResponseEntity(new CustomErrorType("Unable to update user with id "
                     + id), HttpStatus.NOT_FOUND);
         }
-        currentPerson.setLastName(person.getLastName());
-        currentPerson.setFirstName(person.getFirstName());
-        currentPerson.setPatronymic(person.getPatronymic());
-        currentPerson.setEmail(person.getEmail());
-        currentPerson.setYearOfStudy(person.getYearOfStudy());
-        currentPerson.setInternship(person.getInternship());
-        currentPerson.setPractice(person.getPractice());
-        currentPerson.setComment(person.getComment());
-        personService.updatePerson(currentPerson);
+        personService.updatePerson(id, person);
         return new ResponseEntity<>(currentPerson, HttpStatus.OK);
     }
 

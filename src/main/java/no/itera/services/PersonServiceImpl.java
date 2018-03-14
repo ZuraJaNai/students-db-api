@@ -6,13 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +52,46 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void updatePerson(Person person) {
-            personDao.save(person);
+    public void updatePerson(int id, Person person) {
+        Person tempPerson = this.getById(id);
+
+        if(StringUtils.isNoneEmpty(person.getLastName())){
+            tempPerson.setLastName(person.getLastName());
+        }
+        if(StringUtils.isNoneEmpty(person.getFirstName())){
+            tempPerson.setFirstName(person.getFirstName());
+        }
+        if(StringUtils.isNoneEmpty(person.getPatronymic())){
+            tempPerson.setPatronymic(person.getPatronymic());
+        }
+        if(StringUtils.isNoneEmpty(person.getEmail())){
+            tempPerson.setEmail(person.getEmail());
+        }
+        if(StringUtils.isNoneEmpty(person.getYearOfStudy())){
+            tempPerson.setYearOfStudy(person.getYearOfStudy());
+        }
+        if(StringUtils.isNoneEmpty(person.getInternship())){
+            tempPerson.setInternship(person.getInternship());
+        }
+        if(StringUtils.isNoneEmpty(person.getPractice())){
+            tempPerson.setPractice(person.getPractice());
+        }
+        if(StringUtils.isNoneEmpty((CharSequence) person.getAttachments())){
+            tempPerson.setAttachments(person.getAttachments());
+        }
+        personDao.save(tempPerson);
     }
 
     @Override
     public void deleteAll() {
             personDao.deleteAll();
+    }
+
+    @Override
+    public void addFile(int id, byte[] buffer, String originalFilename) {
+        Person tempPerson = this.getById(id);
+        tempPerson.addAttachment(buffer,originalFilename);
+        personDao.save(tempPerson);
     }
 
     public Iterable<Person> findAllPersons(Person filter) {

@@ -20,7 +20,10 @@ public interface PersonService {
 
     boolean deletePerson(int id);
 
-    void updatePerson(Person person);
+    void updatePerson(int id, Person person);
 
     void deleteAll();
+
+    void addFile(int id, byte[] buffer, String originalFilename);
+
 }

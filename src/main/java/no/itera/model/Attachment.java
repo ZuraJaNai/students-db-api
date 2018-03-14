@@ -1,25 +1,37 @@
 package no.itera.model;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class Attachment {
+public class Attachment implements Serializable {
 
-    private String comment;
+    @Column(name = "FILENAME")
+    private String filename;
 
-    public Attachment(String comment){
-        this.comment = comment;
+    @Column(name = "ATTACHMENT", length = 999999999)
+    @Lob
+    private byte[] content;
+
+    public Attachment(byte[] buffer, String originalFilename) {
+        this.content = buffer;
+        this.filename = originalFilename;
     }
 
-    public String getComment() {
-        return comment;
+    public byte[] getContent() {
+        return content;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

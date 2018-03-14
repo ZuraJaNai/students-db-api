@@ -1,6 +1,5 @@
 package no.itera.controller.rest;
 
-import no.itera.controller.rest.PersonController;
 import no.itera.model.Person;
 import no.itera.services.PersonServiceImpl;
 import org.junit.Assert;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
