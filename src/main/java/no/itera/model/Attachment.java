@@ -4,15 +4,16 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
-@Access(AccessType.PROPERTY)
 public class Attachment implements Serializable {
 
     @Column(name = "FILENAME")
     private String filename;
 
-    @Column(name = "ATTACHMENT", length = 999999999)
+    @Column(name = "ATTACHMENT")//, columnDefinition = "LONGBLOB")
     @Lob
     private byte[] content;
+
+    private Attachment(){}
 
     public Attachment(byte[] buffer, String originalFilename) {
         this.content = buffer;

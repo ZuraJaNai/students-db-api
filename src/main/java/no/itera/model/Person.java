@@ -5,6 +5,7 @@ import javax.persistence.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @org.hibernate.annotations.GenericGenerator(
         name = "ID_GENERATOR",
@@ -53,7 +54,10 @@ public class Person {
     @Column(name = "COMMENT")
     private String comment;
 
-    private ArrayList<Attachment> attachments;
+    @ElementCollection
+    @CollectionTable(name="ATTACHMENTS", joinColumns=@JoinColumn(name="PERSON_ID"))
+    @AttributeOverride(name="attachments", column=@Column(name="FILES"))
+    private List<Attachment> attachments;
 
     public Person(String lastName, String firstName, String patronymic,
                   String email, String yearOfStudy, String internship, String practice,
@@ -184,17 +188,14 @@ public class Person {
 
     public void addAttachment(byte[] buffer, String originalFilename) {
         Attachment attachment = new Attachment(buffer,originalFilename);
-        if(this.attachments == null){
-            this.attachments = new ArrayList<>();
-        }
         this.attachments.add(attachment);
     }
 
-    public ArrayList<Attachment> getAttachments() {
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(ArrayList<Attachment> attachments) {
+    public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
 }
