@@ -9,15 +9,19 @@ public class Attachment implements Serializable {
     @Column(name = "FILENAME")
     private String filename;
 
-    @Column(name = "ATTACHMENT")//, columnDefinition = "LONGBLOB")
+    @Column(name = "TYPE")
+    private String type;
+
+    @Column(name = "CONTENT")
     @Lob
     private byte[] content;
 
     private Attachment(){}
 
-    public Attachment(byte[] buffer, String originalFilename) {
+    public Attachment(byte[] buffer, String originalFilename, String contentType) {
         this.content = buffer;
         this.filename = originalFilename;
+        this.type = contentType;
     }
 
     public byte[] getContent() {
@@ -34,5 +38,13 @@ public class Attachment implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

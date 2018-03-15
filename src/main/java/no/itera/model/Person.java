@@ -186,8 +186,8 @@ public class Person {
         return info.toString();
     }
 
-    public void addAttachment(byte[] buffer, String originalFilename) {
-        Attachment attachment = new Attachment(buffer,originalFilename);
+    public void addAttachment(byte[] buffer, String originalFilename, String contentType) {
+        Attachment attachment = new Attachment(buffer,originalFilename,contentType);
         this.attachments.add(attachment);
     }
 

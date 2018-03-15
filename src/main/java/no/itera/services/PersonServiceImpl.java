@@ -1,6 +1,7 @@
 package no.itera.services;
 
 import no.itera.dao.PersonDao;
+import no.itera.model.Attachment;
 import no.itera.model.Person;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,10 +89,31 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void addFile(int id, byte[] buffer, String originalFilename) {
+    public void addFile(int id, byte[] buffer, String originalFilename, String contentType) {
         Person tempPerson = this.getById(id);
-        tempPerson.addAttachment(buffer,originalFilename);
+        tempPerson.addAttachment(buffer,originalFilename,contentType);
         personDao.save(tempPerson);
+    }
+
+    @Override
+    public List<Attachment> getAttachments(int personId) {
+        Person tempPerson = this.getById(personId);
+        if(tempPerson == null){
+            return null;
+        }
+        return tempPerson.getAttachments();
+    }
+
+    @Override
+    public Attachment getFile(int personId, String originalFilename) {
+        Person tempPerson = this.getById(personId);
+        for (Attachment attachment :
+                tempPerson.getAttachments()) {
+            if (attachment.getFilename().equals(originalFilename)) {
+                return attachment;
+            }
+        }
+        return null;
     }
 
     public Iterable<Person> findAllPersons(Person filter) {
