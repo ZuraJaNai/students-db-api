@@ -2,6 +2,7 @@ package no.itera.controller.rest;
 
 import no.itera.model.Attachment;
 import no.itera.model.Person;
+import no.itera.services.AttachmentService;
 import no.itera.services.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,12 +23,22 @@ import java.util.List;
 public class AttachmentController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
-    private PersonService personService;
 
     @Autowired
-    public void setPersonService(PersonService personService) {
-        this.personService = personService;
-    }
+    private AttachmentService attachmentService;
+
+    @Autowired
+    private PersonService personService;
+
+//    @Autowired
+//    public void setPersonService(PersonService personService) {
+//        this.personService = personService;
+//    }
+//
+//    @Autowired
+//    public void setAttachmentService(AttachmentService attachmentService) {
+//        this.attachmentService = attachmentService;
+//    }
 
     @RequestMapping(value = "/{id}/uploadfile", method = RequestMethod.POST)
     public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
@@ -38,17 +49,42 @@ public class AttachmentController {
         if(file.isEmpty()){
             return new ResponseEntity<>("File is empty " + file.getOriginalFilename(),HttpStatus.OK);
         }
-        if(personService.getFile(personId,file.getOriginalFilename()) != null){
+        if(attachmentService.isPersonHasFile(personId,file.getOriginalFilename())){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         byte[] buffer = file.getBytes();
-        personService.addFile(personId,buffer,file.getOriginalFilename(),file.getContentType());
-        return new ResponseEntity<>("File uploaded " + file.getOriginalFilename(), HttpStatus.OK);
+        if(attachmentService.addFile(personId,buffer,file.getOriginalFilename()
+                ,file.getContentType())){
+            return new ResponseEntity<>("File uploaded " + file.getOriginalFilename(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @RequestMapping(value = "/{id}/deletefile", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteFile(@PathVariable("id") int personId,
+                                             @RequestParam("id") int attachmentId){
+        if(!personService.isPersonExists(new Person(personId))){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(attachmentService.isPersonHasFile(personId,attachmentId)){
+            attachmentService.deleteFile(attachmentId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @RequestMapping(value = "/{id}/files", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAllFiles(@PathVariable("id") int personId){
-        List<Attachment> attachments = personService.getAttachments(personId);
+        if(!personService.isPersonExists(new Person(personId))){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<Attachment> attachments = attachmentService.getAttachments(personId);
         if(attachments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -64,15 +100,19 @@ public class AttachmentController {
 
     @RequestMapping(value = "/{id}/downloadfile", method = RequestMethod.GET)
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") int personId,
-                                               @RequestParam("filename") String filename){
-        Attachment attachment = personService.getFile(personId,filename);
+                                               @RequestParam("id") int attachmentId){
+        if(!personService.isPersonExists(new Person(personId))){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Attachment attachment = attachmentService.getFile(personId,attachmentId);
         if (attachment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         byte[] buffer = attachment.getContent();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(attachment.getType()));
-        headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",filename));
+        headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
+                attachment.getFilename()));
         return new ResponseEntity<>(buffer,headers,HttpStatus.OK);
     }
 

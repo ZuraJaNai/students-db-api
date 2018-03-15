@@ -1,10 +1,7 @@
 package no.itera.model;
 
 import javax.persistence.*;
-
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @org.hibernate.annotations.GenericGenerator(
@@ -28,6 +25,7 @@ public class Person {
 
     @Id
     @GeneratedValue(generator = "ID_GENERATOR")
+    @Column(name = "PERSON_ID",updatable = false, nullable = false)
     private int id;
 
     @Column(nullable = false,name = "LASTNAME")
@@ -54,9 +52,8 @@ public class Person {
     @Column(name = "COMMENT")
     private String comment;
 
-    @ElementCollection
-    @CollectionTable(name="ATTACHMENTS", joinColumns=@JoinColumn(name="PERSON_ID"))
-    @AttributeOverride(name="attachments", column=@Column(name="FILES"))
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "ATTACHMENTS", referencedColumnName = "PERSON_ID")
     private List<Attachment> attachments;
 
     public Person(String lastName, String firstName, String patronymic,
@@ -186,8 +183,7 @@ public class Person {
         return info.toString();
     }
 
-    public void addAttachment(byte[] buffer, String originalFilename, String contentType) {
-        Attachment attachment = new Attachment(buffer,originalFilename,contentType);
+    public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
     }
 

@@ -3,8 +3,14 @@ package no.itera.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Embeddable
+@Entity
+@Table(name = "ATTACHMENT")
 public class Attachment implements Serializable {
+
+    @Id
+    @GeneratedValue()
+    @Column(name = "ATTACHMENT_ID",updatable = false, nullable = false)
+    private int id;
 
     @Column(name = "FILENAME")
     private String filename;
@@ -16,12 +22,16 @@ public class Attachment implements Serializable {
     @Lob
     private byte[] content;
 
+    @Column(name = "PERSON_ID", nullable = false)
+    private int personId;
+
     private Attachment(){}
 
-    public Attachment(byte[] buffer, String originalFilename, String contentType) {
+    public Attachment(byte[] buffer, String originalFilename, String contentType,int personId) {
         this.content = buffer;
         this.filename = originalFilename;
         this.type = contentType;
+        this.personId = personId;
     }
 
     public byte[] getContent() {
@@ -46,5 +56,13 @@ public class Attachment implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getPersonId() {
+        return personId;
     }
 }

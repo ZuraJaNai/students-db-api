@@ -19,6 +19,7 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDao personDao;
 
+
     @Override
     public Iterable<Person> getAll() {
         return personDao.findAll();
@@ -77,10 +78,14 @@ public class PersonServiceImpl implements PersonService {
         if(StringUtils.isNoneEmpty(person.getPractice())){
             tempPerson.setPractice(person.getPractice());
         }
-        if(StringUtils.isNoneEmpty((CharSequence) person.getAttachments())){
-            tempPerson.setAttachments(person.getAttachments());
-        }
         personDao.save(tempPerson);
+    }
+
+    @Override
+    public void updateAttachments(int id, Attachment attachment) {
+        Person person = this.getById(id);
+        person.addAttachment(attachment);
+        personDao.save(person);
     }
 
     @Override
@@ -88,33 +93,6 @@ public class PersonServiceImpl implements PersonService {
             personDao.deleteAll();
     }
 
-    @Override
-    public void addFile(int id, byte[] buffer, String originalFilename, String contentType) {
-        Person tempPerson = this.getById(id);
-        tempPerson.addAttachment(buffer,originalFilename,contentType);
-        personDao.save(tempPerson);
-    }
-
-    @Override
-    public List<Attachment> getAttachments(int personId) {
-        Person tempPerson = this.getById(personId);
-        if(tempPerson == null){
-            return null;
-        }
-        return tempPerson.getAttachments();
-    }
-
-    @Override
-    public Attachment getFile(int personId, String originalFilename) {
-        Person tempPerson = this.getById(personId);
-        for (Attachment attachment :
-                tempPerson.getAttachments()) {
-            if (attachment.getFilename().equals(originalFilename)) {
-                return attachment;
-            }
-        }
-        return null;
-    }
 
     public Iterable<Person> findAllPersons(Person filter) {
 

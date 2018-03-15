@@ -5,7 +5,6 @@ import no.itera.model.Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
 
 public interface PersonService {
 
@@ -25,11 +24,7 @@ public interface PersonService {
 
     void updatePerson(int id, Person person);
 
+    void updateAttachments(int id, Attachment attachment);
+
     void deleteAll();
-
-    void addFile(int id, byte[] buffer, String originalFilename, String contentType);
-
-    List<Attachment> getAttachments(int personId);
-
-    Attachment getFile(int personId, String originalFilename);
 }
