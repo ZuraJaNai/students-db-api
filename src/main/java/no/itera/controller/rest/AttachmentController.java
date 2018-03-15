@@ -6,8 +6,6 @@ import no.itera.services.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController("AttachmentControllerRest")
-@RequestMapping("/restapi/person/{id}")
+@RequestMapping("/restapi/person")
 public class AttachmentController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
@@ -30,7 +29,7 @@ public class AttachmentController {
         this.personService = personService;
     }
 
-    @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/uploadfile", method = RequestMethod.POST)
     public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
                                              @RequestParam("file") MultipartFile file) throws IOException {
         if(!personService.isPersonExists(new Person(personId))){
@@ -47,8 +46,8 @@ public class AttachmentController {
         return new ResponseEntity<>("File uploaded " + file.getOriginalFilename(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/files", method = RequestMethod.GET)
-    public ResponseEntity<List<Attachment>> getAllFiles(@PathVariable("id") int personId){
+    @RequestMapping(value = "/{id}/files", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getAllFiles(@PathVariable("id") int personId){
         List<Attachment> attachments = personService.getAttachments(personId);
         if(attachments == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -56,23 +55,25 @@ public class AttachmentController {
         if(attachments.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(attachments,HttpStatus.OK);
+        ArrayList<String> fileNames= new ArrayList<>();
+        for (Attachment attachment:attachments) {
+            fileNames.add(attachment.getFilename());
+        }
+        return new ResponseEntity<>(fileNames,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/downloadfile", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Resource> downloadFile(@PathVariable("id") int personId,
-                                                 @RequestBody Attachment filenameAttachment){
-        Attachment attachment = personService.getFile(personId,filenameAttachment.getFilename());
+    @RequestMapping(value = "/{id}/downloadfile", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") int personId,
+                                               @RequestParam("filename") String filename){
+        Attachment attachment = personService.getFile(personId,filename);
         if (attachment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         byte[] buffer = attachment.getContent();
-        ByteArrayResource resource = new ByteArrayResource(buffer);
-        String name = "files";
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", attachment.getType());
-        headers.set("Content-Disposition",String.format("form-data; name=\"%s\"; filename=\"%s\"",
-                name,attachment.getFilename()));
-        return new ResponseEntity<>(resource,headers,HttpStatus.OK);
+        headers.setContentType(MediaType.parseMediaType(attachment.getType()));
+        headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",filename));
+        return new ResponseEntity<>(buffer,headers,HttpStatus.OK);
     }
+
 }
