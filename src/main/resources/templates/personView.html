@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Person info page</title>
+</head>
+<body>
+<h1>Person info</h1>
+<div>
+    <p>Name</p>
+    <p th:text="${person.fullName()}"></p>
+    <p>Email</p>
+    <p th:text="${person.getEmail()}"></p>
+    <p>Year of study</p>
+    <p th:text="${person.getYearOfStudy()}"></p>
+    <p>Internship</p>
+    <p th:text="${person.getInternship()}"></p>
+    <p>Practice</p>
+    <p th:text="${person.getPractice()}"></p>
+    <p>Comment</p>
+    <p th:text="${person.getComment()}"></p>
+    <!--add attachments from AttachmentController-->
+</div>
+</body>
+</html>

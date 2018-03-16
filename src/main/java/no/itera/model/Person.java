@@ -86,6 +86,10 @@ public class Person {
 
     }
 
+    public String fullName(){
+        return this.lastName + " " + this.firstName + " " + this.patronymic;
+    }
+
     public int getId() {
         return id;
     }
