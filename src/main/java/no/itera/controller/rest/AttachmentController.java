@@ -30,19 +30,10 @@ public class AttachmentController {
     @Autowired
     private PersonService personService;
 
-//    @Autowired
-//    public void setPersonService(PersonService personService) {
-//        this.personService = personService;
-//    }
-//
-//    @Autowired
-//    public void setAttachmentService(AttachmentService attachmentService) {
-//        this.attachmentService = attachmentService;
-//    }
-
     @RequestMapping(value = "/{id}/uploadfile", method = RequestMethod.POST)
     public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
                                              @RequestParam("file") MultipartFile file) throws IOException {
+        logger.debug("Uploading file {}", file.getOriginalFilename());
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

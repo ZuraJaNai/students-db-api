@@ -2,7 +2,6 @@ package no.itera.services;
 
 import no.itera.dao.AttachmentDao;
 import no.itera.model.Attachment;
-import no.itera.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
