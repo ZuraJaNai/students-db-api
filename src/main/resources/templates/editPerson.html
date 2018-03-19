@@ -5,23 +5,15 @@
 </head>
 <body>
 <div>
-    <form th:object="${person}" th:action="@{'/views/person/edit/' + ${person.id}}" method="post">>
-        <p>Last name</p>
-        <input type="text" th:field="*{lastName}" />
-        <p>First name</p>
-        <input type="text" th:field="*{firstName}"/>
-        <p>Patronymic</p>
-        <input type="text" th:field="*{patronymic}"/>
-        <p>Email</p>
-        <input type="text" th:field="*{email}"/>
-        <p>Year of study</p>
-        <input type="text" th:field="*{yearOfStudy}"/>
-        <p>Internship</p>
-        <input type="text" th:field="*{internship}"/>
-        <p>Practice</p>
-        <input type="text" th:field="*{practice}"/>
-        <p>Comment</p>
-        <input type="text" th:field="*{comment}"/>
+    <form th:object="${person}" th:action="@{'/views/person/edit/' + ${person.id}}" method="post">
+        <p>Last name  <input type="text" th:field="*{lastName}"/></p>
+        <p>First name  <input type="text" th:field="*{firstName}"/></p>
+        <p>Patronymic  <input type="text" th:field="*{patronymic}"/></p>
+        <p>Email  <input type="text" th:field="*{email}"/></p>
+        <p>Year of study   <input type="text" th:field="*{yearOfStudy}"/></p>
+        <p>Internship  <input type="text" th:field="*{internship}"/></p>
+        <p>Practice  <input type="text" th:field="*{practice}"/></p>
+        <p>Comment  <textarea type="text" th:field="*{comment}"/></p>
         <button type="submit">Submit</button>
     </form>
 </div>

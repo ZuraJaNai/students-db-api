@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Print</title>
+</head>
+<body>
+<div class="persons">
+    <table border="2px solid black" style="border-collapse: collapse;">
+        <div>
+            <tr>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Year of study</td>
+                <td>Internship</td>
+                <td>Practice</td>
+                <td>Comment</td>
+            </tr>
+        </div>
+        <div>
+            <tr th:each="person : ${persons}">
+                <td th:text="${person.fullName()}">Name</td>
+                <td th:text="${person.getEmail()}">Email</td>
+                <td th:text="${person.getYearOfStudy()}">Year of study</td>
+                <td th:text="${person.getInternship()}">Internship</td>
+                <td th:text="${person.getPractice()}">Practice</td>
+                <td th:text="${person.getComment()}">Comment</td>
+            </tr>
+        </div>
+    </table>
+</div>
+</body>
+</html>

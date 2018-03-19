@@ -17,19 +17,12 @@
 </div>
 <h1>Person info</h1>
 <div>
-    <p>Name</p>
-    <p th:text="${person.fullName()}"></p>
-    <p>Email</p>
-    <p th:text="${person.getEmail()}"></p>
-    <p>Year of study</p>
-    <p th:text="${person.getYearOfStudy()}"></p>
-    <p>Internship</p>
-    <p th:text="${person.getInternship()}"></p>
-    <p>Practice</p>
-    <p th:text="${person.getPractice()}"></p>
-    <p>Comment</p>
-    <p th:text="${person.getComment()}"></p>
-    <!--add attachments from AttachmentController-->
+    <p>Name  <p th:text="${person.fullName()}"></p></p>
+    <p>Email <p th:text="${person.getEmail()}"></p></p>
+    <p>Year of study  <p th:text="${person.getYearOfStudy()}"></p></p>
+    <p>Internship  <p th:text="${person.getInternship()}"></p></p>
+    <p>Practice  <p th:text="${person.getPractice()}"></p></p>
+    <p>Comment  <p th:text="${person.getComment()}"></p></p>
     <table border="2px solid black" style="border-collapse: collapse;">
         <div>
             <tr>
@@ -51,12 +44,17 @@
                     </form>
                 </td>
             </tr>
-            <!--<tr>-->
-                <!--<form th:action="@{'/views/person/' + ${person.id} + '/uploadfile/' + ${attachment.getId()}}" th:method="post">-->
-                    <!--<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>-->
-                    <!--<tr><td></td><td><input type="submit" value="Upload" /></td></tr>-->
-                <!--</form>-->
-            <!--</tr>-->
+        </div>
+    </table>
+    <table>
+        <div>
+            <tr>
+                <form th:action="@{'/views/person/' + ${person.id} + '/uploadfile'}" th:method="post" enctype="multipart/form-data">
+            <tr><td>File to upload:</td>
+                <td><input type="file" name="file" /></td>
+                <td><input type="submit" value="Upload" /></td></tr>
+            </form>
+            </tr>
         </div>
     </table>
 </div>

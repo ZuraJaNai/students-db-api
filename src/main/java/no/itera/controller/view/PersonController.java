@@ -14,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller("PersonControllerView")
 @RequestMapping(value = "/views")
 public class PersonController {
@@ -53,7 +56,7 @@ public class PersonController {
             return "homepage";
         }
         model.addAttribute("persons",page.getContent());
-        model.addAttribute("result",null);
+        model.addAttribute("result",false);
         if(pageNum > 1)
         {
             model.addAttribute("prevPage",pageNum - 1);
@@ -113,4 +116,5 @@ public class PersonController {
         personService.updatePerson(id,person);
         return String.format("redirect:/views/person/%d",id);
     }
+
 }
