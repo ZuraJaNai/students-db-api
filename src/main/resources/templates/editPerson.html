@@ -4,11 +4,8 @@
     <title>Person editing</title>
 </head>
 <body>
-<h1>Person info</h1>
 <div>
-    <form th:action="@{/view/person/edit}" th:object="${newPerson}" th:metod="put">
-        <p>Name</p>
-        <p th:text="${person.fullName()}"></p>
+    <form th:object="${person}" th:action="@{'/views/person/edit/' + ${person.id}}" method="post">>
         <p>Last name</p>
         <input type="text" th:field="*{lastName}" />
         <p>First name</p>
@@ -16,19 +13,14 @@
         <p>Patronymic</p>
         <input type="text" th:field="*{patronymic}"/>
         <p>Email</p>
-        <p th:text="${person.getEmail()}"></p>
         <input type="text" th:field="*{email}"/>
         <p>Year of study</p>
-        <p th:text="${person.getYearOfStudy()}"></p>
         <input type="text" th:field="*{yearOfStudy}"/>
         <p>Internship</p>
-        <p th:text="${person.getInternship()}"></p>
         <input type="text" th:field="*{internship}"/>
         <p>Practice</p>
-        <p th:text="${person.getPractice()}"></p>
         <input type="text" th:field="*{practice}"/>
         <p>Comment</p>
-        <p th:text="${person.getComment()}"></p>
         <input type="text" th:field="*{comment}"/>
         <button type="submit">Submit</button>
     </form>

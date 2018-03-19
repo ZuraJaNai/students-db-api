@@ -3,6 +3,9 @@ package no.itera.controller.view;
 import no.itera.model.Person;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.RequestFacade;
+import org.apache.catalina.connector.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 
@@ -41,8 +45,10 @@ public class PersonController {
             pageNum = 1;
         }
         if(limit == null){
-            limit = this.limit;
+            //limit = this.limit;
+            limit = 5;
         }
+        model.addAttribute("searchPerson",new Person());
         logger.debug("Getting list of persons.Page {}.Limit {}", pageNum, limit);
         Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
         if(!page.hasContent()) {
@@ -50,7 +56,20 @@ public class PersonController {
             return "homepage";
         }
         model.addAttribute("persons",page.getContent());
+        model.addAttribute("result",null);
+        if(pageNum > 1)
+        {
+            model.addAttribute("prevPage",pageNum - 1);
+        }
+        if(pageNum < page.getTotalPages()){
+            model.addAttribute("nextPage",pageNum + 1);
+        }
         return "homepage";
+    }
+
+    @RequestMapping(value = "/person/page/{pageNum}", method = RequestMethod.GET)
+    public String getPage(@PathVariable("pageNum") int pageNum){
+        return String.format("redirect:/views/person?page=%d",pageNum);
     }
 
     @RequestMapping(value = "/person/view/{id}", method = RequestMethod.GET)
@@ -68,22 +87,29 @@ public class PersonController {
         return "redirect:/views/person";
     }
 
-//    @RequestMapping(value = "/person/edit/{id}", method = RequestMethod.PUT)
-//    public String editPerson(@PathVariable("id") int id, @RequestBody Person person){
-//        logger.info("Updating person with id {}", id);
-//        personService.updatePerson(id, person);
-//        return String.format("redirect:/views/person/view/%d",person.getId());
-
     @RequestMapping(value = "/person/edit/{id}", method = RequestMethod.GET)
-    public String showEditPersonForm(@PathVariable("id") int id,Model model) {
+    public String editPerson(@PathVariable("id") int id,Model model) {
         logger.info("Updating person with id {}", id);
         model.addAttribute("person",personService.getById(id));
         return "editPerson";
     }
 
-    @RequestMapping(value = "/person/edit", method = RequestMethod.PUT)
-    public String editPerson(@ModelAttribute(value = "newPerson")Person person){
-        personService.updatePerson(person.getId(),person);
-        return String.format("redirect:/views/person/view/%d",person.getId());
+
+    @RequestMapping(value = "/person/add", method = RequestMethod.GET)
+    public String addPerson(Model model){
+        model.addAttribute("newPerson",new Person());
+        return "addPerson";
+    }
+
+    @RequestMapping(value = "/person/add", method = RequestMethod.POST)
+    public String addPerson(@ModelAttribute(value = "newPerson") Person person){
+        personService.addPerson(person);
+        return String.format("redirect:/views/person/%d",person.getId());
+    }
+
+    @RequestMapping(value = "/person/edit/{id}", method = RequestMethod.POST)
+    public String editPerson(@PathVariable("id") int id,@ModelAttribute(value = "person") Person person){
+        personService.updatePerson(id,person);
+        return String.format("redirect:/views/person/%d",id);
     }
 }

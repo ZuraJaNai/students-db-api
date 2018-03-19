@@ -2,53 +2,115 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Homepage</title>
+    <!--<link rel="stylesheet" type="text/css" href="homepage.css"/>-->
     <style>
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
-    th, td {
-        padding: 15px;
-    }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
 
-</style>
+        div.search {
+            float: left;
+            border: 3px solid #73AD21;
+            padding-right: 30px;
+            padding-left: 30px;
+            width: 260px;
+            height: 650px;
+        }
+
+        div.persons {
+            border: 3px solid #73AD21;
+            height: 650px;
+        }
+
+        div.footer {
+            float:bottom;
+            border: 3px solid #73AD21;
+            height: 50px;
+    </style>
 </head>
 <body>
-<table border="2px solid black" style="border-collapse: collapse;">
+<div class="search">
     <div>
-        <tr>
-            <td>Name</td>
-            <td>Email</td>
-            <td>Year of study</td>
-            <td>Internship</td>
-            <td>Practice</td>
-            <td colspan="3" align="center">Actions</td>
-        </tr>
+        <form th:object="${searchPerson}" th:action="@{/views/search}" method="post">
+            <p>Last name</p>
+            <input type="text" th:field="*{lastName}" />
+            <p>First name</p>
+            <input type="text" th:field="*{firstName}"/>
+            <p>Patronymic</p>
+            <input type="text" th:field="*{patronymic}"/>
+            <p>Email</p>
+            <input type="text" th:field="*{email}"/>
+            <p>Year of study</p>
+            <input type="text" th:field="*{yearOfStudy}"/>
+            <p>Internship</p>
+            <input type="text" th:field="*{internship}"/>
+            <p>Practice</p>
+            <input type="text" th:field="*{practice}"/>
+            <br/>
+            <button style="margin: 5px;" type="submit">Submit</button>
+        </form>
     </div>
     <div>
-        <tr th:each="person : ${persons}">
-            <td th:text="${person.fullName()}">Name</td>
-            <td th:text="${person.getEmail()}">Email</td>
-            <td th:text="${person.getYearOfStudy()}">Year of study</td>
-            <td th:text="${person.getInternship()}">Internship</td>
-            <td th:text="${person.getPractice()}">Practice</td>
-            <td>
-                <form th:action="@{'/views/person/view/' + ${person.id}}" th:method="get">
-                    <button type="submit">VIEW</button>
-                </form>
-            </td>
-            <td>
-                <form  th:action="@{'/views/person/edit/' + ${person.id}}" th:method="put">
-                    <a th:href="${'/views/person/edit/' + person.id}">EDIT</a>
-                </form>
-            </td>
-            <td>
-                <form th:action="@{'/views/person/delete/' + ${person.id}}" th:method="delete">
-                    <button type="submit">DELETE</button>
-                </form>
-            </td>
-        </tr>
+        <form th:action="@{/views/person}" th:method="get">
+            <button style="margin: 5px;" type="submit">Go back to all</button>
+        </form>
     </div>
-</table>
+</div>
+<div class="persons">
+    <table border="2px solid black" style="border-collapse: collapse;">
+        <div>
+            <tr>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Year of study</td>
+                <td>Internship</td>
+                <td>Practice</td>
+                <td colspan="3" align="center">Actions</td>
+            </tr>
+        </div>
+        <div>
+            <tr th:each="person : ${persons}">
+                <td th:text="${person.fullName()}">Name</td>
+                <td th:text="${person.getEmail()}">Email</td>
+                <td th:text="${person.getYearOfStudy()}">Year of study</td>
+                <td th:text="${person.getInternship()}">Internship</td>
+                <td th:text="${person.getPractice()}">Practice</td>
+                <td>
+                    <form th:action="@{'/views/person/' + ${person.id}}" th:method="get">
+                        <button type="submit">VIEW</button>
+                    </form>
+                </td>
+                <td>
+                    <form  th:action="@{'/views/person/edit/' + ${person.id}}" th:method="get">
+                        <button type="submit">EDIT</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{'/views/person/delete/' + ${person.id}}" th:method="delete">
+                        <button type="submit">DELETE</button>
+                    </form>
+                </td>
+            </tr>
+        </div>
+    </table>
+</div>
+<div class="footer">
+    <!--<form th:if="${pageNum - 1 &gt; 0}" th:action="@{'/views/person?page=' + ${pageNum - 1}" th:method="get">-->
+        <!--<button>Prev page</button>-->
+    <!--</form>-->
+    <!--<form th:if="${pageNum &lt; totalPages}" th:action="@{'/views/person?page=' + ${pageNum + 1}" th:method="get">-->
+        <!--<button>Next page</button>-->
+    <!--</form>-->
+    <form th:action="@{'/views/person/page/' + ${prevPage}}" th:method="get">
+        <button type="submit">Prev page</button>
+    </form>
+    <form th:action="@{'/views/person/page/' + ${nextPage}}" th:method="get">
+        <button type="submit">Next page</button>
+    </form>
+</div>
 </body>
 </html>

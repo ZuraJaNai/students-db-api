@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Person info page</title>
+    <title>Person editing</title>
 </head>
 <body>
+<div>
+    <form th:action="@{'/views/person'}" th:method="get">
+        <button type="submit">MAIN PAGE</button>
+    </form>
+    <form  th:action="@{'/views/person/edit/' + ${person.id}}" th:method="get">
+        <button type="submit">EDIT</button>
+    </form>
+    <form th:action="@{'/views/person/delete/' + ${person.id}}" th:method="delete">
+        <button type="submit">DELETE</button>
+    </form>
+</div>
 <h1>Person info</h1>
 <div>
     <p>Name</p>
