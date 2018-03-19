@@ -30,6 +30,35 @@
     <p>Comment</p>
     <p th:text="${person.getComment()}"></p>
     <!--add attachments from AttachmentController-->
+    <table border="2px solid black" style="border-collapse: collapse;">
+        <div>
+            <tr>
+                <td>Name</td>
+                <td colspan="2" align="center">Actions</td>
+            </tr>
+        </div>
+        <div>
+            <tr th:each="attachment : ${attachments}">
+                <td th:text="${attachment.getFilename()}">Name</td>
+                <td>
+                    <form  th:action="@{'/views/person/' + ${person.id} + '/downloadfile/' + ${attachment.id}}" th:method="get">
+                        <button type="submit">DOWNLOAD</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{'/views/person/' + ${person.id} + '/deletefile/' + ${attachment.id}}" th:method="delete">
+                        <button type="submit">DELETE</button>
+                    </form>
+                </td>
+            </tr>
+            <!--<tr>-->
+                <!--<form th:action="@{'/views/person/' + ${person.id} + '/uploadfile/' + ${attachment.getId()}}" th:method="post">-->
+                    <!--<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>-->
+                    <!--<tr><td></td><td><input type="submit" value="Upload" /></td></tr>-->
+                <!--</form>-->
+            <!--</tr>-->
+        </div>
+    </table>
 </div>
 </body>
 </html>

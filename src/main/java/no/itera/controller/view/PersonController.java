@@ -1,11 +1,8 @@
 package no.itera.controller.view;
 
 import no.itera.model.Person;
+import no.itera.services.AttachmentService;
 import no.itera.services.PersonService;
-import no.itera.util.CustomErrorType;
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.RequestFacade;
-import org.apache.catalina.connector.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,21 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 
 @Controller("PersonControllerView")
 @RequestMapping(value = "/views")
 public class PersonController {
 
     private PersonService personService;
+    private AttachmentService attachmentService;
+
+    @Autowired
+    public void setAttachmentService(AttachmentService attachmentService) {
+        this.attachmentService = attachmentService;
+    }
 
     @Autowired
     public void setPersonService(PersonService personService) {
@@ -80,6 +77,7 @@ public class PersonController {
         logger.debug("Fetching person with id {}", id);
         Person person = personService.getById(id);
         model.addAttribute("person", person);
+        model.addAttribute("attachments", attachmentService.getAttachments(id));
         return "personView";
     }
 
