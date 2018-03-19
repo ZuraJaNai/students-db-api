@@ -6,6 +6,7 @@ import no.itera.util.CustomErrorType;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.connector.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,7 @@ public class PersonController {
             pageNum = 1;
         }
         if(limit == null){
-            //limit = this.limit;
-            limit = 5;
+            limit = this.limit;
         }
         model.addAttribute("searchPerson",new Person());
         logger.debug("Getting list of persons.Page {}.Limit {}", pageNum, limit);
@@ -68,11 +68,14 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/person/page/{pageNum}", method = RequestMethod.GET)
-    public String getPage(@PathVariable("pageNum") int pageNum){
-        return String.format("redirect:/views/person?page=%d",pageNum);
+    public String getPage(@PathVariable("pageNum") String pageNum){
+        if(StringUtils.equals(pageNum,"null")){
+            return "redirect:/views/person";
+        }
+        return String.format("redirect:/views/person?page=%s",pageNum);
     }
 
-    @RequestMapping(value = "/person/view/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/person/{id}", method = RequestMethod.GET)
     public String viewPersonById(@PathVariable("id") int id, Model model) {
         logger.debug("Fetching person with id {}", id);
         Person person = personService.getById(id);

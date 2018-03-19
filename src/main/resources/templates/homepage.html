@@ -12,6 +12,12 @@
             padding: 15px;
         }
 
+        div.header, div.footer {
+            float:top;
+             border: 3px solid #73AD21;
+             height: 30px;
+        }
+
         div.search {
             float: left;
             border: 3px solid #73AD21;
@@ -26,13 +32,17 @@
             height: 650px;
         }
 
-        div.footer {
-            float:bottom;
-            border: 3px solid #73AD21;
-            height: 50px;
     </style>
 </head>
 <body>
+<div class="header">
+    <form th:action="@{'/views/person'}" th:method="get">
+        <button type="submit">MAIN PAGE</button>
+    </form>
+    <form  th:action="@{'/views/person/add'}" th:method="get">
+        <button type="submit">ADD NEW</button>
+    </form>
+</div>
 <div class="search">
     <div>
         <form th:object="${searchPerson}" th:action="@{/views/search}" method="post">
@@ -54,9 +64,9 @@
             <button style="margin: 5px;" type="submit">Submit</button>
         </form>
     </div>
-    <div>
+    <div th:if="${result == true}">
         <form th:action="@{/views/person}" th:method="get">
-            <button style="margin: 5px;" type="submit">Go back to all</button>
+            <button style="margin: 5px;" type="submit">Clear search</button>
         </form>
     </div>
 </div>
@@ -99,18 +109,16 @@
     </table>
 </div>
 <div class="footer">
-    <!--<form th:if="${pageNum - 1 &gt; 0}" th:action="@{'/views/person?page=' + ${pageNum - 1}" th:method="get">-->
-        <!--<button>Prev page</button>-->
-    <!--</form>-->
-    <!--<form th:if="${pageNum &lt; totalPages}" th:action="@{'/views/person?page=' + ${pageNum + 1}" th:method="get">-->
-        <!--<button>Next page</button>-->
-    <!--</form>-->
-    <form th:action="@{'/views/person/page/' + ${prevPage}}" th:method="get">
-        <button type="submit">Prev page</button>
-    </form>
-    <form th:action="@{'/views/person/page/' + ${nextPage}}" th:method="get">
-        <button type="submit">Next page</button>
-    </form>
+    <div th:if="${prevPage != null}">
+        <form th:action="@{'/views/person/page/' + ${prevPage}}" th:method="get">
+            <button type="submit">Prev page</button>
+        </form>
+    </div>
+    <div th:if="${nextPage != null}">
+        <form th:action="@{'/views/person/page/' + ${nextPage}}" th:method="get">
+            <button type="submit">Next page</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>
