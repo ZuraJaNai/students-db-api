@@ -1,10 +1,8 @@
 package no.itera.model;
 
 import javax.persistence.*;
-
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
+import java.util.List;
 
 @org.hibernate.annotations.GenericGenerator(
         name = "ID_GENERATOR",
@@ -27,6 +25,7 @@ public class Person {
 
     @Id
     @GeneratedValue(generator = "ID_GENERATOR")
+    @Column(name = "PERSON_ID",updatable = false, nullable = false)
     private int id;
 
     @Column(nullable = false,name = "LASTNAME")
@@ -53,12 +52,9 @@ public class Person {
     @Column(name = "COMMENT")
     private String comment;
 
-    @Embedded // Not necessary...
-    @AttributeOverrides({
-            @AttributeOverride(name = "attachments",
-                    column = @Column(name = "ATTACHMENTS"))
-    })
-    private ArrayList<Attachment> attachments;
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "ATTACHMENTS", referencedColumnName = "PERSON_ID")
+    private List<Attachment> attachments;
 
     public Person(String lastName, String firstName, String patronymic,
                   String email, String yearOfStudy, String internship, String practice,
@@ -187,11 +183,15 @@ public class Person {
         return info.toString();
     }
 
-    public ArrayList<Attachment> getAttachments() {
+    public void addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
+    }
+
+    public List<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(ArrayList<Attachment> attachments) {
+    public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
 }

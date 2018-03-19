@@ -1,8 +1,10 @@
 package no.itera.services;
 
+import no.itera.model.Attachment;
 import no.itera.model.Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+
 
 public interface PersonService {
 
@@ -20,7 +22,9 @@ public interface PersonService {
 
     boolean deletePerson(int id);
 
-    void updatePerson(Person person);
+    void updatePerson(int id, Person person);
+
+    void updateAttachments(int id, Attachment attachment);
 
     void deleteAll();
 }

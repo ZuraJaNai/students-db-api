@@ -37,7 +37,7 @@ public class SearchController {
         Iterable<Person> persons = personService.findAllPersons(person);
         if (persons.spliterator().getExactSizeIfKnown() < 1){
             logger.error("Nothing found by this parameter(s): {}", person);
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(persons, HttpStatus.FOUND);
     }

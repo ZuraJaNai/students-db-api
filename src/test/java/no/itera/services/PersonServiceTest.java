@@ -1,24 +1,21 @@
+package no.itera.services;
+
 import no.itera.dao.PersonDao;
 import no.itera.model.Person;
-import no.itera.services.PersonService;
-import no.itera.services.PersonServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.any;
+import static org.mockito.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-
+@SpringBootTest(classes = PersonServiceImpl.class)
 public class PersonServiceTest {
 
 
@@ -27,9 +24,6 @@ public class PersonServiceTest {
 
     @InjectMocks
     private PersonServiceImpl personService;
-
-//    @Captor
-//    private ArgumentCaptor<Person> personArgumentCaptor;
 
     @BeforeEach
     public void init(){
@@ -67,7 +61,7 @@ public class PersonServiceTest {
 
 
     @Test
-    public void checkAllPersonsDeletion() throws SQLException {
+    public void checkAllPersonsDeletion() {
         when(daoMock.findAll()).thenReturn(Arrays.asList(new Person(1), new Person(2)));
         assertTrue(0 < personService.getAll().spliterator().getExactSizeIfKnown());
         when(daoMock.findAll()).thenReturn(Arrays.asList());
@@ -78,8 +72,8 @@ public class PersonServiceTest {
     @Test
     public void checkNonExistingPersonUpdate(){
         Person person =  new Person(41);
-        when(daoMock.save(person)).thenThrow(new ArrayIndexOutOfBoundsException() );
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> personService.updatePerson( person));
+        when(daoMock.save(any(Person.class))).thenThrow(new NullPointerException() );
+        assertThrows(NullPointerException.class, () -> personService.updatePerson(person.getId(), person));
     }
 
 }
