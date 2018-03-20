@@ -65,6 +65,16 @@
             <button style="margin: 5px;" type="submit">Clear search</button>
         </form>
     </div>
+    <!--<div th:if="${result == true}">-->
+        <!--<form th:action="@{/views/search/print}" th:method="get" target="_blank">-->
+            <!--<button style="margin: 5px;" type="submit">Print search</button>-->
+        <!--</form>-->
+    <!--</div>-->
+    <div>
+        <form th:action="@{/views/print}" th:method="get" target="_blank">
+            <button style="margin: 5px;" type="submit">Print all</button>
+        </form>
+    </div>
 </div>
 <div class="persons">
     <table border="2px solid black" style="border-collapse: collapse;">

@@ -94,7 +94,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    public Iterable<Person> findAllPersons(Person filter) {
+    public List<Person> findAllPersons(Person filter) {
 
         List<Person> persons = personDao.findAll((root, query, cb) -> {
 

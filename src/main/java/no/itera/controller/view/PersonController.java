@@ -14,9 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller("PersonControllerView")
 @RequestMapping(value = "/views")
 public class PersonController {
@@ -115,6 +112,12 @@ public class PersonController {
     public String editPerson(@PathVariable("id") int id,@ModelAttribute(value = "person") Person person){
         personService.updatePerson(id,person);
         return String.format("redirect:/views/person/%d",id);
+    }
+
+    @RequestMapping(value = "/print", method = RequestMethod.GET)
+    public String printAll(Model model){
+        model.addAttribute("persons",personService.getAll());
+        return "printPersons";
     }
 
 }

@@ -36,4 +36,11 @@ public class SearchController {
         model.addAttribute("result",true);
         return "homepage";
     }
+
+    @RequestMapping(value = "/search/print", method = RequestMethod.GET)
+    public String printAll(Model model,
+                           @ModelAttribute(value = "searchPerson") Person person){
+        model.addAttribute("persons",personService.findAllPersons(person));
+        return "printPersons";
+    }
 }

@@ -5,6 +5,8 @@ import no.itera.model.Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 
 public interface PersonService {
 
@@ -14,7 +16,7 @@ public interface PersonService {
 
     Person getById(int id);
 
-    Iterable<Person> findAllPersons(Person filter);
+    List<Person> findAllPersons(Person filter);
 
     boolean isPersonExists(Person person);
 
