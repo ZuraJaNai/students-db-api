@@ -1,4 +1,10 @@
 package no.itera.util;
 
-public class ApplicationExitListener {
+import org.springframework.context.ApplicationListener;
+
+public class ApplicationExitListener implements ApplicationListener<CustomExitEvent> {
+    @Override
+    public void onApplicationEvent(CustomExitEvent customExitEvent) {
+        System.exit(0);
+    }
 }

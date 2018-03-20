@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationListener;
 
 import java.io.IOException;
 
-public class MyApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
+public class ApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationEvent) {
             openBrowser();

@@ -78,6 +78,9 @@ public class PersonServiceImpl implements PersonService {
         if(StringUtils.isNoneEmpty(person.getPractice())){
             tempPerson.setPractice(person.getPractice());
         }
+        if(StringUtils.isNoneEmpty(person.getComment())){
+            tempPerson.setComment(person.getComment());
+        }
         personDao.save(tempPerson);
     }
 

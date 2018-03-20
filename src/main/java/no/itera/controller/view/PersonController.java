@@ -3,11 +3,13 @@ package no.itera.controller.view;
 import no.itera.model.Person;
 import no.itera.services.AttachmentService;
 import no.itera.services.PersonService;
+import no.itera.util.CustomExitEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,9 @@ public class PersonController {
 
     private PersonService personService;
     private AttachmentService attachmentService;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     public void setAttachmentService(AttachmentService attachmentService) {
@@ -119,5 +124,12 @@ public class PersonController {
         model.addAttribute("persons",personService.getAll());
         return "printPersons";
     }
+
+    @RequestMapping(value = "/exit",method = RequestMethod.POST)
+    public void exit(){
+        CustomExitEvent customSpringEvent = new CustomExitEvent(this);
+        applicationEventPublisher.publishEvent(customSpringEvent);
+    }
+
 
 }
