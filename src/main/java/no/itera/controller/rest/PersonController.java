@@ -1,6 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
+import no.itera.model.PersonInputData;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
 
@@ -86,15 +87,9 @@ public class PersonController {
      * httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<String> createPerson(@RequestBody Person person,
+    public ResponseEntity<String> createPerson(@RequestBody PersonInputData person,
                                           UriComponentsBuilder ucBuilder){
         logger.info("Creating person: {}", person);
-        if(personService.isPersonExists(person)){
-            logger.error("Unable to create. Person with id {} already exists",
-                    person.getId());
-            return new ResponseEntity(new CustomErrorType("Unable to create. Person with id "
-                    + person.getId() + " already exists"), HttpStatus.CONFLICT);
-        }
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}").buildAndExpand(person.getId()).toUri());

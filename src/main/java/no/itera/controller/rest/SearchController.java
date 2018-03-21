@@ -1,6 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
+import no.itera.model.SearchPerson;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
 import org.apache.logging.log4j.LogManager;
@@ -36,7 +37,7 @@ public class SearchController {
      * @return ResponseEntity containing list of found persons and httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody Person person,
+    public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody SearchPerson person,
                                                            @RequestParam(value = "page", required = false) Integer pageNum,
                                                            @RequestParam(value = "limit", required = false) Integer limit){
         if(pageNum == null){

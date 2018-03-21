@@ -2,6 +2,8 @@ package no.itera.services;
 
 import no.itera.model.Attachment;
 import no.itera.model.Person;
+import no.itera.model.PersonInputData;
+import no.itera.model.SearchPerson;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -16,15 +18,15 @@ public interface PersonService {
 
     Person getById(int id);
 
-    List<Person> findAllPersons(Person filter);
+    List<Person> findAllPersons(SearchPerson filter);
 
     boolean isPersonExists(Person person);
 
-    boolean addPerson(Person person);
+    boolean addPerson(PersonInputData person);
 
     boolean deletePerson(int id);
 
-    void updatePerson(int id, Person person);
+    void updatePerson(int id, PersonInputData person);
 
     void updateAttachments(int id, Attachment attachment);
 

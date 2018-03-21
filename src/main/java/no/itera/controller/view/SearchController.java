@@ -2,6 +2,7 @@ package no.itera.controller.view;
 
 import no.itera.controller.rest.PersonController;
 import no.itera.model.Person;
+import no.itera.model.SearchPerson;
 import no.itera.services.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ public class SearchController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String findAllPersons(Model model,
-                                 @ModelAttribute(value = "searchPerson") Person person){
+                                 @ModelAttribute(value = "searchPerson") SearchPerson person){
         logger.debug("Searching for persons with parameters {}", person);
         Iterable<Person> persons = personService.findAllPersons(person);
         if (persons.spliterator().getExactSizeIfKnown() < 1){
@@ -39,7 +40,7 @@ public class SearchController {
 
     @RequestMapping(value = "/search/print", method = RequestMethod.GET)
     public String printAll(Model model,
-                           @ModelAttribute(value = "searchPerson") Person person){
+                           @ModelAttribute(value = "searchPerson") SearchPerson person){
         model.addAttribute("persons",personService.findAllPersons(person));
         return "printPersons";
     }
