@@ -1,5 +1,7 @@
 package no.itera.controller.rest;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import no.itera.model.Person;
 import no.itera.model.PersonInputData;
 import no.itera.services.PersonService;
@@ -81,15 +83,17 @@ public class PersonController {
 
     /**
      * Method for person creation
-     * @param person the person to be created
+     * @param personInputData the person to be created
      * @param ucBuilder object for creating URI
      * @return ResposneEntity containing header with URL to created person and
      * httpStatus
      */
+
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<String> createPerson(@RequestBody PersonInputData person,
+    public ResponseEntity<String> createPerson(@RequestBody PersonInputData personInputData,
                                           UriComponentsBuilder ucBuilder){
-        logger.info("Creating person: {}", person);
+        logger.info("Creating person: {}", personInputData);
+        Person person = new Person(personInputData);
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}").buildAndExpand(person.getId()).toUri());
@@ -103,7 +107,8 @@ public class PersonController {
      * @return Person with new data and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Person> updatePerson(@PathVariable("id") int id, @RequestBody Person person) {
+    public ResponseEntity<Person> updatePerson(@PathVariable("id") int id,
+                                               @RequestBody PersonInputData person) {
         logger.info("Updating person with id {}", id);
         Person currentPerson = personService.getById(id);
         if (currentPerson == null) {

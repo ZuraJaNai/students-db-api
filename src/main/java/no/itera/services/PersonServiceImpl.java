@@ -44,8 +44,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean addPerson(PersonInputData person) {
-        personDao.save(new Person(person));
+    public boolean addPerson(Person person) {
+        personDao.save(person);
         return true;
     }
 
@@ -153,5 +153,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
+    public long count(){
+        return personDao.count();
+    }
 
 }

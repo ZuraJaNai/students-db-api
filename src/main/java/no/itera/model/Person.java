@@ -228,23 +228,23 @@ public class Person {
         if(StringUtils.isNoneEmpty(yearOfStudy)){
             info.append(String.format("Year of study: %s%n",yearOfStudy));
         }
-        if(internshipBegin != null){
-            info.append(String.format("Internship begin: %t%n",internshipBegin));
+        if(StringUtils.isNoneEmpty(internshipBegin)){
+            info.append(String.format("Internship begin: %s%n",internshipBegin));
         }
-        if(internshipEnd != null){
-            info.append(String.format("Internship end: %t%n",internshipEnd));
+        if(StringUtils.isNoneEmpty(internshipEnd)){
+            info.append(String.format("Internship end: %s%n",internshipEnd));
         }
-        if(practiceBegin != null){
-            info.append(String.format("Practice begin: %t%n",practiceBegin));
+        if(StringUtils.isNoneEmpty(practiceBegin)){
+            info.append(String.format("Practice begin: %s%n",practiceBegin));
         }
-        if(practiceEnd != null){
-            info.append(String.format("Practice end: %t%n",practiceEnd));
+        if(StringUtils.isNoneEmpty(practiceEnd)){
+            info.append(String.format("Practice end: %s%n",practiceEnd));
         }
-        if(jobBegin != null){
-            info.append(String.format("Job begin: %t%n",jobBegin));
+        if(StringUtils.isNoneEmpty(jobBegin)){
+            info.append(String.format("Job begin: %s%n",jobBegin));
         }
-        if(jobEnd != null){
-            info.append(String.format("Job end: %t%n",jobEnd));
+        if(StringUtils.isNoneEmpty(jobEnd)){
+            info.append(String.format("Job end: %s%n",jobEnd));
         }
         return info.toString();
     }

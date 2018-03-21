@@ -1,5 +1,9 @@
 package no.itera.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value="PersonInputData")
 public class PersonInputData {
 
     private String lastName;
@@ -8,23 +12,35 @@ public class PersonInputData {
 
     private String patronymic;
 
+    @ApiModelProperty(example = "user@mail.com")
     private String email;
 
+    @ApiModelProperty(example = "2017")
     private String yearOfStudy;
 
+    @ApiModelProperty(example = "01.2018")
     private String internshipBegin;
 
+    @ApiModelProperty(example = "02.2018")
     private String internshipEnd;
 
+    @ApiModelProperty(example = "01.2018")
     private String practiceBegin;
 
+    @ApiModelProperty(example = "02.2018")
     private String practiceEnd;
 
+    @ApiModelProperty(example = "01.2018")
     private String jobBegin;
 
+    @ApiModelProperty(example = "02.2018")
     private String jobEnd;
 
     private String comment;
+
+    public PersonInputData(){
+
+    }
 
     public PersonInputData(String lastName, String firstName, String patronymic,
                            String email, String yearOfStudy, String internshipBegin,

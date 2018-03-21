@@ -22,7 +22,7 @@ public interface PersonService {
 
     boolean isPersonExists(Person person);
 
-    boolean addPerson(PersonInputData person);
+    boolean addPerson(Person person);
 
     boolean deletePerson(int id);
 

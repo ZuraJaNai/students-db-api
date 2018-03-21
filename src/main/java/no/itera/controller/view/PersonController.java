@@ -1,6 +1,7 @@
 package no.itera.controller.view;
 
 import no.itera.model.Person;
+import no.itera.model.PersonInputData;
 import no.itera.services.AttachmentService;
 import no.itera.services.PersonService;
 import no.itera.util.CustomExitEvent;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+@ApiIgnore
 @Controller("PersonControllerView")
 @RequestMapping(value = "/views")
 public class PersonController {
@@ -114,7 +117,7 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/person/edit/{id}", method = RequestMethod.POST)
-    public String editPerson(@PathVariable("id") int id,@ModelAttribute(value = "person") Person person){
+    public String editPerson(@PathVariable("id") int id,@ModelAttribute(value = "person") PersonInputData person){
         personService.updatePerson(id,person);
         return String.format("redirect:/views/person/%d",id);
     }

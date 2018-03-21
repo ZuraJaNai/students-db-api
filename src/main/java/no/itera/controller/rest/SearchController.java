@@ -37,7 +37,7 @@ public class SearchController {
      * @return ResponseEntity containing list of found persons and httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody SearchPerson person,
+    public ResponseEntity<PagedListHolder> findAllPersons(@RequestBody SearchPerson person,
                                                            @RequestParam(value = "page", required = false) Integer pageNum,
                                                            @RequestParam(value = "limit", required = false) Integer limit){
         if(pageNum == null){
@@ -48,6 +48,7 @@ public class SearchController {
         }
         logger.debug("Searching for persons with parameters {}", person);
         List<Person> persons = personService.findAllPersons(person);
+        long totalPersons = persons.size();
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);
         page.setPage(pageNum);
@@ -56,6 +57,6 @@ public class SearchController {
             return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
                     " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(persons, HttpStatus.FOUND);
+        return new ResponseEntity<>(page, HttpStatus.FOUND);
     }
 }
