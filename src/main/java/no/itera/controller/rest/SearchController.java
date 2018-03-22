@@ -1,6 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
+import no.itera.model.PersonResponse;
 import no.itera.model.SearchPerson;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController("SearchControllerRest")
-@RequestMapping("/restapi/search")
+@RequestMapping("/restapi/person")
 public class SearchController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
@@ -36,8 +37,8 @@ public class SearchController {
      * @param person Person object containing fields and values to be searched by
      * @return ResponseEntity containing list of found persons and httpStatus
      */
-    @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<PagedListHolder> findAllPersons(@RequestBody SearchPerson person,
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ResponseEntity<PersonResponse> findAllPersons(@RequestBody SearchPerson person,
                                                            @RequestParam(value = "page", required = false) Integer pageNum,
                                                            @RequestParam(value = "limit", required = false) Integer limit){
         if(pageNum == null){
@@ -48,7 +49,6 @@ public class SearchController {
         }
         logger.debug("Searching for persons with parameters {}", person);
         List<Person> persons = personService.findAllPersons(person);
-        long totalPersons = persons.size();
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);
         page.setPage(pageNum);
@@ -57,6 +57,7 @@ public class SearchController {
             return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
                     " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(page, HttpStatus.FOUND);
+        PersonResponse response = new PersonResponse(page.getPageList(),pageNum,page.getPageCount(),persons.size());
+        return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 }

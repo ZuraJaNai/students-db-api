@@ -4,8 +4,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+
 @ApiModel(value="SearchPerson")
-public class SearchPerson {
+public class SearchPerson implements Serializable {
 
     private String lastName;
 
@@ -21,47 +23,24 @@ public class SearchPerson {
     private String internshipDate;
 
     @ApiModelProperty(allowableValues = "true, false")
-    private boolean isInternship;
+    private boolean internship;
 
     @ApiModelProperty(example = "01.2018")
     private String practiceDate;
 
     @ApiModelProperty(allowableValues = "true, false")
-    private boolean isPractice;
+    private boolean practice;
 
     @ApiModelProperty(example = "01.2018")
     private String jobDate;
 
     @ApiModelProperty(allowableValues = "true, false")
-    private boolean isJob;
+    private boolean job;
 
     private String comment;
 
+    public SearchPerson(){
 
-    public SearchPerson(String lastName, String firstName, String email,
-                        String yearOfStudy, String internshipDate, boolean isInternship,
-                        String practiceDate, boolean isPractice, String jobDate,
-                        boolean isJob, String comment) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.email = email;
-        this.yearOfStudy = yearOfStudy;
-        this.isInternship = isInternship;
-        this.isPractice = isPractice;
-        this.isJob = isJob;
-        this.internshipDate = internshipDate;
-        if(StringUtils.isNoneEmpty(internshipDate)){
-            this.isInternship = true;
-        }
-        this.practiceDate = practiceDate;
-        if(StringUtils.isNoneEmpty(practiceDate)){
-            this.isPractice = true;
-        }
-        this.jobDate = jobDate;
-        if(StringUtils.isNoneEmpty(jobDate)){
-            this.isJob = true;
-        }
-        this.comment = comment;
     }
 
     public String getLastName() {
@@ -101,15 +80,18 @@ public class SearchPerson {
     }
 
     public void setInternshipDate(String internshipDate) {
+        if(StringUtils.isNoneEmpty(internshipDate)){
+            this.internship = true;
+        }
         this.internshipDate = internshipDate;
     }
 
     public boolean isInternship() {
-        return isInternship;
+        return internship;
     }
 
     public void setInternship(boolean internship) {
-        isInternship = internship;
+        this.internship = internship;
     }
 
     public String getPracticeDate() {
@@ -117,15 +99,18 @@ public class SearchPerson {
     }
 
     public void setPracticeDate(String practiceDate) {
+        if(StringUtils.isNoneEmpty(practiceDate)){
+            this.practice = true;
+        }
         this.practiceDate = practiceDate;
     }
 
     public boolean isPractice() {
-        return isPractice;
+        return practice;
     }
 
     public void setPractice(boolean practice) {
-        isPractice = practice;
+        this.practice = practice;
     }
 
     public String getJobDate() {
@@ -133,15 +118,18 @@ public class SearchPerson {
     }
 
     public void setJobDate(String jobDate) {
+        if(StringUtils.isNoneEmpty(jobDate)){
+            this.job = true;
+        }
         this.jobDate = jobDate;
     }
 
     public boolean isJob() {
-        return isJob;
+        return job;
     }
 
     public void setJob(boolean job) {
-        isJob = job;
+        this.job = job;
     }
 
     public String getComment() {

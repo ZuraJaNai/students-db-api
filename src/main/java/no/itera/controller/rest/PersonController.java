@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import no.itera.model.Person;
 import no.itera.model.PersonInputData;
+import no.itera.model.PersonResponse;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
 
@@ -45,7 +46,7 @@ public class PersonController {
      *  @return ResponseEntity containing list of persons and httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Person>> listAllPersonsPageable(
+    public ResponseEntity<PersonResponse> listAllPersonsPageable(
             @RequestParam(value = "page", required = false) Integer pageNum,
             @RequestParam(value = "limit", required = false) Integer limit){
         if(pageNum == null){
@@ -61,7 +62,8 @@ public class PersonController {
             return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
                     " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(page.getContent(), HttpStatus.OK);
+        PersonResponse response = new PersonResponse(page.getContent(),pageNum,page.getTotalPages(),personService.count());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**

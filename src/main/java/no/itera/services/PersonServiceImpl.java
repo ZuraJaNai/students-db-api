@@ -11,9 +11,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static java.lang.Math.toIntExact;
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -21,6 +30,10 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDao personDao;
 
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("MM.yyyy")
+            .parseDefaulting(DAY_OF_MONTH, 1)
+            .toFormatter();
 
     @Override
     public Iterable<Person> getAll() {
@@ -75,22 +88,22 @@ public class PersonServiceImpl implements PersonService {
             tempPerson.setYearOfStudy(person.getYearOfStudy());
         }
         if(person.getInternshipBegin() != null){
-            tempPerson.setInternshipBegin(person.getInternshipBegin().toString());
+            tempPerson.setInternshipBegin(person.getInternshipBegin());
         }
         if(person.getInternshipEnd() != null){
-            tempPerson.setInternshipEnd(person.getInternshipEnd().toString());
+            tempPerson.setInternshipEnd(person.getInternshipEnd());
         }
         if(person.getPracticeBegin() != null){
-            tempPerson.setPracticeBegin(person.getPracticeBegin().toString());
+            tempPerson.setPracticeBegin(person.getPracticeBegin());
         }
         if(person.getPracticeEnd() != null){
-            tempPerson.setPracticeEnd(person.getPracticeEnd().toString());
+            tempPerson.setPracticeEnd(person.getPracticeEnd());
         }
         if(person.getJobBegin() != null){
-            tempPerson.setJobBegin(person.getJobBegin().toString());
+            tempPerson.setJobBegin(person.getJobBegin());
         }
         if(person.getJobEnd() != null){
-            tempPerson.setJobEnd(person.getJobEnd().toString());
+            tempPerson.setJobEnd(person.getJobEnd());
         }
         tempPerson.setComment(person.getComment());
         personDao.save(tempPerson);
@@ -110,51 +123,58 @@ public class PersonServiceImpl implements PersonService {
 
 
     public List<Person> findAllPersons(SearchPerson filter) {
-//
-//        List<Person> persons = personDao.findAll((root, query, cb) -> {
-//
-//            List<Predicate> predicates = new ArrayList<>();
-//
-//            if (StringUtils.isNoneEmpty(filter.getLastName())) {
-//                predicates.add(cb.like(cb.lower(root.get("lastName")),
-//                        filter.getLastName().toLowerCase() + "%"));
-//            }
-//
-//            if (StringUtils.isNoneEmpty(filter.getFirstName())) {
-//                predicates.add(cb.like(cb.lower(root.get("firstName")),
-//                         "%" +filter.getFirstName().toLowerCase() + "%"));
-//            }
-//
-//            if (StringUtils.isNoneEmpty(filter.getPatronymic())) {
-//                predicates.add(cb.like(cb.lower(root.get("patronymic")),
-//                        "%" + filter.getPatronymic().toLowerCase() + "%"));
-//            }
-//
-//            if (StringUtils.isNoneEmpty(filter.getEmail())) {
-//                predicates.add(cb.like(cb.lower(root.get("email")),
-//                        "%" + filter.getEmail().toLowerCase() + "%"));
-//            }
-//
-//            if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
-//                predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
-//                        "%" + filter.getYearOfStudy().toLowerCase() + "%"));
-//            }
-//
-//            if(filter.getInternshipBegin() != null){
-//                if(!predicates.add(cb.and(cb.isNull(root.get("internshipEnd")),
-//                        cb.ge(filter.getInternshipBegin(), (root.get("intenrshipBegin")))));
-//            }
-//
-//
-//            return cb.and(predicates.toArray(new Predicate[0]));
-//        });
-//        return persons;
-        return new ArrayList<>();
+
+        List<Person> persons = personDao.findAll((root, query, cb) -> {
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.isNoneEmpty(filter.getLastName())) {
+                predicates.add(cb.like(cb.lower(root.get("lastName")),
+                        filter.getLastName().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getFirstName())) {
+                predicates.add(cb.like(cb.lower(root.get("firstName")),
+                         "%" +filter.getFirstName().toLowerCase() + "%"));
+            }
+
+
+            if (StringUtils.isNoneEmpty(filter.getEmail())) {
+                predicates.add(cb.like(cb.lower(root.get("email")),
+                        "%" + filter.getEmail().toLowerCase() + "%"));
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
+                predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
+                        "%" + filter.getYearOfStudy().toLowerCase() + "%"));
+            }
+
+            if(filter.isInternship()){
+               if((StringUtils.isNoneEmpty(filter.getInternshipDate()))){
+                   Date internshipDate = Date.from(LocalDate.parse(filter.getInternshipDate(),formatter)
+                           .atStartOfDay(ZoneId.systemDefault()).toInstant());
+                   ParameterExpression<Date> criteria = cb.parameter(Date.class,internshipDate.toString());
+                   if(cb.isNotNull(root.get("internshipEnd")).isNegated()){
+                       predicates.add(cb.greaterThanOrEqualTo(criteria,root.<Date>get("internshipBegin")));
+                   }
+                   else {
+                       predicates.add(cb.between(criteria, root.<Date>get("internshipBegin"),root.<Date>get("internshipEnd")));
+                   }
+                }
+                else{
+                    predicates.add(cb.isNotNull(root.get("internshipBegin")));
+                }
+            }
+
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        });
+        return persons;
     }
 
 
-    public long count(){
-        return personDao.count();
+    public int count(){
+        return toIntExact(personDao.count());
     }
 
 }

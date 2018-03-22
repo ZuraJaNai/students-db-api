@@ -3,8 +3,21 @@ package no.itera.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Date;
+
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+
 @ApiModel(value="PersonInputData")
 public class PersonInputData {
+
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("MM.yyyy")
+            .parseDefaulting(DAY_OF_MONTH, 1)
+            .toFormatter();
 
     private String lastName;
 
@@ -19,22 +32,22 @@ public class PersonInputData {
     private String yearOfStudy;
 
     @ApiModelProperty(example = "01.2018")
-    private String internshipBegin;
+    private Date internshipBegin;
 
     @ApiModelProperty(example = "02.2018")
-    private String internshipEnd;
+    private Date internshipEnd;
 
     @ApiModelProperty(example = "01.2018")
-    private String practiceBegin;
+    private Date practiceBegin;
 
     @ApiModelProperty(example = "02.2018")
-    private String practiceEnd;
+    private Date practiceEnd;
 
     @ApiModelProperty(example = "01.2018")
-    private String jobBegin;
+    private Date jobBegin;
 
     @ApiModelProperty(example = "02.2018")
-    private String jobEnd;
+    private Date jobEnd;
 
     private String comment;
 
@@ -43,9 +56,9 @@ public class PersonInputData {
     }
 
     public PersonInputData(String lastName, String firstName, String patronymic,
-                           String email, String yearOfStudy, String internshipBegin,
-                           String internshipEnd, String practiceBegin,
-                           String practiceEnd, String jobBegin, String jobEnd,
+                           String email, String yearOfStudy, Date internshipBegin,
+                           Date internshipEnd, Date practiceBegin,
+                           Date practiceEnd, Date jobBegin, Date jobEnd,
                            String comment){
         this.lastName = lastName;
         this.firstName = firstName;
@@ -102,52 +115,58 @@ public class PersonInputData {
         this.yearOfStudy = yearOfStudy;
     }
 
-    public String getInternshipBegin() {
+    public Date getInternshipBegin() {
         return internshipBegin;
     }
 
     public void setInternshipBegin(String internshipBegin) {
-        this.internshipBegin = internshipBegin;
+        this.internshipBegin = Date.from(LocalDate.parse(internshipBegin,formatter)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public String getInternshipEnd() {
+    public Date getInternshipEnd() {
         return internshipEnd;
     }
 
     public void setInternshipEnd(String internshipEnd) {
-        this.internshipEnd = internshipEnd;
+        this.internshipEnd = Date.from(LocalDate.parse(internshipEnd,formatter)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public String getPracticeBegin() {
+    public Date getPracticeBegin() {
         return practiceBegin;
     }
 
     public void setPracticeBegin(String practiceBegin) {
-        this.practiceBegin = practiceBegin;
+        this.practiceBegin = Date.from(LocalDate.parse(practiceBegin,formatter)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public String getPracticeEnd() {
+    public Date getPracticeEnd() {
         return practiceEnd;
     }
 
     public void setPracticeEnd(String practiceEnd) {
-        this.practiceEnd = practiceEnd;
+        this.practiceEnd = Date.from(LocalDate.parse(practiceEnd,formatter)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public String getJobBegin() {
+    public Date getJobBegin() {
         return jobBegin;
     }
 
     public void setJobBegin(String jobBegin) {
-        this.jobBegin = jobBegin;
+        this.jobBegin = Date.from(LocalDate.parse(jobBegin,formatter)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public String getJobEnd() {
+    public Date getJobEnd() {
         return jobEnd;
     }
 
     public void setJobEnd(String jobEnd) {
-        this.jobEnd = jobEnd;
+        this.jobEnd = Date.from(LocalDate.parse(jobEnd,formatter)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public String getComment() {

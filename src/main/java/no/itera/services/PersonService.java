@@ -31,4 +31,6 @@ public interface PersonService {
     void updateAttachments(int id, Attachment attachment);
 
     void deleteAll();
+
+    int count();
 }
