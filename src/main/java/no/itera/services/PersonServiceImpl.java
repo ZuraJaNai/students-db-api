@@ -11,9 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -39,7 +41,7 @@ public class PersonServiceImpl implements PersonService {
             .appendPattern(date_format_string)
             .parseDefaulting(DAY_OF_MONTH, 15)
             .toFormatter();
-    SimpleDateFormat format = new SimpleDateFormat(date_format_string);
+    DateFormat format = new SimpleDateFormat(date_format_string);
 
     @Override
     public Iterable<Person> getAll() {
@@ -128,6 +130,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
+    @Override
     public List<Person> findAllPersons(SearchPerson filter) {
 
         List<Person> persons = personDao.findAll((root, query, cb) -> {
@@ -159,12 +162,12 @@ public class PersonServiceImpl implements PersonService {
                if(filter.getInternshipDate() != null){
 //                   Date internshipDate = Date.from(LocalDate.parse(filter.getInternshipDate(),formatter)
 //                           .atStartOfDay(ZoneId.systemDefault()).toInstant());
-                   ParameterExpression<Timestamp> criteria = cb.parameter(Timestamp.class,format.format(filter.getInternshipDate()));
+                   //ParameterExpression<Date> criteria = cb.parameter(Date.class,format.format(filter.getInternshipDate()));
                    if(cb.isNotNull(root.get("internshipEnd")).isNegated()){
-                       predicates.add(cb.greaterThanOrEqualTo(criteria,root.<Timestamp>get("internshipBegin")));
+                       predicates.add( cb.greaterThanOrEqualTo((Expression)filter.getInternshipDate(),root.get("internshipBegin")));
                    }
                    else {
-                       predicates.add(cb.between(criteria,root.<Date>get("internshipBegin"),root.<Date>get("internshipEnd")));
+                       //predicates.add(cb.between(criteria,root.get("internshipBegin"),root.get("internshipEnd")));
                    }
                 }
                 else{
@@ -178,9 +181,23 @@ public class PersonServiceImpl implements PersonService {
         return persons;
     }
 
-
+    @Override
     public int count(){
         return toIntExact(personDao.count());
+    }
+
+    @Override
+    public void addPhoto(int personId, byte[] bytes) {
+        Person person = getById(personId);
+        person.setPhoto(bytes);
+        personDao.save(person);
+    }
+
+    @Override
+    public void deletePhoto(int personId) {
+        Person person = getById(personId);
+        person.setPhoto(null);
+        personDao.save(person);
     }
 
 }

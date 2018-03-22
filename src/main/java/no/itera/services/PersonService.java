@@ -33,4 +33,8 @@ public interface PersonService {
     void deleteAll();
 
     int count();
+
+    void addPhoto(int personId, byte[] bytes);
+
+    void deletePhoto(int personId);
 }

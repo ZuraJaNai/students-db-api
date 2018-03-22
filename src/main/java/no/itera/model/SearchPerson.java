@@ -1,11 +1,11 @@
 package no.itera.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +13,7 @@ import java.util.Date;
 @ApiModel(value="SearchPerson")
 public class SearchPerson implements Serializable {
 
-    SimpleDateFormat format = new SimpleDateFormat("MM.yyyy");
+    DateFormat format = new SimpleDateFormat("MM.yyyy");
 
     private String lastName;
 
