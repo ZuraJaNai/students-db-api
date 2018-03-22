@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -30,10 +33,13 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDao personDao;
 
+    private String date_format_string = "MM.yyyy";
+
     DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .appendPattern("MM.yyyy")
-            .parseDefaulting(DAY_OF_MONTH, 1)
+            .appendPattern(date_format_string)
+            .parseDefaulting(DAY_OF_MONTH, 15)
             .toFormatter();
+    SimpleDateFormat format = new SimpleDateFormat(date_format_string);
 
     @Override
     public Iterable<Person> getAll() {
@@ -150,15 +156,15 @@ public class PersonServiceImpl implements PersonService {
             }
 
             if(filter.isInternship()){
-               if((StringUtils.isNoneEmpty(filter.getInternshipDate()))){
-                   Date internshipDate = Date.from(LocalDate.parse(filter.getInternshipDate(),formatter)
-                           .atStartOfDay(ZoneId.systemDefault()).toInstant());
-                   ParameterExpression<Date> criteria = cb.parameter(Date.class,internshipDate.toString());
+               if(filter.getInternshipDate() != null){
+//                   Date internshipDate = Date.from(LocalDate.parse(filter.getInternshipDate(),formatter)
+//                           .atStartOfDay(ZoneId.systemDefault()).toInstant());
+                   ParameterExpression<Timestamp> criteria = cb.parameter(Timestamp.class,format.format(filter.getInternshipDate()));
                    if(cb.isNotNull(root.get("internshipEnd")).isNegated()){
-                       predicates.add(cb.greaterThanOrEqualTo(criteria,root.<Date>get("internshipBegin")));
+                       predicates.add(cb.greaterThanOrEqualTo(criteria,root.<Timestamp>get("internshipBegin")));
                    }
                    else {
-                       predicates.add(cb.between(criteria, root.<Date>get("internshipBegin"),root.<Date>get("internshipEnd")));
+                       predicates.add(cb.between(criteria,root.<Date>get("internshipBegin"),root.<Date>get("internshipEnd")));
                    }
                 }
                 else{

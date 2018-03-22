@@ -16,7 +16,7 @@ public class PersonInputData {
 
     DateTimeFormatter formatter = new DateTimeFormatterBuilder()
             .appendPattern("MM.yyyy")
-            .parseDefaulting(DAY_OF_MONTH, 1)
+            .parseDefaulting(DAY_OF_MONTH, 15)
             .toFormatter();
 
     private String lastName;
