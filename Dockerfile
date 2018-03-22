@@ -1,6 +1,6 @@
 FROM java:8-jre
 EXPOSE 8080
-ADD /target/students-db-api-*.jar /var/lib/students-db-api.jar
+ADD /target/students-db-1.0-SNAPSHOT.jar /var/lib/students-db-api.jar
 
 ENV ENV_CODE=dev
 
