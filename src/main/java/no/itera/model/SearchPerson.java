@@ -1,13 +1,19 @@
 package no.itera.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @ApiModel(value="SearchPerson")
 public class SearchPerson implements Serializable {
+
+    SimpleDateFormat format = new SimpleDateFormat("MM.yyyy");
 
     private String lastName;
 
@@ -20,19 +26,19 @@ public class SearchPerson implements Serializable {
     private String yearOfStudy;
 
     @ApiModelProperty(example = "01.2018")
-    private String internshipDate;
+    private Date internshipDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean internship;
 
     @ApiModelProperty(example = "01.2018")
-    private String practiceDate;
+    private Date practiceDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean practice;
 
     @ApiModelProperty(example = "01.2018")
-    private String jobDate;
+    private Date jobDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean job;
@@ -75,7 +81,7 @@ public class SearchPerson implements Serializable {
         this.yearOfStudy = yearOfStudy;
     }
 
-    public String getInternshipDate() {
+    public Date getInternshipDate() {
         return internshipDate;
     }
 
@@ -83,7 +89,11 @@ public class SearchPerson implements Serializable {
         if(StringUtils.isNoneEmpty(internshipDate)){
             this.internship = true;
         }
-        this.internshipDate = internshipDate;
+        try {
+            this.internshipDate = format.parse(internshipDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isInternship() {
@@ -94,7 +104,7 @@ public class SearchPerson implements Serializable {
         this.internship = internship;
     }
 
-    public String getPracticeDate() {
+    public Date getPracticeDate() {
         return practiceDate;
     }
 
@@ -102,7 +112,11 @@ public class SearchPerson implements Serializable {
         if(StringUtils.isNoneEmpty(practiceDate)){
             this.practice = true;
         }
-        this.practiceDate = practiceDate;
+        try {
+            this.practiceDate =  format.parse(practiceDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isPractice() {
@@ -113,7 +127,7 @@ public class SearchPerson implements Serializable {
         this.practice = practice;
     }
 
-    public String getJobDate() {
+    public Date getJobDate() {
         return jobDate;
     }
 
@@ -121,7 +135,11 @@ public class SearchPerson implements Serializable {
         if(StringUtils.isNoneEmpty(jobDate)){
             this.job = true;
         }
-        this.jobDate = jobDate;
+        try {
+            this.jobDate =  format.parse(jobDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isJob() {

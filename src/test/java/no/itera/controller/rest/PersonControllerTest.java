@@ -44,10 +44,7 @@ public class PersonControllerTest {
 
     @Test
     public void checkGetExistingPeronById() throws Exception {
-        String expected = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
-                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":\"default\"}";
+        String expected = "{\"id\":1,\"photo\":null,\"lastName\":\"default\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":\"01.1970\",\"internshipEnd\":\"01.1970\",\"practiceBegin\":\"01.1970\",\"practiceEnd\":\"01.1970\",\"jobBegin\":\"01.1970\",\"jobEnd\":\"01.1970\",\"comment\":\"default\",\"attachments\":null}";
         Person person = new Person(1);
         when(personService.getById(1)).thenReturn(person);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
@@ -66,33 +63,31 @@ public class PersonControllerTest {
 
     @Test
     public void checkPersonCreation() throws Exception{
-        String contentJson =  "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
-                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":\"default\"}";
+        String contentJson =  "{\n" +
+                "  \"comment\": \"string\",\n" +
+                "  \"email\": \"user@mail.com\",\n" +
+                "  \"firstName\": \"string\",\n" +
+                "  \"internshipBegin\": \"01.2018\",\n" +
+                "  \"internshipEnd\": \"02.2018\",\n" +
+                "  \"jobBegin\": \"01.2018\",\n" +
+                "  \"jobEnd\": \"02.2018\",\n" +
+                "  \"lastName\": \"string\",\n" +
+                "  \"patronymic\": \"string\",\n" +
+                "  \"practiceBegin\": \"01.2018\",\n" +
+                "  \"practiceEnd\": \"02.2018\",\n" +
+                "  \"yearOfStudy\": \"2017\"\n" +
+                "}";
         Person person = new Person(1);
-        Mockito.when(personService.addPerson(person)).thenReturn(true);
+        Mockito.when(personService.addPerson(any(Person.class))).thenReturn(true);
         Mockito.when(personService.isPersonExists(person)).thenReturn(false);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/person").accept(MediaType.APPLICATION_JSON)
                 .content(contentJson).contentType(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isCreated()).andReturn();
-        Assert.assertEquals("http://localhost/restapi/person/1",
+        Assert.assertEquals("http://localhost/restapi/person/0",
                 result.getResponse().getHeader(HttpHeaders.LOCATION));
     }
 
-    @Test
-    public void checkPersonCreationIfPersonExists() throws Exception{
-        String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
-                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":\"default\"}";
-        Mockito.when(personService.isPersonExists(any(Person.class))).thenReturn(true);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
-                "/restapi/person").accept(MediaType.APPLICATION_JSON)
-                .content(contentJson).contentType(MediaType.APPLICATION_JSON);
-        mockMvc.perform(requestBuilder).andExpect(status().isConflict());
-    }
 
     @Test
     public void checkPersonDeletion() throws Exception {
@@ -119,10 +114,7 @@ public class PersonControllerTest {
 
     @Test
     public void checkUpdatingPersonIfExists() throws Exception{
-        String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":" +
-                "\"default\",\"patronymic\":\"default\",\"email\":\"default" +
-                "\",\"yearOfStudy\":\"default\",\"internship\":\"default\",\"practice\":" +
-                "\"default\",\"comment\":\"default\"}";
+        String contentJson = "{\"id\":1,\"photo\":null,\"lastName\":\"default\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":\"01.1970\",\"internshipEnd\":\"01.1970\",\"practiceBegin\":\"01.1970\",\"practiceEnd\":\"01.1970\",\"jobBegin\":\"01.1970\",\"jobEnd\":\"01.1970\",\"comment\":\"default\",\"attachments\":null}";
         Person person = new Person(1);
         Mockito.when(personService.getById(1)).thenReturn(person);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put(

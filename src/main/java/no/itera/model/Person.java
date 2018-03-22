@@ -1,6 +1,8 @@
 package no.itera.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -56,26 +58,38 @@ public class Person {
 
     @Column(name = "INTERNSHIP_BEGIN")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
     private Date internshipBegin;
 
     @Column(name = "INTERNSHIP_END")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
     private Date internshipEnd;
 
     @Column(name = "PRACTICE_BEGIN")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
     private Date practiceBegin;
 
     @Column(name = "PRACTICE_END")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
     private Date practiceEnd;
 
     @Column(name = "JOB_BEGIN")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
     private Date jobBegin;
 
     @Column(name = "JOB_END")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat
+            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
     private Date jobEnd;
 
     @Column(name = "COMMENT")
