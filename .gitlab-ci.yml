@@ -1,0 +1,16 @@
+build:
+    stage: build
+    script: mvn clean compile
+    
+test:
+    stage: test
+    script: mvn clean test
+
+deploy2docker:
+    stage: deploy
+    script:
+        - mvn clean deploy -Dmaven.test.skip
+        - docker build -f Dockerfile -t students-db -t docker-repository.intra.itera.no:5000/students-db/students-db-api .
+        - docker push docker-repository.intra.itera.no:5000/students-db/students-db-api
+    only:
+        - develop
