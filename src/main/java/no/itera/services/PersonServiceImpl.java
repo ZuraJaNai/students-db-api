@@ -11,18 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
-import java.sql.Timestamp;
+import javax.persistence.criteria.*;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -133,7 +128,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<Person> findAllPersons(SearchPerson filter) {
 
-        List<Person> persons = personDao.findAll((root, query, cb) -> {
+        List<Person> persons = personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
@@ -144,7 +139,7 @@ public class PersonServiceImpl implements PersonService {
 
             if (StringUtils.isNoneEmpty(filter.getFirstName())) {
                 predicates.add(cb.like(cb.lower(root.get("firstName")),
-                         "%" +filter.getFirstName().toLowerCase() + "%"));
+                        "%" + filter.getFirstName().toLowerCase() + "%"));
             }
 
 
@@ -158,23 +153,18 @@ public class PersonServiceImpl implements PersonService {
                         "%" + filter.getYearOfStudy().toLowerCase() + "%"));
             }
 
-            if(filter.isInternship()){
-               if(filter.getInternshipDate() != null){
-//                   Date internshipDate = Date.from(LocalDate.parse(filter.getInternshipDate(),formatter)
-//                           .atStartOfDay(ZoneId.systemDefault()).toInstant());
-                   //ParameterExpression<Date> criteria = cb.parameter(Date.class,format.format(filter.getInternshipDate()));
-                   if(cb.isNotNull(root.get("internshipEnd")).isNegated()){
-                       predicates.add( cb.greaterThanOrEqualTo((Expression)filter.getInternshipDate(),root.get("internshipBegin")));
-                   }
-                   else {
-                       //predicates.add(cb.between(criteria,root.get("internshipBegin"),root.get("internshipEnd")));
-                   }
-                }
-                else{
+            if (filter.isInternship()) {
+                if (filter.getInternshipDate() != null) {
+                    predicates.add(
+                            cb.and(
+                                    cb.isNotNull(root.get("internshipEnd")),
+                            cb.and(
+                                    cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate()),
+                                    cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate()))));
+                } else {
                     predicates.add(cb.isNotNull(root.get("internshipBegin")));
                 }
             }
-
 
             return cb.and(predicates.toArray(new Predicate[0]));
         });
