@@ -2,7 +2,14 @@ package no.itera.model;
 
 import javax.persistence.*;
 import org.apache.commons.lang3.StringUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Date;
 import java.util.List;
+
+import static java.time.temporal.ChronoField.DAY_OF_YEAR;
 
 @org.hibernate.annotations.GenericGenerator(
         name = "ID_GENERATOR",
@@ -28,6 +35,10 @@ public class Person {
     @Column(name = "PERSON_ID",updatable = false, nullable = false)
     private int id;
 
+    @Column(name = "PHOTO")
+    @Lob
+    private byte[] photo;
+
     @Column(nullable = false,name = "LASTNAME")
     private String lastName;
 
@@ -43,11 +54,29 @@ public class Person {
     @Column(nullable = false,name = "YEAR")
     private String yearOfStudy;
 
-    @Column(name = "INTERNSHIP")
-    private String internship;
+    @Column(name = "INTERNSHIP_BEGIN")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date internshipBegin;
 
-    @Column(name = "PRACTICE")
-    private String practice;
+    @Column(name = "INTERNSHIP_END")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date internshipEnd;
+
+    @Column(name = "PRACTICE_BEGIN")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date practiceBegin;
+
+    @Column(name = "PRACTICE_END")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date practiceEnd;
+
+    @Column(name = "JOB_BEGIN")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date jobBegin;
+
+    @Column(name = "JOB_END")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date jobEnd;
 
     @Column(name = "COMMENT")
     private String comment;
@@ -56,16 +85,35 @@ public class Person {
     @JoinColumn(name = "ATTACHMENTS", referencedColumnName = "PERSON_ID")
     private List<Attachment> attachments;
 
+    public Person(PersonInputData inputData){
+        this.lastName = inputData.getLastName();
+        this.firstName = inputData.getFirstName();
+        this.patronymic = inputData.getPatronymic();
+        this.email = inputData.getEmail();
+        this.yearOfStudy = inputData.getYearOfStudy();
+        this.internshipBegin = inputData.getInternshipBegin();
+        this.internshipEnd = inputData.getInternshipEnd();
+        this.practiceBegin = inputData.getPracticeBegin();
+        this.practiceEnd = inputData.getPracticeEnd();
+        this.jobBegin = inputData.getJobBegin();
+        this.jobEnd = inputData.getJobEnd();
+        this.comment = inputData.getComment();
+    }
     public Person(String lastName, String firstName, String patronymic,
-                  String email, String yearOfStudy, String internship, String practice,
-                  String comment){
+                  String email, String yearOfStudy, Date internshipBegin,
+                  Date internshipEnd, Date practiceBegin, Date practiceEnd,
+                  Date jobBegin, Date jobEnd, String comment){
         this.lastName = lastName;
         this.firstName = firstName;
         this.patronymic = patronymic;
         this.email = email;
         this.yearOfStudy = yearOfStudy;
-        this.internship = internship;
-        this.practice = practice;
+        this.internshipBegin = internshipBegin;
+        this.internshipEnd = internshipEnd;
+        this.practiceBegin = practiceBegin;
+        this.practiceEnd = practiceEnd;
+        this.jobBegin = jobBegin;
+        this.jobEnd = jobEnd;
         this.comment = comment;
     }
 
@@ -77,13 +125,21 @@ public class Person {
         this.patronymic = byDefalt;
         this.email = byDefalt;
         this.yearOfStudy = byDefalt;
-        this.internship = byDefalt;
-        this.practice = byDefalt;
+        this.internshipBegin = new Date(10);
+        this.internshipEnd = new Date(11);
+        this.practiceBegin = new Date(10);
+        this.practiceEnd = new Date(11);
+        this.jobBegin = new Date(10);
+        this.jobEnd = new Date(11);
         this.comment = byDefalt;
     }
 
     public Person() {
 
+    }
+
+    public String fullName(){
+        return this.lastName + " " + this.firstName + " " + this.patronymic;
     }
 
     public int getId() {
@@ -131,28 +187,33 @@ public class Person {
         this.yearOfStudy = yearOfStudy;
     }
 
-    public String getInternship() {
-        return internship;
-    }
-
-    public void setInternship(String internship) {
-        this.internship = internship;
-    }
-
-    public String getPractice() {
-        return practice;
-    }
-
-    public void setPractice(String practice) {
-        this.practice = practice;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     @Override
@@ -174,24 +235,72 @@ public class Person {
         if(StringUtils.isNoneEmpty(yearOfStudy)){
             info.append(String.format("Year of study: %s%n",yearOfStudy));
         }
-        if(StringUtils.isNoneEmpty(internship)){
-            info.append(String.format("Internship: %s%n",internship));
+        if(internshipBegin != null){
+            info.append(String.format("Internship begin: %s%n",internshipBegin.toString()));
         }
-        if(StringUtils.isNoneEmpty(practice)){
-            info.append(String.format("Practice: %s%n",practice));
+        if(internshipEnd != null){
+            info.append(String.format("Internship end: %s%n",internshipEnd.toString()));
+        }
+        if(practiceBegin != null){
+            info.append(String.format("Practice begin: %s%n",practiceBegin.toString()));
+        }
+        if(practiceEnd != null){
+            info.append(String.format("Practice end: %s%n",practiceEnd.toString()));
+        }
+        if(jobBegin != null){
+            info.append(String.format("Job begin: %s%n",jobBegin.toString()));
+        }
+        if(jobEnd != null){
+            info.append(String.format("Job end: %s%n",jobEnd.toString()));
         }
         return info.toString();
     }
 
-    public void addAttachment(Attachment attachment) {
-        this.attachments.add(attachment);
+    public Date getInternshipBegin() {
+        return internshipBegin;
     }
 
-    public List<Attachment> getAttachments() {
-        return attachments;
+    public void setInternshipBegin(Date internshipBegin) {
+        this.internshipBegin = internshipBegin;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
+    public Date getInternshipEnd() {
+        return internshipEnd;
+    }
+
+    public void setInternshipEnd(Date internshipEnd) {
+        this.internshipEnd = internshipEnd;
+    }
+
+    public Date getPracticeBegin() {
+        return practiceBegin;
+    }
+
+    public void setPracticeBegin(Date practiceBegin) {
+        this.practiceBegin = practiceBegin;
+    }
+
+    public Date getPracticeEnd() {
+        return practiceEnd;
+    }
+
+    public void setPracticeEnd(Date practiceEnd) {
+        this.practiceEnd = practiceEnd;
+    }
+
+    public Date getJobBegin() {
+        return jobBegin;
+    }
+
+    public void setJobBegin(Date jobBegin) {
+        this.jobBegin = jobBegin;
+    }
+
+    public Date getJobEnd() {
+        return jobEnd;
+    }
+
+    public void setJobEnd(Date jobEnd) {
+        this.jobEnd = jobEnd;
     }
 }

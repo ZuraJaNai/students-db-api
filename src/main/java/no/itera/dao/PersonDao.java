@@ -15,4 +15,5 @@ public interface PersonDao extends CrudRepository<Person,Integer>{
     List<Person> findAll(Specification<Person> personSpecification);
 
     Page findAll(Pageable pageable);
+
 }

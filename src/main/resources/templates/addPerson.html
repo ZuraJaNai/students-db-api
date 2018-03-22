@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Person</title>
+</head>
+<body>
+<form th:object="${newPerson}" th:action="@{/views/person/add}" method="post">
+    <p>Last name  <input type="text" th:field="*{lastName}"/></p>
+    <p>First name  <input type="text" th:field="*{firstName}"/></p>
+    <p>Patronymic  <input type="text" th:field="*{patronymic}"/></p>
+    <p>Email  <input type="text" th:field="*{email}"/></p>
+    <p>Year of study   <input type="text" th:field="*{yearOfStudy}"/></p>
+    <p>Internship  <input type="text" th:field="*{internship}"/></p>
+    <p>Practice  <input type="text" th:field="*{practice}"/></p>
+    <p>Comment  <textarea type="text" th:field="*{comment}"/></p>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

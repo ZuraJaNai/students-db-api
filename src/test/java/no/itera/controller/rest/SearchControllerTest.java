@@ -1,6 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
+import no.itera.model.SearchPerson;
 import no.itera.services.PersonServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ public class SearchControllerTest {
                 "\"default\",\"comment\":\"default\"}]";
         Person person = new Person(1);
         person.setLastName("lastName");
-        Mockito.when(personService.findAllPersons(any(Person.class))).thenReturn(Arrays.asList(person));
+        Mockito.when(personService.findAllPersons(any(SearchPerson.class))).thenReturn(Arrays.asList(person));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/search/person").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);
@@ -53,7 +54,7 @@ public class SearchControllerTest {
 
     @Test
     public void checkPersonSearchByLastNameIfNotExists() throws Exception {
-        Mockito.when(personService.findAllPersons(any(Person.class))).thenReturn(Arrays.asList());
+        Mockito.when(personService.findAllPersons(any(SearchPerson.class))).thenReturn(Arrays.asList());
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/search/person").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);

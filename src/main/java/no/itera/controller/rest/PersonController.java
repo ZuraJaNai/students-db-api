@@ -1,6 +1,10 @@
 package no.itera.controller.rest;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import no.itera.model.Person;
+import no.itera.model.PersonInputData;
+import no.itera.model.PersonResponse;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
 
@@ -42,7 +46,7 @@ public class PersonController {
      *  @return ResponseEntity containing list of persons and httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Person>> listAllPersonsPageable(
+    public ResponseEntity<PersonResponse> listAllPersonsPageable(
             @RequestParam(value = "page", required = false) Integer pageNum,
             @RequestParam(value = "limit", required = false) Integer limit){
         if(pageNum == null){
@@ -58,7 +62,8 @@ public class PersonController {
             return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
                     " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(page.getContent(), HttpStatus.OK);
+        PersonResponse response = new PersonResponse(page.getContent(),pageNum,page.getTotalPages(),personService.count());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -80,21 +85,17 @@ public class PersonController {
 
     /**
      * Method for person creation
-     * @param person the person to be created
+     * @param personInputData the person to be created
      * @param ucBuilder object for creating URI
      * @return ResposneEntity containing header with URL to created person and
      * httpStatus
      */
+
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<String> createPerson(@RequestBody Person person,
+    public ResponseEntity<String> createPerson(@RequestBody PersonInputData personInputData,
                                           UriComponentsBuilder ucBuilder){
-        logger.info("Creating person: {}", person);
-        if(personService.isPersonExists(person)){
-            logger.error("Unable to create. Person with id {} already exists",
-                    person.getId());
-            return new ResponseEntity(new CustomErrorType("Unable to create. Person with id "
-                    + person.getId() + " already exists"), HttpStatus.CONFLICT);
-        }
+        logger.info("Creating person: {}", personInputData);
+        Person person = new Person(personInputData);
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}").buildAndExpand(person.getId()).toUri());
@@ -108,7 +109,8 @@ public class PersonController {
      * @return Person with new data and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Person> updatePerson(@PathVariable("id") int id, @RequestBody Person person) {
+    public ResponseEntity<Person> updatePerson(@PathVariable("id") int id,
+                                               @RequestBody PersonInputData person) {
         logger.info("Updating person with id {}", id);
         Person currentPerson = personService.getById(id);
         if (currentPerson == null) {

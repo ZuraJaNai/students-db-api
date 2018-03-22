@@ -2,22 +2,132 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Homepage</title>
+    <!--<link rel="stylesheet" type="text/css" href="homepage.css"/>-->
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+        }
+
+        div.header, div.footer {
+            float:top;
+             border: 3px solid #73AD21;
+             height: 30px;
+        }
+
+        .header button {
+        display : inline;
+        }
+        div.search {
+            float: left;
+            border: 3px solid #73AD21;
+            padding-right: 30px;
+            padding-left: 30px;
+            width: 300px;
+            height: 650px;
+        }
+
+        div.persons {
+            border: 3px solid #73AD21;
+            height: 650px;
+        }
+
+    </style>
 </head>
 <body>
-<table>
-    <tr>
-        <td>Name</td>
-        <td>Age</td>
-    </tr>
-    <tr th:each="person : ${persons}">
-        <td th:text="${person.firstName}">Name</td>
-        <td th:text="${person.age}">Person age</td>
-        <td><a th:href="${'/views/person/' + person.id}">View info</a></td>
-        <td><a th:href="${'/views/person/delete/' + person.id}">Delete</a></td>
-    </tr>
-    <tr>
-        <td><a th:href="${'/views/person/new/'}">Add</a></td>
-    </tr>
-</table>
+<div class="header">
+    <form th:action="@{'/views/person'}" th:method="get">
+        <button type="submit">MAIN PAGE</button>
+    </form>
+    <form  th:action="@{'/views/person/add'}" th:method="get">
+        <button type="submit">ADD NEW</button>
+    </form>
+    <form  style="float:right;" th:action="@{'/views/exit'}" th:method="post">
+        <button type="submit">CLOSE</button>
+    </form>
+</div>
+<div class="search">
+    <div>
+        <form th:object="${searchPerson}" th:action="@{/views/search}" method="post">
+            <p>Last name  <input type="text" th:field="*{lastName}"/></p>
+            <p>First name  <input type="text" th:field="*{firstName}"/></p>
+            <p>Patronymic  <input type="text" th:field="*{patronymic}"/></p>
+            <p>Email  <input type="text" th:field="*{email}"/></p>
+            <p>Year of study   <input type="text" th:field="*{yearOfStudy}"/></p>
+            <p>Internship  <input type="text" th:field="*{internship}"/></p>
+            <p>Practice  <input type="text" th:field="*{practice}"/></p>
+            <p>Comment  <textarea type="text" th:field="*{comment}"/></p>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div th:if="${result == true}">
+        <form th:action="@{/views/person}" th:method="get">
+            <button style="margin: 5px;" type="submit">Clear search</button>
+        </form>
+    </div>
+    <!--<div th:if="${result == true}">-->
+        <!--<form th:action="@{/views/search/print}" th:method="get" target="_blank">-->
+            <!--<button style="margin: 5px;" type="submit">Print search</button>-->
+        <!--</form>-->
+    <!--</div>-->
+    <div>
+        <form th:action="@{/views/print}" th:method="get" target="_blank">
+            <button style="margin: 5px;" type="submit">Print all</button>
+        </form>
+    </div>
+</div>
+<div class="persons">
+    <table border="2px solid black" style="border-collapse: collapse;">
+        <div>
+            <tr>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Year of study</td>
+                <td>Internship</td>
+                <td>Practice</td>
+                <td colspan="3" align="center">Actions</td>
+            </tr>
+        </div>
+        <div>
+            <tr th:each="person : ${persons}">
+                <td th:text="${person.fullName()}">Name</td>
+                <td th:text="${person.getEmail()}">Email</td>
+                <td th:text="${person.getYearOfStudy()}">Year of study</td>
+                <td th:text="${person.getInternship()}">Internship</td>
+                <td th:text="${person.getPractice()}">Practice</td>
+                <td>
+                    <form th:action="@{'/views/person/' + ${person.id}}" th:method="get">
+                        <button type="submit">VIEW</button>
+                    </form>
+                </td>
+                <td>
+                    <form  th:action="@{'/views/person/edit/' + ${person.id}}" th:method="get">
+                        <button type="submit">EDIT</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{'/views/person/delete/' + ${person.id}}" th:method="delete">
+                        <button type="submit">DELETE</button>
+                    </form>
+                </td>
+            </tr>
+        </div>
+    </table>
+</div>
+<div class="footer">
+    <div th:if="${prevPage != null}">
+        <form th:action="@{'/views/person/page/' + ${prevPage}}" th:method="get">
+            <button type="submit">Prev page</button>
+        </form>
+    </div>
+    <div th:if="${nextPage != null}">
+        <form th:action="@{'/views/person/page/' + ${nextPage}}" th:method="get">
+            <button type="submit">Next page</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

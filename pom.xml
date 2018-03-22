@@ -86,6 +86,14 @@
         </dependency>
 
         <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring3</artifactId>
+            <version>3.0.7.RELEASE</version>
+        </dependency>
+
+
+
+        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>

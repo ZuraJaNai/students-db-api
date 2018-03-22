@@ -1,19 +1,23 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
+import no.itera.model.PersonResponse;
+import no.itera.model.SearchPerson;
 import no.itera.services.PersonService;
+import no.itera.util.CustomErrorType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController("SearchControllerRest")
-@RequestMapping("/restapi/search")
+@RequestMapping("/restapi/person")
 public class SearchController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
@@ -24,6 +28,8 @@ public class SearchController {
         this.personService = personService;
     }
 
+    @Value( "${userProperties.objectsPerPageLimit}" )
+    private int limit;
 
     /**
      * Method for searching persons by different parameters(lastname,internship,
@@ -31,14 +37,27 @@ public class SearchController {
      * @param person Person object containing fields and values to be searched by
      * @return ResponseEntity containing list of found persons and httpStatus
      */
-    @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<Iterable<Person>> findAllPersons(@RequestBody Person person){
-        logger.debug("Searching for persons with parameters {}", person);
-        Iterable<Person> persons = personService.findAllPersons(person);
-        if (persons.spliterator().getExactSizeIfKnown() < 1){
-            logger.error("Nothing found by this parameter(s): {}", person);
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ResponseEntity<PersonResponse> findAllPersons(@RequestBody SearchPerson person,
+                                                           @RequestParam(value = "page", required = false) Integer pageNum,
+                                                           @RequestParam(value = "limit", required = false) Integer limit){
+        if(pageNum == null){
+            pageNum = 1;
         }
-        return new ResponseEntity<>(persons, HttpStatus.FOUND);
+        if(limit == null){
+            limit = this.limit;
+        }
+        logger.debug("Searching for persons with parameters {}", person);
+        List<Person> persons = personService.findAllPersons(person);
+        PagedListHolder page = new PagedListHolder(persons);
+        page.setPageSize(limit);
+        page.setPage(pageNum);
+        if(page.getPageList().isEmpty()) {
+            logger.error("Page number {} not found", pageNum);
+            return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
+                    " not found"), HttpStatus.NOT_FOUND);
+        }
+        PersonResponse response = new PersonResponse(page.getPageList(),pageNum,page.getPageCount(),persons.size());
+        return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 }
