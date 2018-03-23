@@ -155,14 +155,31 @@ public class PersonServiceImpl implements PersonService {
 
             if (filter.isInternship()) {
                 if (filter.getInternshipDate() != null) {
-                    predicates.add(
-                            cb.and(
-                                    cb.isNotNull(root.get("internshipEnd")),
-                            cb.and(
-                                    cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate()),
-                                    cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate()))));
+                    predicates.add(cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate()),
+                            cb.isNull(root.get("internshipEnd"))));
                 } else {
                     predicates.add(cb.isNotNull(root.get("internshipBegin")));
+                }
+            }
+
+            if (filter.isPractice()) {
+                if (filter.getPracticeDate() != null) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("practiceBegin"), filter.getPracticeDate()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("practiceEnd"), filter.getPracticeDate()),
+                            cb.isNull(root.get("practiceEnd"))));
+                } else {
+                    predicates.add(cb.isNotNull(root.get("practiceBegin")));
+                }
+            }
+
+            if (filter.isJob()) {
+                if (filter.getJobDate() != null) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("jobBegin"), filter.getJobDate()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("jobEnd"), filter.getJobDate()),
+                            cb.isNull(root.get("jobEnd"))));
+                } else {
+                    predicates.add(cb.isNotNull(root.get("jobBegin")));
                 }
             }
 
