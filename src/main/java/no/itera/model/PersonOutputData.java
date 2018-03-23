@@ -1,21 +1,10 @@
 package no.itera.model;
 
-import io.swagger.annotations.ApiModelProperty;
-
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Date;
-import java.util.List;
-
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+import java.text.SimpleDateFormat;
 
 public class PersonOutputData {
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .appendPattern("MM.yyyy")
-            .parseDefaulting(DAY_OF_MONTH, 15)
-            .toFormatter();
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM.yyyy");
 
     private int id;
 
@@ -25,29 +14,21 @@ public class PersonOutputData {
 
     private String patronymic;
 
-    @ApiModelProperty(example = "user@mail.com")
     private String email;
 
-    @ApiModelProperty(example = "2017")
     private String yearOfStudy;
 
-    @ApiModelProperty(example = "01.2018")
-    private Date internshipBegin;
+    private String internshipBegin;
 
-    @ApiModelProperty(example = "02.2018")
-    private Date internshipEnd;
+    private String internshipEnd;
 
-    @ApiModelProperty(example = "01.2018")
-    private Date practiceBegin;
+    private String practiceBegin;
 
-    @ApiModelProperty(example = "02.2018")
-    private Date practiceEnd;
+    private String practiceEnd;
 
-    @ApiModelProperty(example = "01.2018")
-    private Date jobBegin;
+    private String jobBegin;
 
-    @ApiModelProperty(example = "02.2018")
-    private Date jobEnd;
+    private String jobEnd;
 
     public PersonOutputData(){
 
@@ -60,115 +41,59 @@ public class PersonOutputData {
         this.patronymic = person.getPatronymic();
         this.email = person.getEmail();
         this.yearOfStudy = person.getYearOfStudy();
-        this.internshipBegin = person.getInternshipBegin();
-        this.internshipEnd = person.getInternshipEnd();
-        this.practiceBegin = person.getPracticeBegin();
-
-        this.practiceEnd = person.getPracticeEnd();
-        this.jobBegin = person.getJobBegin();
-        this.jobEnd = person.getJobEnd();
+        this.internshipBegin = dateFormat.format(person.getInternshipBegin());
+        this.internshipEnd = dateFormat.format(person.getInternshipEnd());
+        this.practiceBegin = dateFormat.format(person.getPracticeBegin());
+        this.practiceEnd = dateFormat.format(person.getPracticeEnd());
+        this.jobBegin = dateFormat.format(person.getJobBegin());
+        this.jobEnd = dateFormat.format(person.getJobEnd());
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public String getPatronymic() {
         return patronymic;
     }
 
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getYearOfStudy() {
         return yearOfStudy;
     }
 
-    public void setYearOfStudy(String yearOfStudy) {
-        this.yearOfStudy = yearOfStudy;
-    }
-
-    public Date getInternshipBegin() {
+    public String getInternshipBegin() {
         return internshipBegin;
     }
 
-    public void setInternshipBegin(String internshipBegin) {
-        this.internshipBegin = Date.from(LocalDate.parse(internshipBegin,formatter)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    public Date getInternshipEnd() {
+    public String getInternshipEnd() {
         return internshipEnd;
     }
 
-    public void setInternshipEnd(String internshipEnd) {
-        this.internshipEnd = Date.from(LocalDate.parse(internshipEnd,formatter)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    public Date getPracticeBegin() {
+    public String getPracticeBegin() {
         return practiceBegin;
     }
 
-    public void setPracticeBegin(String practiceBegin) {
-        this.practiceBegin = Date.from(LocalDate.parse(practiceBegin,formatter)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    public Date getPracticeEnd() {
+    public String getPracticeEnd() {
         return practiceEnd;
     }
 
-    public void setPracticeEnd(String practiceEnd) {
-        this.practiceEnd = Date.from(LocalDate.parse(practiceEnd,formatter)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    public Date getJobBegin() {
+    public String getJobBegin() {
         return jobBegin;
     }
 
-    public void setJobBegin(String jobBegin) {
-        this.jobBegin = Date.from(LocalDate.parse(jobBegin,formatter)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-    public Date getJobEnd() {
+    public String getJobEnd() {
         return jobEnd;
     }
 
-    public void setJobEnd(String jobEnd) {
-        this.jobEnd = Date.from(LocalDate.parse(jobEnd,formatter)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

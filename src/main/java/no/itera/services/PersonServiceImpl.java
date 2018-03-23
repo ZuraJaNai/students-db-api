@@ -209,7 +209,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList){
-        List<PersonOutputData> personOutputData = null;
+        List<PersonOutputData> personOutputData = new ArrayList<>();
         for (Person person :
                 personList) {
             personOutputData.add(new PersonOutputData(person));
