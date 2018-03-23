@@ -1,6 +1,6 @@
 package no.itera.controller.rest;
 
-import no.itera.model.Person;
+import no.itera.model.PersonOutputData;
 import no.itera.model.PersonResponse;
 import no.itera.model.SearchPerson;
 import no.itera.services.PersonService;
@@ -48,16 +48,18 @@ public class SearchController {
             limit = this.limit;
         }
         logger.debug("Searching for persons with parameters {}", person);
-        List<Person> persons = personService.findAllPersons(person);
+        List<PersonOutputData> persons = personService
+                .transformPersonsToOutputFormat(personService.findAllPersons(person));
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);
         page.setPage(pageNum);
         if(page.getPageList().isEmpty()) {
             logger.error("Page number {} not found", pageNum);
-            return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
-                    " not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new CustomErrorType("Page number "
+                    + pageNum + " not found"), HttpStatus.NOT_FOUND);
         }
-        PersonResponse response = new PersonResponse(page.getPageList(),pageNum,page.getPageCount(),persons.size());
+        PersonResponse response = new PersonResponse(page.getPageList(),pageNum,
+                page.getPageCount(),persons.size());
         return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 }

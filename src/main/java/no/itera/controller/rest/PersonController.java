@@ -1,16 +1,12 @@
 package no.itera.controller.rest;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import no.itera.model.Person;
 import no.itera.model.PersonInputData;
 import no.itera.model.PersonResponse;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -59,10 +55,12 @@ public class PersonController {
         Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
         if(!page.hasContent()) {
             logger.error("Page number {} not found", pageNum);
-            return new ResponseEntity(new CustomErrorType("Page number " + pageNum +
-                    " not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new CustomErrorType("Page number "
+                    + pageNum + " not found"), HttpStatus.NOT_FOUND);
         }
-        PersonResponse response = new PersonResponse(page.getContent(),pageNum,page.getTotalPages(),personService.count());
+        PersonResponse response = new PersonResponse(personService
+                .transformPersonsToOutputFormat(page.getContent()),pageNum,
+                page.getTotalPages(),personService.count());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -98,7 +96,8 @@ public class PersonController {
         Person person = new Person(personInputData);
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/restapi/person/{id}").buildAndExpand(person.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/restapi/person/{id}")
+                .buildAndExpand(person.getId()).toUri());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 

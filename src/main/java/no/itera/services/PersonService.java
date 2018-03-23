@@ -1,9 +1,6 @@
 package no.itera.services;
 
-import no.itera.model.Attachment;
-import no.itera.model.Person;
-import no.itera.model.PersonInputData;
-import no.itera.model.SearchPerson;
+import no.itera.model.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -37,4 +34,6 @@ public interface PersonService {
     void addPhoto(int personId, byte[] bytes);
 
     void deletePhoto(int personId);
+
+    List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList);
 }

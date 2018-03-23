@@ -1,10 +1,7 @@
 package no.itera.services;
 
 import no.itera.dao.PersonDao;
-import no.itera.model.Attachment;
-import no.itera.model.Person;
-import no.itera.model.PersonInputData;
-import no.itera.model.SearchPerson;
+import no.itera.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,8 +14,6 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
@@ -183,8 +178,14 @@ public class PersonServiceImpl implements PersonService {
                 }
             }
 
+            if (StringUtils.isNoneEmpty(filter.getComment())) {
+                predicates.add(cb.like(cb.lower(root.get("comment")),
+                        "%" + filter.getComment().toLowerCase() + "%"));
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         });
+
         return persons;
     }
 
@@ -207,4 +208,12 @@ public class PersonServiceImpl implements PersonService {
         personDao.save(person);
     }
 
+    public List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList){
+        List<PersonOutputData> personOutputData = null;
+        for (Person person :
+                personList) {
+            personOutputData.add(new PersonOutputData(person));
+        }
+        return personOutputData;
+    }
 }
