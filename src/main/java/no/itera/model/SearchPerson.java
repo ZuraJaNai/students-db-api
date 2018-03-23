@@ -1,19 +1,25 @@
 package no.itera.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
+
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 @ApiModel(value="SearchPerson")
 public class SearchPerson implements Serializable {
 
-    SimpleDateFormat format = new SimpleDateFormat("MM.yyyy");
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("MM.yyyy")
+            .parseDefaulting(DAY_OF_MONTH, 15)
+            .toFormatter();
 
     private String lastName;
 
@@ -89,11 +95,8 @@ public class SearchPerson implements Serializable {
         if(StringUtils.isNoneEmpty(internshipDate)){
             this.internship = true;
         }
-        try {
-            this.internshipDate = format.parse(internshipDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            this.internshipDate = Date.from(LocalDate.parse(internshipDate,formatter)
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public boolean isInternship() {
@@ -112,11 +115,8 @@ public class SearchPerson implements Serializable {
         if(StringUtils.isNoneEmpty(practiceDate)){
             this.practice = true;
         }
-        try {
-            this.practiceDate =  format.parse(practiceDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            this.practiceDate =  Date.from(LocalDate.parse(practiceDate,formatter)
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public boolean isPractice() {
@@ -135,11 +135,8 @@ public class SearchPerson implements Serializable {
         if(StringUtils.isNoneEmpty(jobDate)){
             this.job = true;
         }
-        try {
-            this.jobDate =  format.parse(jobDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            this.jobDate =  Date.from(LocalDate.parse(jobDate,formatter)
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public boolean isJob() {

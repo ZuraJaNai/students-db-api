@@ -5,13 +5,9 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
 import java.util.List;
 
-import static java.time.temporal.ChronoField.DAY_OF_YEAR;
 
 @org.hibernate.annotations.GenericGenerator(
         name = "ID_GENERATOR",

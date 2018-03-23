@@ -1,27 +1,19 @@
 package no.itera.services;
 
 import no.itera.dao.PersonDao;
-import no.itera.model.Attachment;
-import no.itera.model.Person;
-import no.itera.model.PersonInputData;
-import no.itera.model.SearchPerson;
+import no.itera.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Predicate;
-import java.sql.Timestamp;
-import java.text.ParseException;
+import javax.persistence.criteria.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
@@ -39,7 +31,7 @@ public class PersonServiceImpl implements PersonService {
             .appendPattern(date_format_string)
             .parseDefaulting(DAY_OF_MONTH, 15)
             .toFormatter();
-    SimpleDateFormat format = new SimpleDateFormat(date_format_string);
+    DateFormat format = new SimpleDateFormat(date_format_string);
 
     @Override
     public Iterable<Person> getAll() {
@@ -128,9 +120,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
+    @Override
     public List<Person> findAllPersons(SearchPerson filter) {
 
-        List<Person> persons = personDao.findAll((root, query, cb) -> {
+        List<Person> persons = personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
@@ -141,7 +134,7 @@ public class PersonServiceImpl implements PersonService {
 
             if (StringUtils.isNoneEmpty(filter.getFirstName())) {
                 predicates.add(cb.like(cb.lower(root.get("firstName")),
-                         "%" +filter.getFirstName().toLowerCase() + "%"));
+                        "%" + filter.getFirstName().toLowerCase() + "%"));
             }
 
 
@@ -155,32 +148,72 @@ public class PersonServiceImpl implements PersonService {
                         "%" + filter.getYearOfStudy().toLowerCase() + "%"));
             }
 
-            if(filter.isInternship()){
-               if(filter.getInternshipDate() != null){
-//                   Date internshipDate = Date.from(LocalDate.parse(filter.getInternshipDate(),formatter)
-//                           .atStartOfDay(ZoneId.systemDefault()).toInstant());
-                   ParameterExpression<Timestamp> criteria = cb.parameter(Timestamp.class,format.format(filter.getInternshipDate()));
-                   if(cb.isNotNull(root.get("internshipEnd")).isNegated()){
-                       predicates.add(cb.greaterThanOrEqualTo(criteria,root.<Timestamp>get("internshipBegin")));
-                   }
-                   else {
-                       predicates.add(cb.between(criteria,root.<Date>get("internshipBegin"),root.<Date>get("internshipEnd")));
-                   }
-                }
-                else{
+            if (filter.isInternship()) {
+                if (filter.getInternshipDate() != null) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate()),
+                            cb.isNull(root.get("internshipEnd"))));
+                } else {
                     predicates.add(cb.isNotNull(root.get("internshipBegin")));
                 }
             }
 
+            if (filter.isPractice()) {
+                if (filter.getPracticeDate() != null) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("practiceBegin"), filter.getPracticeDate()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("practiceEnd"), filter.getPracticeDate()),
+                            cb.isNull(root.get("practiceEnd"))));
+                } else {
+                    predicates.add(cb.isNotNull(root.get("practiceBegin")));
+                }
+            }
+
+            if (filter.isJob()) {
+                if (filter.getJobDate() != null) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("jobBegin"), filter.getJobDate()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("jobEnd"), filter.getJobDate()),
+                            cb.isNull(root.get("jobEnd"))));
+                } else {
+                    predicates.add(cb.isNotNull(root.get("jobBegin")));
+                }
+            }
+
+            if (StringUtils.isNoneEmpty(filter.getComment())) {
+                predicates.add(cb.like(cb.lower(root.get("comment")),
+                        "%" + filter.getComment().toLowerCase() + "%"));
+            }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         });
+
         return persons;
     }
 
-
+    @Override
     public int count(){
         return toIntExact(personDao.count());
     }
 
+    @Override
+    public void addPhoto(int personId, byte[] bytes) {
+        Person person = getById(personId);
+        person.setPhoto(bytes);
+        personDao.save(person);
+    }
+
+    @Override
+    public void deletePhoto(int personId) {
+        Person person = getById(personId);
+        person.setPhoto(null);
+        personDao.save(person);
+    }
+
+    public List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList){
+        List<PersonOutputData> personOutputData = new ArrayList<>();
+        for (Person person :
+                personList) {
+            personOutputData.add(new PersonOutputData(person));
+        }
+        return personOutputData;
+    }
 }
