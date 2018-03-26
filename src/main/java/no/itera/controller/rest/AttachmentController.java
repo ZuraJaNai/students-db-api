@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  REST controller for Attachment class
+ */
 @RestController("AttachmentControllerRest")
 @RequestMapping("/restapi/person")
 public class AttachmentController {
@@ -30,6 +33,13 @@ public class AttachmentController {
     @Autowired
     private PersonService personService;
 
+    /**
+     * Method for uploading file for specified Person into database
+     *
+     * @param personId  id of Person to whom to add file
+     * @param file the actual MultipartFile file to be uploaded
+     * @return Response entity containing HttpStatus and message
+     */
     @RequestMapping(value = "/{id}/uploadfile", method = RequestMethod.POST)
     public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
                                              @RequestParam("file") MultipartFile file) throws IOException {
@@ -54,6 +64,13 @@ public class AttachmentController {
 
     }
 
+    /**
+     * Method for deletion of uploaded file for defined Person
+     *
+     * @param personId  id of Person for whom to delete file
+     * @param attachmentId  id of the file to delete
+     * @return ResponseEntity containing HttpStatus
+     */
     @RequestMapping(value = "/{id}/deletefile", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteFile(@PathVariable("id") int personId,
                                              @RequestParam("id") int attachmentId){
@@ -70,6 +87,12 @@ public class AttachmentController {
 
     }
 
+    /**
+     * Method to get list of filenames of defined Person
+     *
+     * @param personId  id of the Person
+     * @return ResponseEntity containing list of names and HttpStatus
+     */
     @RequestMapping(value = "/{id}/files", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAllFiles(@PathVariable("id") int personId){
         if(!personService.isPersonExists(new Person(personId))){
@@ -89,6 +112,14 @@ public class AttachmentController {
         return new ResponseEntity<>(fileNames,HttpStatus.OK);
     }
 
+    /**
+     * Method for downloading from the database the file which was uploaded there
+     *
+     * @param personId  id of Person whos file to download
+     * @param attachmentId  id of file to download
+     * @return ResponseEntity containing byte array with file, headers with
+     * information about file and HttpStatus
+     */
     @RequestMapping(value = "/{id}/downloadfile", method = RequestMethod.GET)
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") int personId,
                                                @RequestParam("id") int attachmentId){

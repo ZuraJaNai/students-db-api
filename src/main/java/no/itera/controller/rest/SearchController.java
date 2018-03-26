@@ -2,7 +2,7 @@ package no.itera.controller.rest;
 
 import no.itera.model.PersonOutputData;
 import no.itera.model.PersonResponse;
-import no.itera.model.SearchPerson;
+import no.itera.model.PersonSearch;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
 import org.apache.logging.log4j.LogManager;
@@ -34,11 +34,12 @@ public class SearchController {
     /**
      * Method for searching persons by different parameters(lastname,internship,
      * course,practice, etc.)
-     * @param person Person object containing fields and values to be searched by
-     * @return ResponseEntity containing list of found persons and httpStatus
+     * @param person PersonSearch object containing fields and values to be searched by
+     * @return ResponseEntity containing httpStatus and PersonResponse object
+     *  with list of found persons,number of persons, current page and total number of pages
      */
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public ResponseEntity<PersonResponse> findAllPersons(@RequestBody SearchPerson person,
+    public ResponseEntity<PersonResponse> findAllPersons(@RequestBody PersonSearch person,
                                                            @RequestParam(value = "page", required = false) Integer pageNum,
                                                            @RequestParam(value = "limit", required = false) Integer limit){
         if(pageNum == null){

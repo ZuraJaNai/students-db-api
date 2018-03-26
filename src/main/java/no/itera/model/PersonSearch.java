@@ -13,8 +13,8 @@ import java.util.Date;
 
 import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
-@ApiModel(value="SearchPerson")
-public class SearchPerson implements Serializable {
+@ApiModel(value="PersonSearch")
+public class PersonSearch implements Serializable {
 
     DateTimeFormatter formatter = new DateTimeFormatterBuilder()
             .appendPattern("MM.yyyy")
@@ -51,7 +51,7 @@ public class SearchPerson implements Serializable {
 
     private String comment;
 
-    public SearchPerson(){
+    public PersonSearch(){
 
     }
 

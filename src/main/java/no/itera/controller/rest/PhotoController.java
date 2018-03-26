@@ -12,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ *  REST controller for Person's photos
+ */
 @RestController("PhotoControllerRest")
 @RequestMapping("/restapi/person")
 public class PhotoController {
@@ -21,6 +24,14 @@ public class PhotoController {
     @Autowired
     private PersonService personService;
 
+    /**
+     * Method for adding photo to Person instance
+     *
+     * @param personId  id of Person for whom we upload photo
+     * @param file  the actual photo MultipartFile
+     * @return ResponseEntity containnig message and HttpStatus
+     * @throws IOException if can't get bytes from the file
+     */
     @RequestMapping(value = "/{id}/uploadphoto", method = RequestMethod.POST)
     public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
                                              @RequestParam("file") MultipartFile file) throws IOException {
@@ -36,6 +47,12 @@ public class PhotoController {
 
     }
 
+    /**
+     * Method for deleting Person photo
+     *
+     * @param personId  id of Person whos photo to delete
+     * @return ResponseEntity with HttpStatus
+     */
     @RequestMapping(value = "/{id}/deletephoto", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteFile(@PathVariable("id") int personId){
         if(!personService.isPersonExists(new Person(personId))){
