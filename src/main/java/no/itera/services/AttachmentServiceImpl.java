@@ -59,7 +59,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         Iterable<Attachment> savedAttachments = attachmentDao.findAll();
         for (Attachment attachment :
                 savedAttachments) {
-            if(attachment.getPersonId() == personId){
+            if(attachment.getPersonId() == personId&&
+                    attachment.getType() != Type.PHOTO){
                 attachments.add(attachment);
             }
         }
