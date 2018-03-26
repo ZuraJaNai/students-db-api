@@ -1,7 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
-import no.itera.model.PersonInputData;
+import no.itera.model.PersonData;
 import no.itera.model.PersonResponse;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
@@ -87,17 +87,17 @@ public class PersonController {
     /**
      * Method for person creation
      *
-     * @param personInputData  data for the person to be created
+     * @param personData  data for the person to be created
      * @param ucBuilder  object for creating URI
      * @return ResponseEntity containing header with URL to created person and
      * httpStatus
      */
 
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<String> createPerson(@RequestBody PersonInputData personInputData,
+    public ResponseEntity<String> createPerson(@RequestBody PersonData personData,
                                           UriComponentsBuilder ucBuilder){
-        logger.info("Creating person: {}", personInputData);
-        Person person = new Person(personInputData);
+        logger.info("Creating person: {}", personData);
+        Person person = new Person(personData);
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}")
@@ -109,12 +109,12 @@ public class PersonController {
      * Method for updating existing person be specified ID
      *
      * @param id  path variable containing person's ID
-     * @param personInputData  PersonInputData object containing new data for Person
+     * @param personData  PersonData object containing new data for Person
      * @return Person with new data and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Person> updatePerson(@PathVariable("id") int id,
-                                               @RequestBody PersonInputData personInputData) {
+                                               @RequestBody PersonData personData) {
         logger.info("Updating person with id {}", id);
         Person currentPerson = personService.getById(id);
         if (currentPerson == null) {
@@ -122,7 +122,7 @@ public class PersonController {
             return new ResponseEntity(new CustomErrorType("Unable to update user with id "
                     + id), HttpStatus.NOT_FOUND);
         }
-        personService.updatePerson(id, personInputData);
+        personService.updatePerson(id, personData);
         return new ResponseEntity<>(currentPerson, HttpStatus.OK);
     }
 

@@ -1,7 +1,7 @@
 package no.itera.controller.view;
 
 import no.itera.model.Person;
-import no.itera.model.PersonInputData;
+import no.itera.model.PersonData;
 import no.itera.services.AttachmentService;
 import no.itera.services.PersonService;
 import no.itera.util.CustomExitEvent;
@@ -117,7 +117,7 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/person/edit/{id}", method = RequestMethod.POST)
-    public String editPerson(@PathVariable("id") int id,@ModelAttribute(value = "person") PersonInputData person){
+    public String editPerson(@PathVariable("id") int id,@ModelAttribute(value = "person") PersonData person){
         personService.updatePerson(id,person);
         return String.format("redirect:/views/person/%d",id);
     }

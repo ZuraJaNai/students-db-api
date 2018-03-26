@@ -132,7 +132,7 @@ public class AttachmentController {
         }
         byte[] buffer = attachment.getContent();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(attachment.getType()));
+        headers.setContentType(MediaType.parseMediaType(attachment.getMimetype()));
         headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
                 attachment.getFilename()));
         return new ResponseEntity<>(buffer,headers,HttpStatus.OK);

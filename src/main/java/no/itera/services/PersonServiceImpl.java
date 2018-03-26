@@ -9,15 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 /**
  * Service for managing Person classes
@@ -101,10 +97,10 @@ public class PersonServiceImpl implements PersonService {
      * Method for updating existing person data
      *
      * @param id id of Person to update
-     * @param person PersonInputData object containing new data for Person
+     * @param person PersonData object containing new data for Person
      */
     @Override
-    public void updatePerson(int id, PersonInputData person) {
+    public void updatePerson(int id, PersonData person) {
         Person tempPerson = this.getById(id);
 
         if(StringUtils.isNoneEmpty(person.getLastName())){
@@ -250,43 +246,19 @@ public class PersonServiceImpl implements PersonService {
         return toIntExact(personDao.count());
     }
 
-    /**
-     * Method to add photo to instance of Person
-     *
-     * @param personId  id of Person to whom to add photo
-     * @param bytes  the photo data
-     */
-    @Override
-    public void addPhoto(int personId, byte[] bytes) {
-        Person person = getById(personId);
-        person.setPhoto(bytes);
-        personDao.save(person);
-    }
 
     /**
-     * Method to delete photo from the instance of Person
-     *
-     * @param personId  id of person whos photo to delete
-     */
-    @Override
-    public void deletePhoto(int personId) {
-        Person person = getById(personId);
-        person.setPhoto(null);
-        personDao.save(person);
-    }
-
-    /**
-     * Method to transform List of Persons to List of PersonOutputData,needed
+     * Method to transform List of Persons to List of PersonData,needed
      * when we want to get only main information about person
      *
      * @param personList  List of Person objects
-     * @return List of PersonOutputData objects
+     * @return List of PersonData objects
      */
-    public List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList){
-        List<PersonOutputData> personOutputData = new ArrayList<>();
+    public List<PersonData> transformPersonsToOutputFormat(List<Person> personList){
+        List<PersonData> personOutputData = new ArrayList<>();
         for (Person person :
                 personList) {
-            personOutputData.add(new PersonOutputData(person));
+            personOutputData.add(new PersonData(person));
         }
         return personOutputData;
     }

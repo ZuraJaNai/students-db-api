@@ -1,6 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
+import no.itera.services.AttachmentService;
 import no.itera.services.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,9 @@ import java.io.IOException;
 public class PhotoController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     @Autowired
     private PersonService personService;
@@ -42,7 +46,7 @@ public class PhotoController {
         if(file.isEmpty()){
             return new ResponseEntity<>("File is empty " + file.getOriginalFilename(),HttpStatus.OK);
         }
-        personService.addPhoto(personId,file.getBytes());
+        attachmentService.addPhoto(personId,file.getBytes(),file.getOriginalFilename(),file.getContentType());
         return new ResponseEntity<>("Photo uploaded " + file.getOriginalFilename(), HttpStatus.OK);
 
     }
@@ -58,7 +62,7 @@ public class PhotoController {
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        personService.deletePhoto(personId);
+        attachmentService.deletePhoto(personId);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }

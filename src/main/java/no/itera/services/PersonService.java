@@ -69,9 +69,9 @@ public interface PersonService {
      * Method for updating existing person data
      *
      * @param id id of Person to update
-     * @param person PersonInputData object containing new data for Person
+     * @param person PersonData object containing new data for Person
      */
-    void updatePerson(int id, PersonInputData person);
+    void updatePerson(int id, PersonData person);
 
     /**
      * Method to add attachment to defined Person
@@ -92,27 +92,13 @@ public interface PersonService {
      */
     int count();
 
-    /**
-     * Method to add photo to instance of Person
-     *
-     * @param personId  id of Person to whom to add photo
-     * @param bytes  the photo data
-     */
-    void addPhoto(int personId, byte[] bytes);
 
     /**
-     * Method to delete photo from the instance of Person
-     *
-     * @param personId  id of person whos photo to delete
-     */
-    void deletePhoto(int personId);
-
-    /**
-     * Method to transform List of Persons to List of PersonOutputData,needed
+     * Method to transform List of Persons to List of PersonData,needed
      * when we want to get only main information about person
      *
      * @param personList  List of Person objects
-     * @return List of PersonOutputData objects
+     * @return List of PersonData objects
      */
-    List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList);
+    List<PersonData> transformPersonsToOutputFormat(List<Person> personList);
 }

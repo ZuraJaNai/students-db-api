@@ -1,7 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
-import no.itera.model.PersonOutputData;
+import no.itera.model.PersonData;
 import no.itera.model.PersonSearch;
 import no.itera.services.PersonServiceImpl;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class SearchControllerTest {
         Person person = new Person(1);
         person.setLastName("lastName");
         Mockito.when(personService.findAllPersons(any(PersonSearch.class))).thenReturn(Arrays.asList(person));
-        Mockito.when(personService.transformPersonsToOutputFormat(any(List.class))).thenReturn(Arrays.asList(new PersonOutputData(person)));
+        Mockito.when(personService.transformPersonsToOutputFormat(any(List.class))).thenReturn(Arrays.asList(new PersonData(person)));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/person/search").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);

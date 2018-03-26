@@ -15,8 +15,8 @@ public class Attachment implements Serializable {
     @Column(name = "FILENAME")
     private String filename;
 
-    @Column(name = "TYPE")
-    private String type;
+    @Column(name = "MIMETYPE")
+    private String mimetype;
 
     @Column(name = "CONTENT")
     @Lob
@@ -25,13 +25,18 @@ public class Attachment implements Serializable {
     @Column(name = "PERSON_ID", nullable = false)
     private int personId;
 
+    @Column(name = "TYPE")
+    private Type type;
+
     private Attachment(){}
 
-    public Attachment(byte[] buffer, String originalFilename, String contentType,int personId) {
+    public Attachment(byte[] buffer, String originalFilename, String contentType,
+                      int personId,Type type) {
         this.content = buffer;
         this.filename = originalFilename;
-        this.type = contentType;
+        this.mimetype = contentType;
         this.personId = personId;
+        this.type = type;
     }
 
     public byte[] getContent() {
@@ -50,12 +55,12 @@ public class Attachment implements Serializable {
         this.filename = filename;
     }
 
-    public String getType() {
-        return type;
+    public String getMimetype() {
+        return mimetype;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 
     public int getId() {
@@ -64,5 +69,13 @@ public class Attachment implements Serializable {
 
     public int getPersonId() {
         return personId;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }

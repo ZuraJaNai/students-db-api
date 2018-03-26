@@ -2,6 +2,8 @@ package no.itera.services;
 
 import no.itera.dao.AttachmentDao;
 import no.itera.model.Attachment;
+import no.itera.model.Person;
+import no.itera.model.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,8 @@ public class AttachmentServiceImpl implements AttachmentService {
      */
     @Override
     public boolean addFile(int personId, byte[] buffer, String originalFilename, String contentType) {
-        Attachment attachment = new Attachment(buffer,originalFilename,contentType,personId);
+        Attachment attachment = new Attachment(buffer,originalFilename,
+                contentType,personId, Type.DOCUMENT);
         attachmentDao.save(attachment);
         personService.updateAttachments(personId,attachment);
         return true;
@@ -132,10 +135,41 @@ public class AttachmentServiceImpl implements AttachmentService {
         List<Attachment> attachments = new ArrayList<>();
         for (Attachment attachment :
                 attachmentDao.findAll()) {
-            if (attachment.getPersonId() == personId){
+            if (attachment.getPersonId() == personId &&
+                    attachment.getType() != Type.PHOTO){
                 attachments.add(attachment);
             }
         }
         return attachments;
+    }
+
+    /**
+     * Method to add photo to instance of Person
+     *  @param personId  id of Person to whom to add photo
+     * @param bytes  the photo data
+     * @param originalFilename name of file
+     * @param contentType mimetype of file
+     */
+    @Override
+    public void addPhoto(int personId, byte[] bytes, String originalFilename, String contentType){
+        Person person = personService.getById(personId);
+        Attachment photo = new Attachment(bytes,originalFilename,contentType,personId,Type.PHOTO);
+        attachmentDao.save(photo);
+        person.setPhoto(photo);
+        personService.addPerson(person);
+    }
+
+    /**
+     * Method to delete photo from the instance of Person
+     *
+     * @param personId  id of person whos photo to delete
+     */
+    @Override
+    public void deletePhoto(int personId){
+        Person person = personService.getById(personId);
+        int photoId = person.getPhoto().getId();
+        person.setPhoto(null);
+        attachmentDao.delete(photoId);
+        personService.addPerson(person);
     }
 }

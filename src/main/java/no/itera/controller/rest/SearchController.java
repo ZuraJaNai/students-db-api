@@ -1,6 +1,6 @@
 package no.itera.controller.rest;
 
-import no.itera.model.PersonOutputData;
+import no.itera.model.PersonData;
 import no.itera.model.PersonResponse;
 import no.itera.model.PersonSearch;
 import no.itera.services.PersonService;
@@ -49,7 +49,7 @@ public class SearchController {
             limit = this.limit;
         }
         logger.debug("Searching for persons with parameters {}", person);
-        List<PersonOutputData> persons = personService
+        List<PersonData> persons = personService
                 .transformPersonsToOutputFormat(personService.findAllPersons(person));
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);

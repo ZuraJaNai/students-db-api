@@ -11,7 +11,7 @@ public interface AttachmentService {
      * @param personId  id of person to whom to add file
      * @param buffer  byte array containing file data
      * @param originalFilename  name of the file
-     * @param contentType  content type of the file
+     * @param contentType  mimetype of the file
      * @return Boolean true or false
      */
     boolean addFile(int personId, byte[] buffer, String originalFilename, String contentType);
@@ -66,4 +66,19 @@ public interface AttachmentService {
      * @return List of Attachment objects
      */
     List<Attachment> findAllAttachments(int personId);
+
+    /**
+     * Method to add photo to instance of Person
+     *  @param personId  id of Person to whom to add photo
+     * @param bytes  the photo data
+     * @param originalFilename name of file
+     * @param contentType mimetype of file
+     */
+    void addPhoto(int personId, byte[] bytes, String originalFilename, String contentType);
+    /**
+     * Method to delete photo from the instance of Person
+     *
+     * @param personId  id of person whos photo to delete
+     */
+    void deletePhoto(int personId);
 }
