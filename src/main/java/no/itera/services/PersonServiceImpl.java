@@ -9,65 +9,98 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.toIntExact;
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
+/**
+ * Service for managing Person classes
+ */
 @Service
 public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonDao personDao;
 
-    private String date_format_string = "MM.yyyy";
-
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .appendPattern(date_format_string)
-            .parseDefaulting(DAY_OF_MONTH, 15)
-            .toFormatter();
-    DateFormat format = new SimpleDateFormat(date_format_string);
-
+    /**
+     * Method to get all persons from the database
+     *
+     * @return Iterable of Persons
+     */
     @Override
     public Iterable<Person> getAll() {
         return personDao.findAll();
     }
 
+    /**
+     * Method to get page containing several
+     *
+     * @param pageRequest  object containing number of page and number of
+     *                     persons to get from the database
+     * @return Page object with persons list
+     */
     @Override
     public Page getAll(PageRequest pageRequest) {
         return personDao.findAll(pageRequest);
     }
 
+    /**
+     * Method to get defined Person by id from the database
+     *
+     * @param id  id of the Person
+     * @return Person object
+     */
     @Override
     public Person getById(int id) {
         return personDao.findOne(id);
     }
 
 
+    /**
+     * Method to find out if Person with specified id exists in database
+     *
+     * @param person  Person object
+     * @return Boolean true or false
+     */
     @Override
     public boolean isPersonExists(Person person) {
         return personDao.exists(person.getId());
     }
 
+    /**
+     * Method for adding person to the database
+     *
+     * @param person  Person object to add
+     * @return Boolean true
+     */
     @Override
     public boolean addPerson(Person person) {
         personDao.save(person);
         return true;
     }
 
+    /**
+     * Method for deleting person from the database
+     *
+     * @param id  id of person to delete
+     * @return Boolean true
+     */
     @Override
     public boolean deletePerson(int id) {
             personDao.delete(id);
             return true;
     }
 
+    /**
+     * Method for updating existing person data
+     *
+     * @param id id of Person to update
+     * @param person PersonData object containing new data for Person
+     */
     @Override
-    public void updatePerson(int id, PersonInputData person) {
+    public void updatePerson(int id, PersonData person) {
         Person tempPerson = this.getById(id);
 
         if(StringUtils.isNoneEmpty(person.getLastName())){
@@ -107,6 +140,11 @@ public class PersonServiceImpl implements PersonService {
         personDao.save(tempPerson);
     }
 
+    /**
+     * Method to add attachment to defined Person
+     * @param id  id of person for who to add attachment
+     * @param attachment Attachment object which to add
+     */
     @Override
     public void updateAttachments(int id, Attachment attachment) {
         Person person = this.getById(id);
@@ -114,14 +152,23 @@ public class PersonServiceImpl implements PersonService {
         personDao.save(person);
     }
 
+    /**
+     * Method to delete all persons in database
+     */
     @Override
     public void deleteAll() {
             personDao.deleteAll();
     }
 
 
+    /**
+     * Method to find persons according to certain criteria
+     *
+     * @param filter  object with fields that are a criteria (if not null or empty)
+     * @return List of persons,which suits to the criteria
+     */
     @Override
-    public List<Person> findAllPersons(SearchPerson filter) {
+    public List<Person> findAllPersons(PersonSearch filter) {
 
         List<Person> persons = personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
@@ -189,30 +236,29 @@ public class PersonServiceImpl implements PersonService {
         return persons;
     }
 
+    /**
+     * Method to get total number of students in the database
+     *
+     * @return int number
+     */
     @Override
     public int count(){
         return toIntExact(personDao.count());
     }
 
-    @Override
-    public void addPhoto(int personId, byte[] bytes) {
-        Person person = getById(personId);
-        person.setPhoto(bytes);
-        personDao.save(person);
-    }
 
-    @Override
-    public void deletePhoto(int personId) {
-        Person person = getById(personId);
-        person.setPhoto(null);
-        personDao.save(person);
-    }
-
-    public List<PersonOutputData> transformPersonsToOutputFormat(List<Person> personList){
-        List<PersonOutputData> personOutputData = new ArrayList<>();
+    /**
+     * Method to transform List of Persons to List of PersonData,needed
+     * when we want to get only main information about person
+     *
+     * @param personList  List of Person objects
+     * @return List of PersonData objects
+     */
+    public List<PersonData> transformPersonsToOutputFormat(List<Person> personList){
+        List<PersonData> personOutputData = new ArrayList<>();
         for (Person person :
                 personList) {
-            personOutputData.add(new PersonOutputData(person));
+            personOutputData.add(new PersonData(person));
         }
         return personOutputData;
     }

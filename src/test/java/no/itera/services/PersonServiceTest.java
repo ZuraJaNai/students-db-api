@@ -2,7 +2,7 @@ package no.itera.services;
 
 import no.itera.dao.PersonDao;
 import no.itera.model.Person;
-import no.itera.model.PersonInputData;
+import no.itera.model.PersonData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -73,7 +73,7 @@ public class PersonServiceTest {
     @Test
     public void checkNonExistingPersonUpdate(){
         when(daoMock.save(any(Person.class))).thenThrow(new NullPointerException() );
-        assertThrows(NullPointerException.class, () -> personService.updatePerson(10, new PersonInputData()));
+        assertThrows(NullPointerException.class, () -> personService.updatePerson(10, new PersonData()));
     }
 
 }

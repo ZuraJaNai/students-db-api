@@ -1,7 +1,7 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
-import no.itera.model.PersonInputData;
+import no.itera.model.PersonData;
 import no.itera.model.PersonResponse;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
@@ -37,9 +37,11 @@ public class PersonController {
 
     /**
      *  Method for getting all existing persons with pagination
-     *  @param pageNum number of page,which you want to get (starts with 1)
-     *  @param limit number of elements on one page
-     *  @return ResponseEntity containing list of persons and httpStatus
+     *
+     *  @param pageNum  number of page,which you want to get (starts with 1)
+     *  @param limit  number of elements on one page
+     *  @return ResponseEntity containing httpStatus and PersonResponse object
+     *  with list of persons,number of persons, current page and total number of pages
      */
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     public ResponseEntity<PersonResponse> listAllPersonsPageable(
@@ -66,7 +68,8 @@ public class PersonController {
 
     /**
      * Method for getting person specified by ID
-     * @param id path variable containing person's ID
+     *
+     * @param id  path variable containing person's ID
      * @return ResponseEntity with person(with specified ID) and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.GET)
@@ -83,17 +86,18 @@ public class PersonController {
 
     /**
      * Method for person creation
-     * @param personInputData the person to be created
-     * @param ucBuilder object for creating URI
-     * @return ResposneEntity containing header with URL to created person and
+     *
+     * @param personData  data for the person to be created
+     * @param ucBuilder  object for creating URI
+     * @return ResponseEntity containing header with URL to created person and
      * httpStatus
      */
 
     @RequestMapping(value = "/person", method = RequestMethod.POST)
-    public ResponseEntity<String> createPerson(@RequestBody PersonInputData personInputData,
+    public ResponseEntity<String> createPerson(@RequestBody PersonData personData,
                                           UriComponentsBuilder ucBuilder){
-        logger.info("Creating person: {}", personInputData);
-        Person person = new Person(personInputData);
+        logger.info("Creating person: {}", personData);
+        Person person = new Person(personData);
         personService.addPerson(person);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/restapi/person/{id}")
@@ -103,13 +107,14 @@ public class PersonController {
 
     /**
      * Method for updating existing person be specified ID
+     *
      * @param id  path variable containing person's ID
-     * @param person Person containing new data
+     * @param personData  PersonData object containing new data for Person
      * @return Person with new data and httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Person> updatePerson(@PathVariable("id") int id,
-                                               @RequestBody PersonInputData person) {
+                                               @RequestBody PersonData personData) {
         logger.info("Updating person with id {}", id);
         Person currentPerson = personService.getById(id);
         if (currentPerson == null) {
@@ -117,13 +122,14 @@ public class PersonController {
             return new ResponseEntity(new CustomErrorType("Unable to update user with id "
                     + id), HttpStatus.NOT_FOUND);
         }
-        personService.updatePerson(id, person);
+        personService.updatePerson(id, personData);
         return new ResponseEntity<>(currentPerson, HttpStatus.OK);
     }
 
     /**
      * Method for deletion of existing person by specified ID
-     * @param id path variable containing person's ID
+     *
+     * @param id  path variable containing person's ID
      * @return ResponseEntity containing httpStatus
      */
     @RequestMapping(value = "/person/{id}", method = RequestMethod.DELETE)
@@ -141,6 +147,7 @@ public class PersonController {
 
     /**
      * Method for deletion of all existing persons
+     *
      * @return ResponseEntity containing httpStatus
      */
     @RequestMapping(value = "/person", method = RequestMethod.DELETE)

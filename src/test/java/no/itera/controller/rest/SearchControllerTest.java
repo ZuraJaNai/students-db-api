@@ -1,13 +1,12 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Person;
-import no.itera.model.PersonOutputData;
-import no.itera.model.SearchPerson;
+import no.itera.model.PersonData;
+import no.itera.model.PersonSearch;
 import no.itera.services.PersonServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -63,8 +61,8 @@ public class SearchControllerTest {
                 "}";
         Person person = new Person(1);
         person.setLastName("lastName");
-        Mockito.when(personService.findAllPersons(any(SearchPerson.class))).thenReturn(Arrays.asList(person));
-        Mockito.when(personService.transformPersonsToOutputFormat(any(List.class))).thenReturn(Arrays.asList(new PersonOutputData(person)));
+        Mockito.when(personService.findAllPersons(any(PersonSearch.class))).thenReturn(Arrays.asList(person));
+        Mockito.when(personService.transformPersonsToOutputFormat(any(List.class))).thenReturn(Arrays.asList(new PersonData(person)));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/person/search").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);
@@ -73,7 +71,7 @@ public class SearchControllerTest {
 
     @Test
     public void checkPersonSearchByLastNameIfNotExists() throws Exception {
-        Mockito.when(personService.findAllPersons(any(SearchPerson.class))).thenReturn(Arrays.asList());
+        Mockito.when(personService.findAllPersons(any(PersonSearch.class))).thenReturn(Arrays.asList());
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/search/person").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);

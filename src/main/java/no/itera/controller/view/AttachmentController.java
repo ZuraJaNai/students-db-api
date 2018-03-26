@@ -60,7 +60,7 @@ public class AttachmentController {
         Attachment attachment = attachmentService.getFile(personId,attachmentId);
         byte[] buffer = attachment.getContent();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(attachment.getType()));
+        headers.setContentType(MediaType.parseMediaType(attachment.getMimetype()));
         headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
                 attachment.getFilename()));
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
