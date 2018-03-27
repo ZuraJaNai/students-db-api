@@ -2,7 +2,9 @@ package no.itera.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
+import no.itera.util.CustomDateSerializer;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -61,6 +63,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "01.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date internshipBegin;
 
     @Column(name = "INTERNSHIP_END")
@@ -68,6 +71,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "02.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date internshipEnd;
 
     @Column(name = "PRACTICE_BEGIN")
@@ -75,6 +79,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "01.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date practiceBegin;
 
     @Column(name = "PRACTICE_END")
@@ -82,6 +87,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "02.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date practiceEnd;
 
     @Column(name = "JOB_BEGIN")
@@ -89,6 +95,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "01.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date jobBegin;
 
     @Column(name = "JOB_END")
@@ -96,6 +103,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "02.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date jobEnd;
 
     @Column(name = "COMMENT")
