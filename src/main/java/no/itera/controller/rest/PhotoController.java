@@ -36,8 +36,8 @@ public class PhotoController {
      * @return ResponseEntity containnig message and HttpStatus
      * @throws IOException if can't get bytes from the file
      */
-    @RequestMapping(value = "/{id}/uploadphoto", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
+    @RequestMapping(value = "/{person_id}/photo", method = RequestMethod.POST)
+    public ResponseEntity<String> uploadFile(@PathVariable("person_id") int personId,
                                              @RequestParam("file") MultipartFile file) throws IOException {
         logger.debug("Uploading file {}", file.getOriginalFilename());
         if(!personService.isPersonExists(new Person(personId))){
@@ -57,7 +57,7 @@ public class PhotoController {
      * @param personId  id of Person whos photo to delete
      * @return ResponseEntity with HttpStatus
      */
-    @RequestMapping(value = "/{id}/deletephoto", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{person_id}/photo", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteFile(@PathVariable("id") int personId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
