@@ -1,5 +1,10 @@
 package no.itera.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,9 +23,9 @@ public class Attachment implements Serializable {
     @Column(name = "MIMETYPE")
     private String mimetype;
 
-    @Column(name = "CONTENT")
-    @Lob
-    private byte[] content;
+    @OneToOne(fetch = FetchType.LAZY, optional=false, cascade=CascadeType.ALL)
+    @JsonIgnore
+    private File file;
 
     @Column(name = "PERSON_ID", nullable = false)
     private int personId;
@@ -32,20 +37,13 @@ public class Attachment implements Serializable {
 
     public Attachment(byte[] buffer, String originalFilename, String contentType,
                       int personId,Type type) {
-        this.content = buffer;
+        this.file = new File(buffer);
         this.filename = originalFilename;
         this.mimetype = contentType;
         this.personId = personId;
         this.type = type;
     }
 
-    public byte[] getContent() {
-        return content;
-    }
-
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
 
     public String getFilename() {
         return filename;
@@ -77,5 +75,13 @@ public class Attachment implements Serializable {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public File getFile() {
+        return file;
     }
 }

@@ -58,13 +58,12 @@ public class AttachmentController {
     public ResponseEntity<byte[]> downloadFile(@PathVariable("id") int personId,
                                                @PathVariable("attachmentId") int attachmentId){
         Attachment attachment = attachmentService.getFile(personId,attachmentId);
-        byte[] buffer = attachment.getContent();
+        byte[] buffer = attachment.getFile().getContent();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(attachment.getMimetype()));
         headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
                 attachment.getFilename()));
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        ResponseEntity<byte[]> response = new ResponseEntity<>(buffer, headers, HttpStatus.OK);
-        return response;
+        return new ResponseEntity<>(buffer, headers, HttpStatus.OK);
     }
 }

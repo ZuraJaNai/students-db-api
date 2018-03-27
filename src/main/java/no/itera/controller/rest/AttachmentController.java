@@ -94,7 +94,7 @@ public class AttachmentController {
      * @return ResponseEntity containing list of names and HttpStatus
      */
     @RequestMapping(value = "/{person_id}/attachments", method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getAllFiles(@PathVariable("person_id") int personId){
+    public ResponseEntity<List<Attachment>> getAllAttachments(@PathVariable("person_id") int personId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -105,11 +105,7 @@ public class AttachmentController {
         if(attachments.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        ArrayList<String> fileNames= new ArrayList<>();
-        for (Attachment attachment:attachments) {
-            fileNames.add(attachment.getFilename());
-        }
-        return new ResponseEntity<>(fileNames,HttpStatus.OK);
+        return new ResponseEntity<>(attachments,HttpStatus.OK);
     }
 
     /**
@@ -130,7 +126,7 @@ public class AttachmentController {
         if (attachment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        byte[] buffer = attachment.getContent();
+        byte[] buffer = attachment.getFile().getContent();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(attachment.getMimetype()));
         headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
