@@ -14,3 +14,19 @@ deploy2docker:
         - docker push docker-repository.intra.itera.no:5000/students-db/students-db-api
     only:
         - develop
+        
+sonarqube_job:
+  stage: test
+  only:
+    - develop
+  script:
+    - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=$SONAR_URL
+
+sonarqube_preview_feature_job:
+  stage: test
+  only:
+    - /^feature\/*/
+  script:
+    - git checkout origin/develop
+    - git merge $CI_COMMIT_REF --no-commit --no-ff
+    - mvn --batch-mode verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.analysis.mode=preview -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.commit_sha=$CI_COMMIT_REF -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
