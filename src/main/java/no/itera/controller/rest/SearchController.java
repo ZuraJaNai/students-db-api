@@ -31,6 +31,7 @@ public class SearchController {
     @Value( "${userProperties.objectsPerPageLimit}" )
     private int limit;
 
+
     /**
      * Method for searching persons by different parameters(lastname,internship,
      * course,practice, etc.)
