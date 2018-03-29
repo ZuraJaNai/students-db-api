@@ -1,12 +1,12 @@
 package no.itera.model;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "PERSONS")
 public class Person extends AbstractPerson{
+
 
     @OneToOne(targetEntity = Attachment.class,cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Attachment photo;
@@ -24,8 +24,8 @@ public class Person extends AbstractPerson{
 
     public Person(int id){
         super(id,"default","default","default","default",
-                "default",new Date(10),new Date(11), new Date(10)
-                ,new Date(11),new Date(10),new Date(11),"default");
+                "default",null,null,null
+                ,null,null,null,"default");
     }
 
     public Person() {

@@ -44,7 +44,7 @@ public class PersonControllerTest {
 
     @Test
     public void checkGetExistingPeronById() throws Exception {
-        String expected = "{\"id\":1,\"photo\":null,\"lastName\":\"default\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":\"01.1970\",\"internshipEnd\":\"01.1970\",\"practiceBegin\":\"01.1970\",\"practiceEnd\":\"01.1970\",\"jobBegin\":\"01.1970\",\"jobEnd\":\"01.1970\",\"comment\":\"default\",\"attachments\":null}";
+        String expected = "{\"id\":1,\"lastName\":\"default\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":null,\"internshipEnd\":null,\"practiceBegin\":null,\"practiceEnd\":null,\"jobBegin\":null,\"jobEnd\":null,\"comment\":\"default\",\"photo\":null,\"attachments\":null}";
         Person person = new Person(1);
         when(personService.getById(1)).thenReturn(person);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
@@ -114,7 +114,7 @@ public class PersonControllerTest {
 
     @Test
     public void checkUpdatingPersonIfExists() throws Exception{
-        String contentJson = "{\"id\":1,\"photo\":null,\"lastName\":\"default\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":\"01.1970\",\"internshipEnd\":\"01.1970\",\"practiceBegin\":\"01.1970\",\"practiceEnd\":\"01.1970\",\"jobBegin\":\"01.1970\",\"jobEnd\":\"01.1970\",\"comment\":\"default\",\"attachments\":null}";
+        String contentJson = "{\"id\":1,\"lastName\":\"default\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":null,\"internshipEnd\":null,\"practiceBegin\":null,\"practiceEnd\":null,\"jobBegin\":null,\"jobEnd\":null,\"comment\":\"default\",\"photo\":null,\"attachments\":null}";
         Person person = new Person(1);
         Mockito.when(personService.getById(1)).thenReturn(person);
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put(

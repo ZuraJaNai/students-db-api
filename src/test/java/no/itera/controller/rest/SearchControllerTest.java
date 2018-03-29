@@ -40,7 +40,7 @@ public class SearchControllerTest {
 
     @Test
     public void checkPersonSearchByLastNameIfExists() throws Exception {
-        String expected = "{\"persons\":[{\"id\":1,\"lastName\":\"lastName\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":\"01.1970\",\"internshipEnd\":\"01.1970\",\"practiceBegin\":\"01.1970\",\"practiceEnd\":\"01.1970\",\"jobBegin\":\"01.1970\",\"jobEnd\":\"01.1970\",\"comment\":\"default\"}],\"currentPage\":1,\"totalPages\":1,\"count\":1}";
+        String expected = "{\"persons\":[{\"id\":1,\"lastName\":\"lastName\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":null,\"internshipEnd\":null,\"practiceBegin\":null,\"practiceEnd\":null,\"jobBegin\":null,\"jobEnd\":null,\"comment\":\"default\"}],\"currentPage\":1,\"totalPages\":1,\"count\":1}";
         Person person = new Person(1);
         person.setLastName("lastName");
         Mockito.when(personService.findAllPersons(any(PersonSearch.class))).thenReturn(Arrays.asList(person));
