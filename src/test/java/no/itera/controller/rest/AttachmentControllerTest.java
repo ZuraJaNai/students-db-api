@@ -5,6 +5,8 @@ import no.itera.model.Person;
 import no.itera.model.Type;
 import no.itera.services.AttachmentServiceImpl;
 import no.itera.services.PersonServiceImpl;
+import org.codehaus.groovy.runtime.powerassert.AssertionRenderer;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -124,7 +126,7 @@ public class AttachmentControllerTest {
     }
 
     @Test
-    public void getAllPersonsAttachmentsIfNotExists() throws Exception {
+    public void getAllPersonAttachmentsIfNotExists() throws Exception {
         String expected = "[]";
         when(personService.isPersonExists(any(Person.class))).thenReturn(true);
         when(attachmentService.getAttachments(1)).thenReturn(Arrays.asList());
@@ -133,4 +135,32 @@ public class AttachmentControllerTest {
          mockMvc.perform(requestBuilder).andExpect(status().isNoContent());
     }
 
+    @Test
+    public void downloadPersonAttachment() throws Exception {
+        when(personService.isPersonExists(any(Person.class))).thenReturn(true);
+        when(attachmentService.getFile(1,1)).thenReturn(new Attachment(
+                new byte[]{0},"fileName","application/pdf",1,Type.DOCUMENT));
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+                "/restapi/person/1/attachments/1").accept(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
+        Assert.assertEquals("application/pdf",result.getResponse().getContentType());
+    }
+
+    @Test
+    public void uploadPersonPhoto() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file","fileName",
+                "application/pdf",new byte[]{0});
+        when(personService.isPersonExists(any(Person.class))).thenReturn(true);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.fileUpload(
+                "/restapi/person/1/photo").file(file);
+        mockMvc.perform(requestBuilder).andExpect(status().isOk());
+    }
+
+    @Test
+    public void deletePersonPhoto() throws Exception {
+        when(personService.isPersonExists(any(Person.class))).thenReturn(true);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(
+                "/restapi/person/1/photo").accept(MediaType.APPLICATION_JSON);
+        mockMvc.perform(requestBuilder).andExpect(status().isOk());
+    }
 }

@@ -164,7 +164,7 @@ public class AttachmentController {
      * @return ResponseEntity with HttpStatus
      */
     @RequestMapping(value = "/{person_id}/photo", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deletePhoto(@PathVariable("id") int personId){
+    public ResponseEntity<String> deletePhoto(@PathVariable("person_id") int personId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
