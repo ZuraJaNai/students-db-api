@@ -7,6 +7,7 @@ import no.itera.services.PersonServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -38,27 +40,7 @@ public class SearchControllerTest {
 
     @Test
     public void checkPersonSearchByLastNameIfExists() throws Exception {
-        String expected = "{\n" +
-                "  \"persons\": [\n" +
-                "    {\n" +
-                "      \"id\": 1,\n" +
-                "      \"lastName\": \"lastName\",\n" +
-                "      \"firstName\": \"string\",\n" +
-                "      \"patronymic\": \"string\",\n" +
-                "      \"email\": \"user@mail.com\",\n" +
-                "      \"yearOfStudy\": \"2017\",\n" +
-                "      \"internshipBegin\": \"01.2018\",\n" +
-                "      \"internshipEnd\": \"02.2018\",\n" +
-                "      \"practiceBegin\": \"01.2018\",\n" +
-                "      \"practiceEnd\": \"02.2018\",\n" +
-                "      \"jobBegin\": \"01.2018\",\n" +
-                "      \"jobEnd\": \"02.2018\"\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"currentPage\": 1,\n" +
-                "  \"totalPages\": 1,\n" +
-                "  \"count\": 1\n" +
-                "}";
+        String expected = "{\"persons\":[{\"id\":1,\"lastName\":\"lastName\",\"firstName\":\"default\",\"patronymic\":\"default\",\"email\":\"default\",\"yearOfStudy\":\"default\",\"internshipBegin\":\"01.1970\",\"internshipEnd\":\"01.1970\",\"practiceBegin\":\"01.1970\",\"practiceEnd\":\"01.1970\",\"jobBegin\":\"01.1970\",\"jobEnd\":\"01.1970\",\"comment\":\"default\"}],\"currentPage\":1,\"totalPages\":1,\"count\":1}";
         Person person = new Person(1);
         person.setLastName("lastName");
         Mockito.when(personService.findAllPersons(any(PersonSearch.class))).thenReturn(Arrays.asList(person));
@@ -66,7 +48,8 @@ public class SearchControllerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/person/search").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);
-        mockMvc.perform(requestBuilder).andExpect(status().isFound());
+        MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isFound()).andReturn();
+        JSONAssert.assertEquals(expected,result.getResponse().getContentAsString(),false);
     }
 
     @Test

@@ -17,11 +17,6 @@ import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 @MappedSuperclass
 public abstract class AbstractPerson implements Serializable{
 
-//    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-//            .appendPattern("MM.yyyy")
-//            .parseDefaulting(DAY_OF_MONTH, 15)
-//            .toFormatter();
-
     @org.hibernate.annotations.GenericGenerator(
             name = "ID_GENERATOR",
             strategy = "enhanced-sequence",

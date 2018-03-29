@@ -73,7 +73,7 @@ public class AttachmentController {
      */
     @RequestMapping(value = "/{person_id}/attachments/{attachment_id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteFile(@PathVariable("person_id") int personId,
-                                             @RequestParam("attachment_id") int attachmentId){
+                                             @PathVariable("attachment_id") int attachmentId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -132,6 +132,45 @@ public class AttachmentController {
         headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
                 attachment.getFilename()));
         return new ResponseEntity<>(buffer,headers,HttpStatus.OK);
+    }
+
+    /**
+     * Method for adding photo to Person instance
+     *
+     * @param personId  id of Person for whom we upload photo
+     * @param file  the actual photo MultipartFile
+     * @return ResponseEntity containnig message and HttpStatus
+     * @throws IOException if can't get bytes from the file
+     */
+    @RequestMapping(value = "/{person_id}/photo", method = RequestMethod.POST)
+    public ResponseEntity<String> uploadPhoto(@PathVariable("person_id") int personId,
+                                             @RequestParam("file") MultipartFile file) throws IOException {
+        logger.debug("Uploading file {}", file.getOriginalFilename());
+        if(!personService.isPersonExists(new Person(personId))){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(file.isEmpty()){
+            return new ResponseEntity<>("File is empty " + file.getOriginalFilename(),HttpStatus.OK);
+        }
+        attachmentService.addPhoto(personId,file.getBytes(),file.getOriginalFilename(),file.getContentType());
+        return new ResponseEntity<>("Photo uploaded " + file.getOriginalFilename(), HttpStatus.OK);
+
+    }
+
+    /**
+     * Method for deleting Person photo
+     *
+     * @param personId  id of Person whos photo to delete
+     * @return ResponseEntity with HttpStatus
+     */
+    @RequestMapping(value = "/{person_id}/photo", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deletePhoto(@PathVariable("person_id") int personId){
+        if(!personService.isPersonExists(new Person(personId))){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        attachmentService.deletePhoto(personId);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 }

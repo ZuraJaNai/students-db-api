@@ -28,6 +28,8 @@ public class AttachmentController {
 
     private static final Logger logger = LogManager.getLogger(PersonController.class);
 
+    String redirectToPersonView = "redirect:/views/person/%d";
+
     @Autowired
     private AttachmentService attachmentService;
 
@@ -39,11 +41,11 @@ public class AttachmentController {
                                              @RequestParam("file") MultipartFile file) throws IOException {
         logger.debug("Uploading file {}", file.getOriginalFilename());
         if(attachmentService.isPersonHasFile(personId,file.getOriginalFilename())){
-            return String.format("redirect:/views/person/%d",personId);
+            return String.format(redirectToPersonView,personId);
         }
         byte[] buffer = file.getBytes();
         attachmentService.addFile(personId,buffer,file.getOriginalFilename(),file.getContentType());
-        return String.format("redirect:/views/person/%d",personId);
+        return String.format(redirectToPersonView,personId);
     }
 
     @RequestMapping(value = "/{id}/deletefile/{attachmentId}", method = RequestMethod.DELETE)
@@ -51,7 +53,7 @@ public class AttachmentController {
                              @PathVariable("attachmentId") int attachmentId){
         attachmentService.isPersonHasFile(personId,attachmentId);
         attachmentService.deleteFile(attachmentId);
-        return String.format("redirect:/views/person/%d",personId);
+        return String.format(redirectToPersonView,personId);
     }
 
     @RequestMapping(value = "/{id}/downloadfile/{attachmentId}", method = RequestMethod.GET)

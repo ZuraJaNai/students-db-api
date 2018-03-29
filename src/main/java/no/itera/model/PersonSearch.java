@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -16,6 +17,7 @@ import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 @ApiModel(value="PersonSearch")
 public class PersonSearch implements Serializable {
 
+    @Transient
     DateTimeFormatter formatter = new DateTimeFormatterBuilder()
             .appendPattern("MM.yyyy")
             .parseDefaulting(DAY_OF_MONTH, 15)
@@ -50,10 +52,6 @@ public class PersonSearch implements Serializable {
     private boolean job;
 
     private String comment;
-
-    public PersonSearch(){
-
-    }
 
     public String getLastName() {
         return lastName;
