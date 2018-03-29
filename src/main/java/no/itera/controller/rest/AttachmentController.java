@@ -40,8 +40,8 @@ public class AttachmentController {
      * @param file the actual MultipartFile file to be uploaded
      * @return Response entity containing HttpStatus and message
      */
-    @RequestMapping(value = "/{id}/uploadfile", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile(@PathVariable("id") int personId,
+    @RequestMapping(value = "/{person_id}/attachments", method = RequestMethod.POST)
+    public ResponseEntity<String> uploadFile(@PathVariable("person_id") int personId,
                                              @RequestParam("file") MultipartFile file) throws IOException {
         logger.debug("Uploading file {}", file.getOriginalFilename());
         if(!personService.isPersonExists(new Person(personId))){
@@ -71,9 +71,9 @@ public class AttachmentController {
      * @param attachmentId  id of the file to delete
      * @return ResponseEntity containing HttpStatus
      */
-    @RequestMapping(value = "/{id}/deletefile", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteFile(@PathVariable("id") int personId,
-                                             @RequestParam("id") int attachmentId){
+    @RequestMapping(value = "/{person_id}/attachments/{attachment_id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteFile(@PathVariable("person_id") int personId,
+                                             @RequestParam("attachment_id") int attachmentId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -93,8 +93,8 @@ public class AttachmentController {
      * @param personId  id of the Person
      * @return ResponseEntity containing list of names and HttpStatus
      */
-    @RequestMapping(value = "/{id}/files", method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getAllFiles(@PathVariable("id") int personId){
+    @RequestMapping(value = "/{person_id}/attachments", method = RequestMethod.GET)
+    public ResponseEntity<List<Attachment>> getAllAttachments(@PathVariable("person_id") int personId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -105,11 +105,7 @@ public class AttachmentController {
         if(attachments.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        ArrayList<String> fileNames= new ArrayList<>();
-        for (Attachment attachment:attachments) {
-            fileNames.add(attachment.getFilename());
-        }
-        return new ResponseEntity<>(fileNames,HttpStatus.OK);
+        return new ResponseEntity<>(attachments,HttpStatus.OK);
     }
 
     /**
@@ -120,9 +116,9 @@ public class AttachmentController {
      * @return ResponseEntity containing byte array with file, headers with
      * information about file and HttpStatus
      */
-    @RequestMapping(value = "/{id}/downloadfile", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> downloadFile(@PathVariable("id") int personId,
-                                               @RequestParam("id") int attachmentId){
+    @RequestMapping(value = "/{person_id}/attachments/{attachment_id}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> downloadFile(@PathVariable("person_id") int personId,
+                                               @PathVariable("attachment_id") int attachmentId){
         if(!personService.isPersonExists(new Person(personId))){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -130,7 +126,7 @@ public class AttachmentController {
         if (attachment == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        byte[] buffer = attachment.getContent();
+        byte[] buffer = attachment.getFile().getContent();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(attachment.getMimetype()));
         headers.set("Content-Disposition",String.format("form-data; filename=\"%s\"",
