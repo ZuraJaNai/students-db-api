@@ -4,15 +4,12 @@ package no.itera.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
-import no.itera.util.CustomDateSerializer;
+import no.itera.util.CustomPersonDateSerializer;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
-
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 @MappedSuperclass
 public abstract class AbstractPerson implements Serializable{
@@ -58,7 +55,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "01.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomPersonDateSerializer.class)
     private Date internshipBegin;
 
     @Column(name = "INTERNSHIP_END")
@@ -66,7 +63,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "02.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomPersonDateSerializer.class)
     private Date internshipEnd;
 
     @Column(name = "PRACTICE_BEGIN")
@@ -74,7 +71,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "01.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomPersonDateSerializer.class)
     private Date practiceBegin;
 
     @Column(name = "PRACTICE_END")
@@ -82,7 +79,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "02.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomPersonDateSerializer.class)
     private Date practiceEnd;
 
     @Column(name = "JOB_BEGIN")
@@ -90,7 +87,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "01.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomPersonDateSerializer.class)
     private Date jobBegin;
 
     @Column(name = "JOB_END")
@@ -98,7 +95,7 @@ public abstract class AbstractPerson implements Serializable{
     @ApiModelProperty(example = "02.2018")
     @JsonFormat
             (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomDateSerializer.class)
+    @JsonSerialize(using = CustomPersonDateSerializer.class)
     private Date jobEnd;
 
     @Column(name = "COMMENT")
@@ -113,20 +110,9 @@ public abstract class AbstractPerson implements Serializable{
                            Date internshipEnd, Date practiceBegin,
                            Date practiceEnd, Date jobBegin, Date jobEnd,
                            String comment){
+        this(lastName, firstName, patronymic, email, yearOfStudy, internshipBegin,
+                internshipEnd, practiceBegin, practiceEnd, jobBegin, jobEnd, comment);
         this.id = id;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.email = email;
-        this.yearOfStudy = yearOfStudy;
-        this.internshipBegin = internshipBegin;
-        this.internshipEnd = internshipEnd;
-        this.practiceBegin = practiceBegin;
-
-        this.practiceEnd = practiceEnd;
-        this.jobBegin = jobBegin;
-        this.jobEnd = jobEnd;
-        this.comment = comment;
     }
 
     public AbstractPerson(String lastName, String firstName, String patronymic,
@@ -248,5 +234,50 @@ public abstract class AbstractPerson implements Serializable{
 
     public int getId() {
         return id;
+    }
+
+
+    @Override
+    public String toString() {
+        StringBuilder info = new StringBuilder();
+
+        info.append(String.format("ID: %d%n", id));
+        if(StringUtils.isNoneEmpty(lastName)){
+            info.append(String.format("Last name: %s%n",lastName));
+        }
+        if(StringUtils.isNoneEmpty(firstName)){
+            info.append(String.format("First name: %s%n",firstName));
+        }
+        if(StringUtils.isNoneEmpty(patronymic)){
+            info.append(String.format("Patronymic: %s%n",patronymic));
+        }
+        if(StringUtils.isNoneEmpty(email)){
+            info.append(String.format("Email: %s%n",email));
+        }
+        if(StringUtils.isNoneEmpty(yearOfStudy)){
+            info.append(String.format("Year of study: %s%n",yearOfStudy));
+        }
+        if(StringUtils.isNoneEmpty(comment)){
+            info.append(String.format("Comment: %s%n",comment));
+        }
+        if(internshipBegin != null){
+            info.append(String.format("Internship begin: %s%n",internshipBegin));
+        }
+        if(internshipEnd != null){
+            info.append(String.format("Internship end: %s%n",internshipEnd));
+        }
+        if(practiceBegin != null){
+            info.append(String.format("Practice begin: %s%n",practiceBegin));
+        }
+        if(practiceEnd != null){
+            info.append(String.format("Practice end: %s%n",practiceEnd));
+        }
+        if(jobBegin != null){
+            info.append(String.format("Job begin: %s%n",jobBegin));
+        }
+        if(jobEnd != null){
+            info.append(String.format("Job end: %s%n",jobEnd));
+        }
+        return info.toString();
     }
 }

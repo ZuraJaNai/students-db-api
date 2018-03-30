@@ -1,12 +1,11 @@
 package no.itera.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "FILE")
-public class File {
+public class AttachmentContent implements Serializable{
 
     @Id
     @GeneratedValue()
@@ -18,11 +17,11 @@ public class File {
     private byte[] content;
 
 
-    public File(){
+    public AttachmentContent(){
 
     }
 
-    public File(byte[] buffer){
+    public AttachmentContent(byte[] buffer){
         this.content = buffer;
     }
 
@@ -38,3 +37,4 @@ public class File {
         return id;
     }
 }
+

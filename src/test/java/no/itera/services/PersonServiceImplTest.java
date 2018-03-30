@@ -1,35 +1,34 @@
 package no.itera.services;
 
 import no.itera.dao.PersonDao;
+import no.itera.model.AbstractPerson;
 import no.itera.model.Person;
 import no.itera.model.PersonData;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import no.itera.model.PersonSearch;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.jpa.domain.Specification;
+
 
 import java.util.Arrays;
+import java.util.Date;
 
-import static org.mockito.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = PersonServiceImpl.class)
-public class PersonServiceTest {
 
+@RunWith(MockitoJUnitRunner.class)
+public class PersonServiceImplTest {
 
     @Mock
     private PersonDao daoMock;
 
     @InjectMocks
     private PersonServiceImpl personService;
-
-    @BeforeEach
-    public void init(){
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void checkIfExistingPersonExists() {
@@ -76,4 +75,24 @@ public class PersonServiceTest {
         assertThrows(NullPointerException.class, () -> personService.updatePerson(10, new PersonData()));
     }
 
+    @Test
+    public void getPersonCount(){
+        when(daoMock.count()).thenReturn(new Long(12));
+        assertEquals(12,personService.count());
+    }
+
+    @Test
+    public void checkPersonTransformationToOutputFormat(){
+        Person person = new Person(1);
+        AbstractPerson personData = new PersonData(person);
+        assertEquals(personData.toString(),
+                personService.transformPersonsToOutputFormat(Arrays.asList(person)).get(0).toString());
+    }
+
+    @Test
+    public void checkExistingPersonSearch(){
+        AbstractPerson person = new Person(1);
+        when(daoMock.findAll(any(Specification.class))).thenReturn(Arrays.asList(person));
+        assertEquals(person.toString(),personService.findAllPersons(new PersonSearch()).get(0).toString());
+    }
 }

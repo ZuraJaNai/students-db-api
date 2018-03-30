@@ -169,7 +169,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<Person> findAllPersons(PersonSearch filter) {
 
-        List<Person> persons = personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+        return personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
@@ -231,8 +231,6 @@ public class PersonServiceImpl implements PersonService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         });
-
-        return persons;
     }
 
     /**
@@ -255,7 +253,7 @@ public class PersonServiceImpl implements PersonService {
      */
     public List<PersonData> transformPersonsToOutputFormat(List<Person> personList){
         List<PersonData> personOutputData = new ArrayList<>();
-        for (Person person :
+        for (AbstractPerson person :
                 personList) {
             personOutputData.add(new PersonData(person));
         }
