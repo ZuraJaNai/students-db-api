@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 /**
  *  REST controller for Person class
  */
@@ -46,7 +48,16 @@ public class PersonController {
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     public ResponseEntity<PersonResponse> listAllPersonsPageable(
             @RequestParam(value = "page", required = false) Integer pageNum,
-            @RequestParam(value = "limit", required = false) Integer limit){
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "print", required = false) Boolean print){
+        if(print){
+            Iterable<Person> persons = personService.getAll();
+            if(persons.spliterator().estimateSize() > 0){
+                return new ResponseEntity<>(new PersonResponse(personService
+                        .transformPersonsToOutputFormat(persons),0,
+                        0,personService.count()),HttpStatus.OK);
+            }
+        }
         if(pageNum == null){
             pageNum = 1;
         }

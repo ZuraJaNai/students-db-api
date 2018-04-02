@@ -259,4 +259,20 @@ public class PersonServiceImpl implements PersonService {
         }
         return personOutputData;
     }
+
+    /**
+     * Method to transform List of Persons to List of PersonData,needed
+     * when we want to get only main information about person
+     *
+     * @param personList  List of Person objects
+     * @return List of PersonData objects
+     */
+    public List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList){
+        List<PersonData> personOutputData = new ArrayList<>();
+        for (AbstractPerson person :
+                personList) {
+            personOutputData.add(new PersonData(person));
+        }
+        return personOutputData;
+    }
 }
