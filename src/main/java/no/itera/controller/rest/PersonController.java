@@ -49,12 +49,15 @@ public class PersonController {
     public ResponseEntity<PersonResponse> listAllPersonsPageable(
             @RequestParam(value = "page", required = false) Integer pageNum,
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "print", required = false) Boolean print){
+            @RequestParam(value = "print", required = false, defaultValue = "false") Boolean print){
         if(print){
-            Iterable<Person> persons = personService.getAll();
-            if(persons.spliterator().estimateSize() > 0){
-                return new ResponseEntity<>(new PersonResponse(personService
-                        .transformPersonsToOutputFormat(persons),0,
+            List<PersonData> persons = personService
+                    .transformPersonsToOutputFormat(personService.getAll());
+            if(persons.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else{
+                return new ResponseEntity<>(new PersonResponse(persons,0,
                         0,personService.count()),HttpStatus.OK);
             }
         }
