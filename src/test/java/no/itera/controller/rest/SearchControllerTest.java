@@ -48,7 +48,7 @@ public class SearchControllerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
                 "/restapi/person/search").accept(MediaType.APPLICATION_JSON)
                 .content("{\"lastName\":\"lastName\"}").contentType(MediaType.APPLICATION_JSON);
-        MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isFound()).andReturn();
+        MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
         JSONAssert.assertEquals(expected,result.getResponse().getContentAsString(),false);
     }
 
