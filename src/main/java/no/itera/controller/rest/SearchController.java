@@ -41,8 +41,20 @@ public class SearchController {
      */
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public ResponseEntity<PersonResponse> findAllPersons(@RequestBody PersonSearch person,
-                                                           @RequestParam(value = "page", required = false) Integer pageNum,
-                                                           @RequestParam(value = "limit", required = false) Integer limit){
+                                                         @RequestParam(value = "page", required = false) Integer pageNum,
+                                                         @RequestParam(value = "limit", required = false) Integer limit,
+                                                         @RequestParam(value = "print", required = false, defaultValue = "false") Boolean print){
+        if(print){
+            List<PersonData> persons = personService
+                    .transformPersonsToOutputFormat(personService.findAllPersons(person));
+            if(persons.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else{
+                return new ResponseEntity<>(new PersonResponse(persons,0,
+                        0,persons.size()),HttpStatus.OK);
+            }
+        }
         if(pageNum == null){
             pageNum = 1;
         }
@@ -62,6 +74,6 @@ public class SearchController {
         }
         PersonResponse response = new PersonResponse(page.getPageList(),pageNum,
                 page.getPageCount(),persons.size());
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

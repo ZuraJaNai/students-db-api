@@ -1,7 +1,5 @@
 package no;
 
-import no.itera.util.ApplicationExitListener;
-import no.itera.util.ApplicationReadyListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

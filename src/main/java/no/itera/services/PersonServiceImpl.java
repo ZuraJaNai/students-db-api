@@ -169,7 +169,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<Person> findAllPersons(PersonSearch filter) {
 
-        List<Person> persons = personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+        return personDao.findAll((Root<Person> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
@@ -231,8 +231,6 @@ public class PersonServiceImpl implements PersonService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         });
-
-        return persons;
     }
 
     /**
@@ -255,7 +253,23 @@ public class PersonServiceImpl implements PersonService {
      */
     public List<PersonData> transformPersonsToOutputFormat(List<Person> personList){
         List<PersonData> personOutputData = new ArrayList<>();
-        for (Person person :
+        for (AbstractPerson person :
+                personList) {
+            personOutputData.add(new PersonData(person));
+        }
+        return personOutputData;
+    }
+
+    /**
+     * Method to transform List of Persons to List of PersonData,needed
+     * when we want to get only main information about person
+     *
+     * @param personList  List of Person objects
+     * @return List of PersonData objects
+     */
+    public List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList){
+        List<PersonData> personOutputData = new ArrayList<>();
+        for (AbstractPerson person :
                 personList) {
             personOutputData.add(new PersonData(person));
         }

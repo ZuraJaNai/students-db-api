@@ -8,15 +8,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CustomDateSerializer extends StdSerializer<Date> {
+public class CustomPersonDateSerializer extends StdSerializer<Date> {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM.yyyy");
 
-    public CustomDateSerializer() {
+    public CustomPersonDateSerializer() {
         this(null);
     }
 
-    public CustomDateSerializer(Class<Date> t) {
+    public CustomPersonDateSerializer(Class<Date> t) {
         super(t);
     }
 

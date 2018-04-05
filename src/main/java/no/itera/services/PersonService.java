@@ -101,4 +101,7 @@ public interface PersonService {
      * @return List of PersonData objects
      */
     List<PersonData> transformPersonsToOutputFormat(List<Person> personList);
+
+    public List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList);
+
 }
