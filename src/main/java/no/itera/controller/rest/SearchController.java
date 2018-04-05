@@ -74,6 +74,6 @@ public class SearchController {
         }
         PersonResponse response = new PersonResponse(page.getPageList(),pageNum,
                 page.getPageCount(),persons.size());
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
