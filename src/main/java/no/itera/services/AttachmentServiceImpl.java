@@ -153,9 +153,16 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public void addPhoto(int personId, byte[] bytes, String originalFilename, String contentType){
         Person person = personService.getById(personId);
+        Integer oldPhotoId = null;
+        if(person.getPhoto() != null){
+            oldPhotoId = person.getPhoto().getId();
+        }
         Attachment photo = new Attachment(bytes,originalFilename,contentType,personId,Type.PHOTO);
         attachmentDao.save(photo);
         person.setPhoto(photo);
+        if(oldPhotoId != null){
+            this.deleteFile(oldPhotoId);
+        }
         personService.addPerson(person);
     }
 
