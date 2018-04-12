@@ -136,8 +136,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         List<Attachment> attachments = new ArrayList<>();
         for (Attachment attachment :
                 attachmentDao.findAll()) {
-            if (attachment.getPersonId() == personId &&
-                    attachment.getType() != Type.PHOTO){
+            if (attachment.getPersonId() == personId){
                 attachments.add(attachment);
             }
         }
