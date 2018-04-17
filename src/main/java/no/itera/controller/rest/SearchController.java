@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController("SearchControllerRest")
@@ -48,7 +49,8 @@ public class SearchController {
             List<PersonData> persons = personService
                     .transformPersonsToOutputFormat(personService.findAllPersons(person));
             if(persons.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new PersonResponse(new ArrayList<PersonData>(),0,
+                        0,0),HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(new PersonResponse(persons,0,
@@ -68,7 +70,7 @@ public class SearchController {
         page.setPageSize(limit);
         page.setPage(pageNum);
         if(persons.isEmpty()){
-            return new ResponseEntity<>( new PersonResponse(null,1,
+            return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),1,
                     1,0),HttpStatus.OK);
         }
         if(page.getPageList().isEmpty()) {

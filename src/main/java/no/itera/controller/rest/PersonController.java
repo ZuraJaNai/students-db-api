@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,8 +55,8 @@ public class PersonController {
             List<PersonData> persons = personService
                     .transformPersonsToOutputFormat(personService.getAll());
             if(persons.isEmpty()) {
-                return new ResponseEntity<>( new PersonResponse(null,1,
-                        1,personService.count()),HttpStatus.OK);
+                return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),0,
+                        0,personService.count()),HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(new PersonResponse(persons,0,
@@ -71,7 +72,7 @@ public class PersonController {
         logger.debug("Getting list of persons.Page {}.Limit {}", pageNum, limit);
         Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
         if(!page.hasContent()) {
-            return new ResponseEntity<>( new PersonResponse(null,1,
+            return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),1,
                     1,personService.count()),HttpStatus.OK);
         }
         PersonResponse response = new PersonResponse(personService

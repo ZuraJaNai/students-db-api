@@ -15,12 +15,12 @@ public class CustomEndDateDeserializer  extends JsonDeserializer<LocalDate> {
 
     public final DateTimeFormatter endDateFormatter = new DateTimeFormatterBuilder()
             .appendPattern("MM.yyyy")
-            .parseDefaulting(DAY_OF_MONTH, 28)
+            .parseDefaulting(DAY_OF_MONTH, 1)
             .toFormatter();
 
     @Override
     public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         LocalDate date = LocalDate.parse(p.getValueAsString(), endDateFormatter);
-        return date;
+        return date.withDayOfMonth(date.getMonth().maxLength());
     }
 }
