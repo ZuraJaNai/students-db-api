@@ -50,8 +50,8 @@ public class PersonController {
     public ResponseEntity<PersonResponse> listAllPersonsPageable(
             @RequestParam(value = "page", required = false) Integer pageNum,
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "print", required = false, defaultValue = "false") Boolean print){
-        if(print){
+            @RequestParam(value = "pagination", required = false, defaultValue = "true") Boolean pagination){
+        if(!pagination){
             List<PersonData> persons = personService
                     .transformPersonsToOutputFormat(personService.getAll());
             if(persons.isEmpty()) {
