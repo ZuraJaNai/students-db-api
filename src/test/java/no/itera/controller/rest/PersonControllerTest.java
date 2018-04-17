@@ -143,7 +143,7 @@ public class PersonControllerTest {
         when(personService.getAll(any(PageRequest.class))).thenReturn(new PageImpl(Arrays.asList()));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
                 "/restapi/person?page=1&limit=3").accept(MediaType.APPLICATION_JSON);
-        mockMvc.perform(requestBuilder).andExpect(status().isNotFound());
+        mockMvc.perform(requestBuilder).andExpect(status().isOk());
     }
 
     @Test

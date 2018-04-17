@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController("SearchControllerRest")
@@ -43,12 +44,13 @@ public class SearchController {
     public ResponseEntity<PersonResponse> findAllPersons(@RequestBody PersonSearch person,
                                                          @RequestParam(value = "page", required = false) Integer pageNum,
                                                          @RequestParam(value = "limit", required = false) Integer limit,
-                                                         @RequestParam(value = "print", required = false, defaultValue = "false") Boolean print){
-        if(print){
+                                                         @RequestParam(value = "pagination", required = false, defaultValue = "true") Boolean pagination){
+        if(!pagination){
             List<PersonData> persons = personService
                     .transformPersonsToOutputFormat(personService.findAllPersons(person));
             if(persons.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new PersonResponse(new ArrayList<PersonData>(),0,
+                        0,0),HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(new PersonResponse(persons,0,
@@ -67,6 +69,10 @@ public class SearchController {
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);
         page.setPage(pageNum);
+        if(persons.isEmpty()){
+            return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),1,
+                    1,0),HttpStatus.OK);
+        }
         if(page.getPageList().isEmpty()) {
             logger.error("Page number {} not found", pageNum);
             return new ResponseEntity(new CustomErrorType("Page number "

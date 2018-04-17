@@ -7,10 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.util.Date;
 
 import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
@@ -34,19 +32,19 @@ public class PersonSearch implements Serializable {
     private String yearOfStudy;
 
     @ApiModelProperty(example = "01.2018")
-    private Date internshipDate;
+    private LocalDate internshipDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean internship;
 
     @ApiModelProperty(example = "01.2018")
-    private Date practiceDate;
+    private LocalDate practiceDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean practice;
 
     @ApiModelProperty(example = "01.2018")
-    private Date jobDate;
+    private LocalDate jobDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean job;
@@ -85,7 +83,7 @@ public class PersonSearch implements Serializable {
         this.yearOfStudy = yearOfStudy;
     }
 
-    public Date getInternshipDate() {
+    public LocalDate getInternshipDate() {
         return internshipDate;
     }
 
@@ -93,8 +91,7 @@ public class PersonSearch implements Serializable {
         if(StringUtils.isNoneEmpty(internshipDate)){
             this.internship = true;
         }
-            this.internshipDate = Date.from(LocalDate.parse(internshipDate,formatter)
-                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.internshipDate = LocalDate.parse(internshipDate,formatter);
     }
 
     public boolean isInternship() {
@@ -105,7 +102,7 @@ public class PersonSearch implements Serializable {
         this.internship = internship;
     }
 
-    public Date getPracticeDate() {
+    public LocalDate getPracticeDate() {
         return practiceDate;
     }
 
@@ -113,8 +110,7 @@ public class PersonSearch implements Serializable {
         if(StringUtils.isNoneEmpty(practiceDate)){
             this.practice = true;
         }
-            this.practiceDate =  Date.from(LocalDate.parse(practiceDate,formatter)
-                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.practiceDate =  LocalDate.parse(practiceDate,formatter);
     }
 
     public boolean isPractice() {
@@ -125,7 +121,7 @@ public class PersonSearch implements Serializable {
         this.practice = practice;
     }
 
-    public Date getJobDate() {
+    public LocalDate getJobDate() {
         return jobDate;
     }
 
@@ -133,8 +129,7 @@ public class PersonSearch implements Serializable {
         if(StringUtils.isNoneEmpty(jobDate)){
             this.job = true;
         }
-            this.jobDate =  Date.from(LocalDate.parse(jobDate,formatter)
-                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
+            this.jobDate =  LocalDate.parse(jobDate,formatter);
     }
 
     public boolean isJob() {

@@ -2,14 +2,19 @@ package no.itera.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
-import no.itera.util.CustomPersonDateSerializer;
+import no.itera.util.CustomBeginDateDeserializer;
+import no.itera.util.CustomEndDateDeserializer;
+import no.itera.util.CustomPersonBeginDateSerializer;
+import no.itera.util.CustomPersonEndDateSerializer;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @MappedSuperclass
 public abstract class AbstractPerson implements Serializable{
@@ -51,52 +56,58 @@ public abstract class AbstractPerson implements Serializable{
     private String yearOfStudy;
 
     @Column(name = "INTERNSHIP_BEGIN")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
+    @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "01.2018")
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomPersonDateSerializer.class)
-    private Date internshipBegin;
+    @JsonFormat(pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomPersonBeginDateSerializer.class)
+    @JsonDeserialize(using = CustomBeginDateDeserializer.class)
+    private LocalDate internshipBegin;
 
     @Column(name = "INTERNSHIP_END")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
+    @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "02.2018")
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomPersonDateSerializer.class)
-    private Date internshipEnd;
+    @JsonFormat(pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomPersonEndDateSerializer.class)
+    @JsonDeserialize(using = CustomEndDateDeserializer.class)
+    private LocalDate internshipEnd;
 
     @Column(name = "PRACTICE_BEGIN")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
+    @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "01.2018")
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomPersonDateSerializer.class)
-    private Date practiceBegin;
+    @JsonFormat(pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomPersonBeginDateSerializer.class)
+    @JsonDeserialize(using = CustomBeginDateDeserializer.class)
+    private LocalDate practiceBegin;
 
     @Column(name = "PRACTICE_END")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
+    @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "02.2018")
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomPersonDateSerializer.class)
-    private Date practiceEnd;
+    @JsonFormat(pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomPersonEndDateSerializer.class)
+    @JsonDeserialize(using = CustomEndDateDeserializer.class)
+    private LocalDate practiceEnd;
 
     @Column(name = "JOB_BEGIN")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
+    @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "01.2018")
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomPersonDateSerializer.class)
-    private Date jobBegin;
+    @JsonFormat(pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomPersonBeginDateSerializer.class)
+    @JsonDeserialize(using = CustomBeginDateDeserializer.class)
+    private LocalDate jobBegin;
 
     @Column(name = "JOB_END")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
+    @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "02.2018")
-    @JsonFormat
-            (shape = JsonFormat.Shape.STRING, pattern = "MM.yyyy")
-    @JsonSerialize(using = CustomPersonDateSerializer.class)
-    private Date jobEnd;
+    @JsonFormat(pattern = "MM.yyyy")
+    @JsonSerialize(using = CustomPersonEndDateSerializer.class)
+    @JsonDeserialize(using = CustomEndDateDeserializer.class)
+    private LocalDate jobEnd;
 
     @Column(name = "COMMENT")
     private String comment;
@@ -106,9 +117,9 @@ public abstract class AbstractPerson implements Serializable{
     }
 
     public AbstractPerson(int id, String lastName, String firstName, String patronymic,
-                           String email, String yearOfStudy, Date internshipBegin,
-                           Date internshipEnd, Date practiceBegin,
-                           Date practiceEnd, Date jobBegin, Date jobEnd,
+                           String email, String yearOfStudy, LocalDate internshipBegin,
+                          LocalDate internshipEnd, LocalDate practiceBegin,
+                          LocalDate practiceEnd, LocalDate jobBegin, LocalDate jobEnd,
                            String comment){
         this(lastName, firstName, patronymic, email, yearOfStudy, internshipBegin,
                 internshipEnd, practiceBegin, practiceEnd, jobBegin, jobEnd, comment);
@@ -116,9 +127,9 @@ public abstract class AbstractPerson implements Serializable{
     }
 
     public AbstractPerson(String lastName, String firstName, String patronymic,
-                          String email, String yearOfStudy, Date internshipBegin,
-                          Date internshipEnd, Date practiceBegin,
-                          Date practiceEnd, Date jobBegin, Date jobEnd,
+                          String email, String yearOfStudy, LocalDate internshipBegin,
+                          LocalDate internshipEnd, LocalDate practiceBegin,
+                          LocalDate practiceEnd, LocalDate jobBegin, LocalDate jobEnd,
                           String comment){
         this.lastName = lastName;
         this.firstName = firstName;
@@ -176,51 +187,51 @@ public abstract class AbstractPerson implements Serializable{
         this.yearOfStudy = yearOfStudy;
     }
 
-    public Date getInternshipBegin() {
+    public LocalDate getInternshipBegin() {
         return internshipBegin;
     }
 
-    public void setInternshipBegin(Date internshipBegin) {
+    public void setInternshipBegin(LocalDate internshipBegin) {
         this.internshipBegin = internshipBegin;
     }
 
-    public Date getInternshipEnd() {
+    public LocalDate getInternshipEnd() {
         return internshipEnd;
     }
 
-    public void setInternshipEnd(Date internshipEnd) {
+    public void setInternshipEnd(LocalDate internshipEnd) {
         this.internshipEnd = internshipEnd;
     }
 
-    public Date getPracticeBegin() {
+    public LocalDate getPracticeBegin() {
         return practiceBegin;
     }
 
-    public void setPracticeBegin(Date practiceBegin) {
+    public void setPracticeBegin(LocalDate practiceBegin) {
         this.practiceBegin = practiceBegin;
     }
 
-    public Date getPracticeEnd() {
+    public LocalDate getPracticeEnd() {
         return practiceEnd;
     }
 
-    public void setPracticeEnd(Date practiceEnd) {
+    public void setPracticeEnd(LocalDate practiceEnd) {
         this.practiceEnd = practiceEnd;
     }
 
-    public Date getJobBegin() {
+    public LocalDate getJobBegin() {
         return jobBegin;
     }
 
-    public void setJobBegin(Date jobBegin) {
+    public void setJobBegin(LocalDate jobBegin) {
         this.jobBegin = jobBegin;
     }
 
-    public Date getJobEnd() {
+    public LocalDate getJobEnd() {
         return jobEnd;
     }
 
-    public void setJobEnd(Date jobEnd) {
+    public void setJobEnd(LocalDate jobEnd) {
         this.jobEnd = jobEnd;
     }
 

@@ -15,8 +15,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,12 +51,13 @@ public class PersonController {
     public ResponseEntity<PersonResponse> listAllPersonsPageable(
             @RequestParam(value = "page", required = false) Integer pageNum,
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "print", required = false, defaultValue = "false") Boolean print){
-        if(print){
+            @RequestParam(value = "pagination", required = false, defaultValue = "true") Boolean pagination){
+        if(!pagination){
             List<PersonData> persons = personService
                     .transformPersonsToOutputFormat(personService.getAll());
             if(persons.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),0,
+                        0,personService.count()),HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(new PersonResponse(persons,0,
@@ -70,9 +73,8 @@ public class PersonController {
         logger.debug("Getting list of persons.Page {}.Limit {}", pageNum, limit);
         Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
         if(!page.hasContent()) {
-            logger.error("Page number {} not found", pageNum);
-            return new ResponseEntity(new CustomErrorType("Page number "
-                    + pageNum + " not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),1,
+                    1,personService.count()),HttpStatus.OK);
         }
         PersonResponse response = new PersonResponse(personService
                 .transformPersonsToOutputFormat(page.getContent()),pageNum,
@@ -117,6 +119,12 @@ public class PersonController {
         headers.setLocation(ucBuilder.path("/restapi/person/{id}")
                 .buildAndExpand(person.getId()).toUri());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/person/import", method = RequestMethod.POST)
+    public ResponseEntity<String> importPersonsFromExcel(@RequestParam("file") MultipartFile file){
+        //import from excel
+        return new ResponseEntity<>(file.getOriginalFilename()+" imported",HttpStatus.OK);
     }
 
     /**

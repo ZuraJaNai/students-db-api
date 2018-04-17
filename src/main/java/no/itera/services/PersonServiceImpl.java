@@ -108,33 +108,15 @@ public class PersonServiceImpl implements PersonService {
         if(StringUtils.isNoneEmpty(person.getFirstName())){
             tempPerson.setFirstName(person.getFirstName());
         }
-        if(StringUtils.isNoneEmpty(person.getPatronymic())){
-            tempPerson.setPatronymic(person.getPatronymic());
-        }
-        if(StringUtils.isNoneEmpty(person.getEmail())){
-            tempPerson.setEmail(person.getEmail());
-        }
-        if(StringUtils.isNoneEmpty(person.getYearOfStudy())){
-            tempPerson.setYearOfStudy(person.getYearOfStudy());
-        }
-        if(person.getInternshipBegin() != null){
-            tempPerson.setInternshipBegin(person.getInternshipBegin());
-        }
-        if(person.getInternshipEnd() != null){
-            tempPerson.setInternshipEnd(person.getInternshipEnd());
-        }
-        if(person.getPracticeBegin() != null){
-            tempPerson.setPracticeBegin(person.getPracticeBegin());
-        }
-        if(person.getPracticeEnd() != null){
-            tempPerson.setPracticeEnd(person.getPracticeEnd());
-        }
-        if(person.getJobBegin() != null){
-            tempPerson.setJobBegin(person.getJobBegin());
-        }
-        if(person.getJobEnd() != null){
-            tempPerson.setJobEnd(person.getJobEnd());
-        }
+        tempPerson.setPatronymic(person.getPatronymic());
+        tempPerson.setEmail(person.getEmail());
+        tempPerson.setYearOfStudy(person.getYearOfStudy());
+        tempPerson.setInternshipBegin(person.getInternshipBegin());
+        tempPerson.setInternshipEnd(person.getInternshipEnd());
+        tempPerson.setPracticeBegin(person.getPracticeBegin());
+        tempPerson.setPracticeEnd(person.getPracticeEnd());
+        tempPerson.setJobBegin(person.getJobBegin());
+        tempPerson.setJobEnd(person.getJobEnd());
         tempPerson.setComment(person.getComment());
         personDao.save(tempPerson);
     }
