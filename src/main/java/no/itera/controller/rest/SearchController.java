@@ -67,6 +67,10 @@ public class SearchController {
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);
         page.setPage(pageNum);
+        if(persons.isEmpty()){
+            return new ResponseEntity<>( new PersonResponse(null,1,
+                    1,0),HttpStatus.OK);
+        }
         if(page.getPageList().isEmpty()) {
             logger.error("Page number {} not found", pageNum);
             return new ResponseEntity(new CustomErrorType("Page number "

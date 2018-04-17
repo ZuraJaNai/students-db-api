@@ -54,7 +54,8 @@ public class PersonController {
             List<PersonData> persons = personService
                     .transformPersonsToOutputFormat(personService.getAll());
             if(persons.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>( new PersonResponse(null,1,
+                        1,personService.count()),HttpStatus.OK);
             }
             else{
                 return new ResponseEntity<>(new PersonResponse(persons,0,
@@ -70,9 +71,8 @@ public class PersonController {
         logger.debug("Getting list of persons.Page {}.Limit {}", pageNum, limit);
         Page page = personService.getAll(new PageRequest(pageNum - 1,limit));
         if(!page.hasContent()) {
-            logger.error("Page number {} not found", pageNum);
-            return new ResponseEntity(new CustomErrorType("Page number "
-                    + pageNum + " not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>( new PersonResponse(null,1,
+                    1,personService.count()),HttpStatus.OK);
         }
         PersonResponse response = new PersonResponse(personService
                 .transformPersonsToOutputFormat(page.getContent()),pageNum,
