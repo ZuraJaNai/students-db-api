@@ -10,8 +10,6 @@ import java.time.format.DateTimeFormatter;
 
 public class CustomPersonBeginDateSerializer extends StdSerializer<LocalDate> {
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.yyyy");
-
     public CustomPersonBeginDateSerializer() {
         this(null);
     }
@@ -22,6 +20,6 @@ public class CustomPersonBeginDateSerializer extends StdSerializer<LocalDate> {
 
     @Override
     public void serialize(LocalDate date, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(formatter.format(date));
+        jsonGenerator.writeString(DateConstants.dateFormatterSerizalisztion.format(date));
     }
 }

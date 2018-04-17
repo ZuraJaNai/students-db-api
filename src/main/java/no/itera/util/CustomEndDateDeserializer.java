@@ -13,14 +13,9 @@ import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 public class CustomEndDateDeserializer  extends JsonDeserializer<LocalDate> {
 
-    public final DateTimeFormatter endDateFormatter = new DateTimeFormatterBuilder()
-            .appendPattern("MM.yyyy")
-            .parseDefaulting(DAY_OF_MONTH, 1)
-            .toFormatter();
-
     @Override
     public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        LocalDate date = LocalDate.parse(p.getValueAsString(), endDateFormatter);
-        return date.withDayOfMonth(date.getMonth().maxLength());
+        LocalDate date = LocalDate.parse(p.getValueAsString(), DateConstants.dateFormatterDeserialization);
+        return date.withDayOfMonth(date.lengthOfMonth());
     }
 }
