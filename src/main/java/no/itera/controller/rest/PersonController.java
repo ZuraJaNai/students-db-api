@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
@@ -118,6 +119,12 @@ public class PersonController {
         headers.setLocation(ucBuilder.path("/restapi/person/{id}")
                 .buildAndExpand(person.getId()).toUri());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/person/import", method = RequestMethod.POST)
+    public ResponseEntity<String> importPersonsFromExcel(@RequestParam("file") MultipartFile file){
+        //import from excel
+        return new ResponseEntity<>(file.getOriginalFilename()+" imported",HttpStatus.OK);
     }
 
     /**
