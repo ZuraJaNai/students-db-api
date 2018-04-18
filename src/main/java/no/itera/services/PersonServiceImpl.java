@@ -177,9 +177,13 @@ public class PersonServiceImpl implements PersonService {
             }
 
             if (filter.isInternship()) {
-                if (filter.getInternshipDate() != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate()),
+                if (filter.getInternshipDate().getType() == SearchDateType.SINGLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate().getDateOne()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate().getDateOne()),
+                            cb.isNull(root.get("internshipEnd"))));
+                } else if(filter.getInternshipDate().getType() == SearchDateType.DOUBLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate().getDateTwo()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate().getDateOne()),
                             cb.isNull(root.get("internshipEnd"))));
                 } else {
                     predicates.add(cb.isNotNull(root.get("internshipBegin")));
@@ -187,9 +191,13 @@ public class PersonServiceImpl implements PersonService {
             }
 
             if (filter.isPractice()) {
-                if (filter.getPracticeDate() != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get("practiceBegin"), filter.getPracticeDate()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("practiceEnd"), filter.getPracticeDate()),
+                if (filter.getPracticeDate().getType() == SearchDateType.SINGLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("practiceBegin"), filter.getPracticeDate().getDateOne()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("practiceEnd"), filter.getPracticeDate().getDateOne()),
+                            cb.isNull(root.get("practiceEnd"))));
+                } else if(filter.getPracticeDate().getType() == SearchDateType.DOUBLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("practiceBegin"), filter.getPracticeDate().getDateTwo()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("practiceEnd"), filter.getPracticeDate().getDateOne()),
                             cb.isNull(root.get("practiceEnd"))));
                 } else {
                     predicates.add(cb.isNotNull(root.get("practiceBegin")));
@@ -197,10 +205,15 @@ public class PersonServiceImpl implements PersonService {
             }
 
             if (filter.isJob()) {
-                if (filter.getJobDate() != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get("jobBegin"), filter.getJobDate()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("jobEnd"), filter.getJobDate()),
+                if (filter.getJobDate().getType() == SearchDateType.SINGLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("jobBegin"), filter.getJobDate().getDateOne()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("jobEnd"), filter.getJobDate().getDateOne()),
                             cb.isNull(root.get("jobEnd"))));
+                } else if(filter.getJobDate().getType() == SearchDateType.DOUBLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get("jobBegin"), filter.getJobDate().getDateTwo()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("jobEnd"), filter.getJobDate().getDateOne()),
+                            cb.isNull(root.get("jobEnd"))));
+
                 } else {
                     predicates.add(cb.isNotNull(root.get("jobBegin")));
                 }

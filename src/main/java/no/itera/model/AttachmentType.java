@@ -1,5 +1,5 @@
 package no.itera.model;
 
-public enum Type {
+public enum AttachmentType {
     PHOTO,DOCUMENT
 }

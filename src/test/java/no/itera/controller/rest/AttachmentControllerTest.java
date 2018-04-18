@@ -1,11 +1,10 @@
 package no.itera.controller.rest;
 
 import no.itera.model.Attachment;
+import no.itera.model.AttachmentType;
 import no.itera.model.Person;
-import no.itera.model.Type;
 import no.itera.services.AttachmentServiceImpl;
 import no.itera.services.PersonServiceImpl;
-import org.codehaus.groovy.runtime.powerassert.AssertionRenderer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,7 +117,7 @@ public class AttachmentControllerTest {
         String expected = "[{\"id\":0,\"filename\":\"fileName\",\"mimetype\":\"application/pdf\",\"personId\":1,\"type\":\"DOCUMENT\"}]";
         when(personService.isPersonExists(any(Person.class))).thenReturn(true);
         when(attachmentService.getAttachments(1)).thenReturn(Arrays.asList(new Attachment(
-                new byte[]{0},"fileName","application/pdf",1, Type.DOCUMENT)));
+                new byte[]{0},"fileName","application/pdf",1, AttachmentType.DOCUMENT)));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
                 "/restapi/person/1/attachments").accept(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
@@ -139,7 +138,7 @@ public class AttachmentControllerTest {
     public void downloadPersonAttachment() throws Exception {
         when(personService.isPersonExists(any(Person.class))).thenReturn(true);
         when(attachmentService.getFile(1,1)).thenReturn(new Attachment(
-                new byte[]{0},"fileName","application/pdf",1,Type.DOCUMENT));
+                new byte[]{0},"fileName","application/pdf",1,AttachmentType.DOCUMENT));
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
                 "/restapi/person/1/attachments/1").accept(MediaType.APPLICATION_JSON);
         MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();

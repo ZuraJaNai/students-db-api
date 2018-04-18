@@ -27,17 +27,17 @@ public class Attachment implements Serializable {
     private int personId;
 
     @Column(name = "TYPE")
-    private Type type;
+    private AttachmentType attachmentType;
 
     private Attachment(){}
 
     public Attachment(byte[] buffer, String originalFilename, String contentType,
-                      int personId,Type type) {
+                      int personId,AttachmentType attachmentType) {
         this.file = new AttachmentContent(buffer);
         this.filename = originalFilename;
         this.mimetype = contentType;
         this.personId = personId;
-        this.type = type;
+        this.attachmentType = attachmentType;
     }
 
 
@@ -65,12 +65,12 @@ public class Attachment implements Serializable {
         return personId;
     }
 
-    public Type getType() {
-        return type;
+    public AttachmentType getAttachmentType() {
+        return attachmentType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setAttachmentType(AttachmentType attachmentType) {
+        this.attachmentType = attachmentType;
     }
 
     public void setFile(AttachmentContent file) {

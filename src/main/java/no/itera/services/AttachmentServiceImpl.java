@@ -2,8 +2,8 @@ package no.itera.services;
 
 import no.itera.dao.AttachmentDao;
 import no.itera.model.Attachment;
+import no.itera.model.AttachmentType;
 import no.itera.model.Person;
-import no.itera.model.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public boolean addFile(int personId, byte[] buffer, String originalFilename, String contentType) {
         Attachment attachment = new Attachment(buffer,originalFilename,
-                contentType,personId, Type.DOCUMENT);
+                contentType,personId, AttachmentType.DOCUMENT);
         attachmentDao.save(attachment);
         personService.updateAttachments(personId,attachment);
         return true;
@@ -60,7 +60,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         for (Attachment attachment :
                 savedAttachments) {
             if(attachment.getPersonId() == personId&&
-                    attachment.getType() != Type.PHOTO){
+                    attachment.getAttachmentType() != AttachmentType.PHOTO){
                 attachments.add(attachment);
             }
         }
@@ -157,7 +157,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         if(person.getPhoto() != null){
             oldPhotoId = person.getPhoto().getId();
         }
-        Attachment photo = new Attachment(bytes,originalFilename,contentType,personId,Type.PHOTO);
+        Attachment photo = new Attachment(bytes,originalFilename,contentType,personId,AttachmentType.PHOTO);
         attachmentDao.save(photo);
         person.setPhoto(photo);
         if(oldPhotoId != null){

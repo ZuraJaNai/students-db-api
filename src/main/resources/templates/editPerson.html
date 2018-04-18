@@ -6,15 +6,15 @@
 <body>
 <div>
     <form th:object="${person}" th:action="@{'/views/person/edit/' + ${person.id}}" method="post">
-        <p>Last name  <input type="text" th:field="*{lastName}"/></p>
-        <p>First name  <input type="text" th:field="*{firstName}"/></p>
-        <p>Patronymic  <input type="text" th:field="*{patronymic}"/></p>
-        <p>Email  <input type="text" th:field="*{email}"/></p>
-        <p>Year of study   <input type="text" th:field="*{yearOfStudy}"/></p>
-        <p>Internship  <input type="text" th:field="*{internship}"/></p>
-        <p>Practice  <input type="text" th:field="*{practice}"/></p>
-        <p>Comment  <textarea type="text" th:field="*{comment}"/></p>
-        <button type="submit">Submit</button>
+        <p>Last name  <input attachmentType="text" th:field="*{lastName}"/></p>
+        <p>First name  <input attachmentType="text" th:field="*{firstName}"/></p>
+        <p>Patronymic  <input attachmentType="text" th:field="*{patronymic}"/></p>
+        <p>Email  <input attachmentType="text" th:field="*{email}"/></p>
+        <p>Year of study   <input attachmentType="text" th:field="*{yearOfStudy}"/></p>
+        <p>Internship  <input attachmentType="text" th:field="*{internship}"/></p>
+        <p>Practice  <input attachmentType="text" th:field="*{practice}"/></p>
+        <p>Comment  <textarea attachmentType="text" th:field="*{comment}"/></p>
+        <button attachmentType="submit">Submit</button>
     </form>
 </div>
 </body>

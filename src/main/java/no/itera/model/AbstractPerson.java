@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
-import no.itera.util.CustomBeginDateDeserializer;
-import no.itera.util.CustomEndDateDeserializer;
+import no.itera.util.CustomPersonBeginDateDeserializer;
+import no.itera.util.CustomPersonEndDateDeserializer;
 import no.itera.util.CustomPersonBeginDateSerializer;
 import no.itera.util.CustomPersonEndDateSerializer;
 import org.apache.commons.lang3.StringUtils;
@@ -56,57 +56,51 @@ public abstract class AbstractPerson implements Serializable{
     private String yearOfStudy;
 
     @Column(name = "INTERNSHIP_BEGIN")
-    //@Temporal(TemporalType.DATE)
     @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "01.2018")
     @JsonFormat(pattern = "MM.yyyy")
     @JsonSerialize(using = CustomPersonBeginDateSerializer.class)
-    @JsonDeserialize(using = CustomBeginDateDeserializer.class)
+    @JsonDeserialize(using = CustomPersonBeginDateDeserializer.class)
     private LocalDate internshipBegin;
 
     @Column(name = "INTERNSHIP_END")
-    //@Temporal(TemporalType.DATE)
     @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "02.2018")
     @JsonFormat(pattern = "MM.yyyy")
     @JsonSerialize(using = CustomPersonEndDateSerializer.class)
-    @JsonDeserialize(using = CustomEndDateDeserializer.class)
+    @JsonDeserialize(using = CustomPersonEndDateDeserializer.class)
     private LocalDate internshipEnd;
 
     @Column(name = "PRACTICE_BEGIN")
-    //@Temporal(TemporalType.DATE)
     @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "01.2018")
     @JsonFormat(pattern = "MM.yyyy")
     @JsonSerialize(using = CustomPersonBeginDateSerializer.class)
-    @JsonDeserialize(using = CustomBeginDateDeserializer.class)
+    @JsonDeserialize(using = CustomPersonBeginDateDeserializer.class)
     private LocalDate practiceBegin;
 
     @Column(name = "PRACTICE_END")
-    //@Temporal(TemporalType.DATE)
     @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "02.2018")
     @JsonFormat(pattern = "MM.yyyy")
     @JsonSerialize(using = CustomPersonEndDateSerializer.class)
-    @JsonDeserialize(using = CustomEndDateDeserializer.class)
+    @JsonDeserialize(using = CustomPersonEndDateDeserializer.class)
     private LocalDate practiceEnd;
 
     @Column(name = "JOB_BEGIN")
-    //@Temporal(TemporalType.DATE)
     @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "01.2018")
     @JsonFormat(pattern = "MM.yyyy")
     @JsonSerialize(using = CustomPersonBeginDateSerializer.class)
-    @JsonDeserialize(using = CustomBeginDateDeserializer.class)
+    @JsonDeserialize(using = CustomPersonBeginDateDeserializer.class)
     private LocalDate jobBegin;
 
     @Column(name = "JOB_END")
-    //@Temporal(TemporalType.DATE)
     @Type(type = "org.hibernate.type.LocalDateType")
     @ApiModelProperty(example = "02.2018")
     @JsonFormat(pattern = "MM.yyyy")
     @JsonSerialize(using = CustomPersonEndDateSerializer.class)
-    @JsonDeserialize(using = CustomEndDateDeserializer.class)
+    @JsonDeserialize(using = CustomPersonEndDateDeserializer.class)
     private LocalDate jobEnd;
 
     @Column(name = "COMMENT")

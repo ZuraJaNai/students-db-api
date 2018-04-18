@@ -6,13 +6,13 @@
 <body>
 <div>
     <form th:action="@{'/views/person'}" th:method="get">
-        <button type="submit">MAIN PAGE</button>
+        <button attachmentType="submit">MAIN PAGE</button>
     </form>
     <form  th:action="@{'/views/person/edit/' + ${person.id}}" th:method="get">
-        <button type="submit">EDIT</button>
+        <button attachmentType="submit">EDIT</button>
     </form>
     <form th:action="@{'/views/person/delete/' + ${person.id}}" th:method="delete">
-        <button type="submit">DELETE</button>
+        <button attachmentType="submit">DELETE</button>
     </form>
 </div>
 <h1>Person info</h1>
@@ -35,12 +35,12 @@
                 <td th:text="${attachment.getFilename()}">Name</td>
                 <td>
                     <form  th:action="@{'/views/person/' + ${person.id} + '/downloadfile/' + ${attachment.id}}" th:method="get">
-                        <button type="submit">DOWNLOAD</button>
+                        <button attachmentType="submit">DOWNLOAD</button>
                     </form>
                 </td>
                 <td>
                     <form th:action="@{'/views/person/' + ${person.id} + '/deletefile/' + ${attachment.id}}" th:method="delete">
-                        <button type="submit">DELETE</button>
+                        <button attachmentType="submit">DELETE</button>
                     </form>
                 </td>
             </tr>
@@ -51,8 +51,8 @@
             <tr>
                 <form th:action="@{'/views/person/' + ${person.id} + '/uploadfile'}" th:method="post" enctype="multipart/form-data">
             <tr><td>File to upload:</td>
-                <td><input type="file" name="file" /></td>
-                <td><input type="submit" value="Upload" /></td></tr>
+                <td><input attachmentType="file" name="file" /></td>
+                <td><input attachmentType="submit" value="Upload" /></td></tr>
             </form>
             </tr>
         </div>
