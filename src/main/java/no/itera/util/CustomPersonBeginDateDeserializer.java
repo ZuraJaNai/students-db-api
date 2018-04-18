@@ -11,11 +11,11 @@ import java.time.format.DateTimeFormatterBuilder;
 
 import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
-public class CustomEndDateDeserializer  extends JsonDeserializer<LocalDate> {
+public class CustomPersonBeginDateDeserializer extends JsonDeserializer<LocalDate> {
 
     @Override
     public LocalDate deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         LocalDate date = LocalDate.parse(p.getValueAsString(), DateConstants.dateFormatterDeserialization);
-        return date.withDayOfMonth(date.lengthOfMonth());
+        return date;
     }
 }

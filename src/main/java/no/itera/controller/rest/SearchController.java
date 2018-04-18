@@ -68,7 +68,7 @@ public class SearchController {
                 .transformPersonsToOutputFormat(personService.findAllPersons(person));
         PagedListHolder page = new PagedListHolder(persons);
         page.setPageSize(limit);
-        page.setPage(pageNum);
+        page.setPage(pageNum-1);
         if(persons.isEmpty()){
             return new ResponseEntity<>( new PersonResponse(new ArrayList<PersonData>(),1,
                     1,0),HttpStatus.OK);

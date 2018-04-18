@@ -2,7 +2,7 @@ package no.itera.services;
 
 import no.itera.dao.AttachmentDao;
 import no.itera.model.Attachment;
-import no.itera.model.Type;
+import no.itera.model.AttachmentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,7 +35,7 @@ public class AttachmentServiceImplTest {
     @Test
     public void checkGetAllAttachments(){
         Attachment attachment = new Attachment(new byte[0],"filename",
-                "application/pdf",1, Type.DOCUMENT);
+                "application/pdf",1, AttachmentType.DOCUMENT);
         when(daoMock.findAll()).thenReturn(Arrays.asList(attachment));
         Attachment result = attachmentService.getAttachments(1).get(0);
         assertEquals(attachment.getFilename(),result.getFilename());
@@ -45,7 +45,7 @@ public class AttachmentServiceImplTest {
     @Test
     public void checkGetAllAttachmentsIfHasOnlyPhoto(){
         Attachment attachment = new Attachment(new byte[0],"filename",
-                "application/pdf",1, Type.PHOTO);
+                "application/pdf",1, AttachmentType.PHOTO);
         when(daoMock.findAll()).thenReturn(Arrays.asList());
         assertEquals(true,attachmentService.getAttachments(1).isEmpty());
     }
@@ -53,7 +53,7 @@ public class AttachmentServiceImplTest {
     @Test
     public void checkGetFileIfExists(){
         Attachment attachment = new Attachment(new byte[0],"filename",
-                "application/pdf",1, Type.DOCUMENT);
+                "application/pdf",1, AttachmentType.DOCUMENT);
         when(daoMock.findAll()).thenReturn(Arrays.asList(attachment));
         Attachment result = attachmentService.getFile(1,attachment.getId());
         assertEquals(attachment.getFilename(),result.getFilename());
@@ -71,7 +71,7 @@ public class AttachmentServiceImplTest {
     @Test
     public void checkIfPersonHasFileById(){
         Attachment attachment = new Attachment(new byte[0],"filename",
-                "application/pdf",1, Type.DOCUMENT);
+                "application/pdf",1, AttachmentType.DOCUMENT);
         when(daoMock.findAll()).thenReturn(Arrays.asList(attachment));
         assertEquals(true,
                 attachmentService.isPersonHasFile(1,attachment.getId()));
@@ -80,7 +80,7 @@ public class AttachmentServiceImplTest {
     @Test
     public void checkIfPersonHasFileByName(){
         Attachment attachment = new Attachment(new byte[0],"filename",
-                "application/pdf",1, Type.DOCUMENT);
+                "application/pdf",1, AttachmentType.DOCUMENT);
         when(daoMock.findAll()).thenReturn(Arrays.asList(attachment));
         assertEquals(true,
                 attachmentService.isPersonHasFile(1,attachment.getFilename()));

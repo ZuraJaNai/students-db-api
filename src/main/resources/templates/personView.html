@@ -51,8 +51,8 @@
             <tr>
                 <form th:action="@{'/views/person/' + ${person.id} + '/uploadfile'}" th:method="post" enctype="multipart/form-data">
             <tr><td>File to upload:</td>
-                <td><input type="file" name="file" /></td>
-                <td><input type="submit" value="Upload" /></td></tr>
+                <td><input attachmentType="file" name="file" /></td>
+                <td><input attachmentType="submit" value="Upload" /></td></tr>
             </form>
             </tr>
         </div>

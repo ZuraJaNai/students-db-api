@@ -1,25 +1,16 @@
 package no.itera.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.StringUtils;
+import no.itera.util.CustomSearchDateDeserializer;
+import no.itera.util.CustomSearchYearOfStudyDeserializer;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+import java.util.List;
 
 @ApiModel(value="PersonSearch")
 public class PersonSearch implements Serializable {
-
-    @Transient
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .appendPattern("MM.yyyy")
-            .parseDefaulting(DAY_OF_MONTH, 15)
-            .toFormatter();
 
     private String lastName;
 
@@ -29,22 +20,27 @@ public class PersonSearch implements Serializable {
     private String email;
 
     @ApiModelProperty(example = "2017")
-    private String yearOfStudy;
+    @JsonDeserialize(using = CustomSearchYearOfStudyDeserializer.class)
+    private List<String> yearOfStudy;
 
     @ApiModelProperty(example = "01.2018")
-    private LocalDate internshipDate;
+    @JsonDeserialize(using = CustomSearchDateDeserializer.class)
+    private SearchDate internshipDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean internship;
 
     @ApiModelProperty(example = "01.2018")
-    private LocalDate practiceDate;
+
+    @JsonDeserialize(using = CustomSearchDateDeserializer.class)
+    private SearchDate practiceDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean practice;
 
     @ApiModelProperty(example = "01.2018")
-    private LocalDate jobDate;
+    @JsonDeserialize(using = CustomSearchDateDeserializer.class)
+    private SearchDate jobDate;
 
     @ApiModelProperty(allowableValues = "true, false")
     private boolean job;
@@ -75,23 +71,23 @@ public class PersonSearch implements Serializable {
         this.email = email;
     }
 
-    public String getYearOfStudy() {
+    public List<String> getYearOfStudy() {
         return yearOfStudy;
     }
 
-    public void setYearOfStudy(String yearOfStudy) {
+    public void setYearOfStudy(List<String> yearOfStudy) {
         this.yearOfStudy = yearOfStudy;
     }
 
-    public LocalDate getInternshipDate() {
+    public SearchDate getInternshipDate() {
         return internshipDate;
     }
 
-    public void setInternshipDate(String internshipDate) {
-        if(StringUtils.isNoneEmpty(internshipDate)){
+    public void setInternshipDate(SearchDate internshipDate) {
+        if(internshipDate != null){
             this.internship = true;
         }
-            this.internshipDate = LocalDate.parse(internshipDate,formatter);
+            this.internshipDate = internshipDate;
     }
 
     public boolean isInternship() {
@@ -102,15 +98,15 @@ public class PersonSearch implements Serializable {
         this.internship = internship;
     }
 
-    public LocalDate getPracticeDate() {
+    public SearchDate getPracticeDate() {
         return practiceDate;
     }
 
-    public void setPracticeDate(String practiceDate) {
-        if(StringUtils.isNoneEmpty(practiceDate)){
+    public void setPracticeDate(SearchDate practiceDate) {
+        if(practiceDate != null){
             this.practice = true;
         }
-            this.practiceDate =  LocalDate.parse(practiceDate,formatter);
+            this.practiceDate =  practiceDate;
     }
 
     public boolean isPractice() {
@@ -121,15 +117,15 @@ public class PersonSearch implements Serializable {
         this.practice = practice;
     }
 
-    public LocalDate getJobDate() {
+    public SearchDate getJobDate() {
         return jobDate;
     }
 
-    public void setJobDate(String jobDate) {
-        if(StringUtils.isNoneEmpty(jobDate)){
+    public void setJobDate(SearchDate jobDate) {
+        if(jobDate != null){
             this.job = true;
         }
-            this.jobDate =  LocalDate.parse(jobDate,formatter);
+            this.jobDate =  jobDate;
     }
 
     public boolean isJob() {

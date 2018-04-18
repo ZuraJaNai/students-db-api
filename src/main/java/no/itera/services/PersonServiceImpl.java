@@ -23,6 +23,18 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDao personDao;
 
+    private static String LAST_NAME_PARAM = "lastName";
+    private static String FIRST_NAME_PARAM = "firstName";
+    private static String EMAIL_PARAM = "email";
+    private static String YEAR_OF_STUDY_PARAM = "yearOfStudy";
+    private static String INTERNSHIP_BEGIN_PARAM = "internshipBegin";
+    private static String INTERNSHIP_END_PARAM = "internshipEnd";
+    private static String PRACTICE_BEGIN_PARAM = "practiceBegin";
+    private static String PRACTICE_END_PARAM = "practiceEnd";
+    private static String JOB_BEGIN_PARAM = "jobBegin";
+    private static String JOB_END_PARAM = "jobEnd";
+    private static String COMMENT_PARAM = "comment";
+
     /**
      * Method to get all persons from the database
      *
@@ -156,58 +168,71 @@ public class PersonServiceImpl implements PersonService {
             List<Predicate> predicates = new ArrayList<>();
 
             if (StringUtils.isNoneEmpty(filter.getLastName())) {
-                predicates.add(cb.like(cb.lower(root.get("lastName")),
+                predicates.add(cb.like(cb.lower(root.get(LAST_NAME_PARAM)),
                         filter.getLastName().toLowerCase() + "%"));
             }
 
             if (StringUtils.isNoneEmpty(filter.getFirstName())) {
-                predicates.add(cb.like(cb.lower(root.get("firstName")),
+                predicates.add(cb.like(cb.lower(root.get(FIRST_NAME_PARAM)),
                         "%" + filter.getFirstName().toLowerCase() + "%"));
             }
 
 
             if (StringUtils.isNoneEmpty(filter.getEmail())) {
-                predicates.add(cb.like(cb.lower(root.get("email")),
+                predicates.add(cb.like(cb.lower(root.get(EMAIL_PARAM)),
                         "%" + filter.getEmail().toLowerCase() + "%"));
             }
 
-            if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
-                predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
-                        "%" + filter.getYearOfStudy().toLowerCase() + "%"));
+            if (filter.getYearOfStudy() != null) {
+                predicates.add(root.get(YEAR_OF_STUDY_PARAM).in(filter.getYearOfStudy()));
+
             }
 
             if (filter.isInternship()) {
-                if (filter.getInternshipDate() != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get("internshipBegin"), filter.getInternshipDate()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("internshipEnd"), filter.getInternshipDate()),
-                            cb.isNull(root.get("internshipEnd"))));
+                if (filter.getInternshipDate().getType() == SearchDateType.SINGLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get(INTERNSHIP_BEGIN_PARAM), filter.getInternshipDate().getDateOne()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(INTERNSHIP_END_PARAM), filter.getInternshipDate().getDateOne()),
+                            cb.isNull(root.get(INTERNSHIP_END_PARAM))));
+                } else if(filter.getInternshipDate().getType() == SearchDateType.DOUBLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get(INTERNSHIP_BEGIN_PARAM), filter.getInternshipDate().getDateTwo()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(INTERNSHIP_END_PARAM), filter.getInternshipDate().getDateOne()),
+                            cb.isNull(root.get(INTERNSHIP_END_PARAM))));
                 } else {
-                    predicates.add(cb.isNotNull(root.get("internshipBegin")));
+                    predicates.add(cb.isNotNull(root.get(INTERNSHIP_BEGIN_PARAM)));
                 }
             }
 
             if (filter.isPractice()) {
-                if (filter.getPracticeDate() != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get("practiceBegin"), filter.getPracticeDate()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("practiceEnd"), filter.getPracticeDate()),
-                            cb.isNull(root.get("practiceEnd"))));
+                if (filter.getPracticeDate().getType() == SearchDateType.SINGLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get(PRACTICE_BEGIN_PARAM), filter.getPracticeDate().getDateOne()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(PRACTICE_END_PARAM), filter.getPracticeDate().getDateOne()),
+                            cb.isNull(root.get(PRACTICE_END_PARAM))));
+                } else if(filter.getPracticeDate().getType() == SearchDateType.DOUBLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get(PRACTICE_BEGIN_PARAM), filter.getPracticeDate().getDateTwo()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(PRACTICE_END_PARAM), filter.getPracticeDate().getDateOne()),
+                            cb.isNull(root.get(PRACTICE_END_PARAM))));
                 } else {
-                    predicates.add(cb.isNotNull(root.get("practiceBegin")));
+                    predicates.add(cb.isNotNull(root.get(PRACTICE_BEGIN_PARAM)));
                 }
             }
 
             if (filter.isJob()) {
-                if (filter.getJobDate() != null) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get("jobBegin"), filter.getJobDate()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get("jobEnd"), filter.getJobDate()),
-                            cb.isNull(root.get("jobEnd"))));
+                if (filter.getJobDate().getType() == SearchDateType.SINGLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get(JOB_BEGIN_PARAM), filter.getJobDate().getDateOne()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(JOB_END_PARAM), filter.getJobDate().getDateOne()),
+                            cb.isNull(root.get(JOB_END_PARAM))));
+                } else if(filter.getJobDate().getType() == SearchDateType.DOUBLE) {
+                    predicates.add(cb.lessThanOrEqualTo(root.get(JOB_BEGIN_PARAM), filter.getJobDate().getDateTwo()));
+                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(JOB_END_PARAM), filter.getJobDate().getDateOne()),
+                            cb.isNull(root.get(JOB_END_PARAM))));
+
                 } else {
-                    predicates.add(cb.isNotNull(root.get("jobBegin")));
+                    predicates.add(cb.isNotNull(root.get(JOB_BEGIN_PARAM)));
                 }
             }
 
             if (StringUtils.isNoneEmpty(filter.getComment())) {
-                predicates.add(cb.like(cb.lower(root.get("comment")),
+                predicates.add(cb.like(cb.lower(root.get(COMMENT_PARAM)),
                         "%" + filter.getComment().toLowerCase() + "%"));
             }
 
