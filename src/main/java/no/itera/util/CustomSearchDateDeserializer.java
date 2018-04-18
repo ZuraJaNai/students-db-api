@@ -23,7 +23,7 @@ public class CustomSearchDateDeserializer extends JsonDeserializer<SearchDate> {
             .toFormatter();
 
     private static String SINGLE_DATE_REGEX = "[0-9]{2}.[0-9]{4}";
-    String DOUBLE_DATE_REGEX = "[0-9]{2}[.][0-9]{4}[-][0-9]{2}[.][0-9]{4}";
+    private static String DOUBLE_DATE_REGEX = "[0-9]{2}[.][0-9]{4}[-][0-9]{2}[.][0-9]{4}";
 
     @Override
     public SearchDate deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
