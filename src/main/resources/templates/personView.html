@@ -6,13 +6,13 @@
 <body>
 <div>
     <form th:action="@{'/views/person'}" th:method="get">
-        <button attachmentType="submit">MAIN PAGE</button>
+        <button type="submit">MAIN PAGE</button>
     </form>
     <form  th:action="@{'/views/person/edit/' + ${person.id}}" th:method="get">
-        <button attachmentType="submit">EDIT</button>
+        <button type="submit">EDIT</button>
     </form>
     <form th:action="@{'/views/person/delete/' + ${person.id}}" th:method="delete">
-        <button attachmentType="submit">DELETE</button>
+        <button type="submit">DELETE</button>
     </form>
 </div>
 <h1>Person info</h1>
@@ -35,12 +35,12 @@
                 <td th:text="${attachment.getFilename()}">Name</td>
                 <td>
                     <form  th:action="@{'/views/person/' + ${person.id} + '/downloadfile/' + ${attachment.id}}" th:method="get">
-                        <button attachmentType="submit">DOWNLOAD</button>
+                        <button type="submit">DOWNLOAD</button>
                     </form>
                 </td>
                 <td>
                     <form th:action="@{'/views/person/' + ${person.id} + '/deletefile/' + ${attachment.id}}" th:method="delete">
-                        <button attachmentType="submit">DELETE</button>
+                        <button type="submit">DELETE</button>
                     </form>
                 </td>
             </tr>
