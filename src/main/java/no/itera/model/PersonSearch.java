@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import no.itera.util.CustomSearchDateDeserializer;
+import no.itera.util.CustomSearchYearOfStudyDeserializer;
 
 import java.io.Serializable;
+import java.util.List;
 
 @ApiModel(value="PersonSearch")
 public class PersonSearch implements Serializable {
@@ -18,7 +20,8 @@ public class PersonSearch implements Serializable {
     private String email;
 
     @ApiModelProperty(example = "2017")
-    private String yearOfStudy;
+    @JsonDeserialize(using = CustomSearchYearOfStudyDeserializer.class)
+    private List<String> yearOfStudy;
 
     @ApiModelProperty(example = "01.2018")
     @JsonDeserialize(using = CustomSearchDateDeserializer.class)
@@ -68,11 +71,11 @@ public class PersonSearch implements Serializable {
         this.email = email;
     }
 
-    public String getYearOfStudy() {
+    public List<String> getYearOfStudy() {
         return yearOfStudy;
     }
 
-    public void setYearOfStudy(String yearOfStudy) {
+    public void setYearOfStudy(List<String> yearOfStudy) {
         this.yearOfStudy = yearOfStudy;
     }
 

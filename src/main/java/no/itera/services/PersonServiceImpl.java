@@ -171,9 +171,12 @@ public class PersonServiceImpl implements PersonService {
                         "%" + filter.getEmail().toLowerCase() + "%"));
             }
 
-            if (StringUtils.isNoneEmpty(filter.getYearOfStudy())) {
-                predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
-                        "%" + filter.getYearOfStudy().toLowerCase() + "%"));
+            //not null and not empty
+            if (filter.getYearOfStudy() != null) {
+                predicates.add(root.get("yearOfStudy").in(filter.getYearOfStudy()));
+//                    predicates.add(cb.like(cb.lower(root.get("yearOfStudy")),
+//                            "%" + filter.getYearOfStudy().toLowerCase() + "%"));
+
             }
 
             if (filter.isInternship()) {
