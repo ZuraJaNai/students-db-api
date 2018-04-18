@@ -114,7 +114,7 @@ public class AttachmentControllerTest {
 
     @Test
     public void getAllPersonsAttachments() throws Exception {
-        String expected = "[{\"id\":0,\"filename\":\"fileName\",\"mimetype\":\"application/pdf\",\"personId\":1,\"type\":\"DOCUMENT\"}]";
+        String expected = "[{\"id\":0,\"filename\":\"fileName\",\"mimetype\":\"application/pdf\",\"personId\":1,\"attachmentType\":\"DOCUMENT\"}]";
         when(personService.isPersonExists(any(Person.class))).thenReturn(true);
         when(attachmentService.getAttachments(1)).thenReturn(Arrays.asList(new Attachment(
                 new byte[]{0},"fileName","application/pdf",1, AttachmentType.DOCUMENT)));
