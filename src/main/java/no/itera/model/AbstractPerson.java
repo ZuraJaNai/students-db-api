@@ -44,7 +44,7 @@ public abstract class AbstractPerson implements Serializable{
     @Column(nullable = false,name = "FIRSTNAME")
     private String firstName;
 
-    @Column(nullable = false,name = "PATRONYMIC")
+    @Column(name = "PATRONYMIC")
     private String patronymic;
 
     @Column(name = "EMAIL")

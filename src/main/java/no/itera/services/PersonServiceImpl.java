@@ -122,7 +122,9 @@ public class PersonServiceImpl implements PersonService {
         }
         tempPerson.setPatronymic(person.getPatronymic());
         tempPerson.setEmail(person.getEmail());
-        tempPerson.setYearOfStudy(person.getYearOfStudy());
+        if(StringUtils.isNoneEmpty(person.getYearOfStudy())) {
+            tempPerson.setYearOfStudy(person.getYearOfStudy());
+        }
         tempPerson.setInternshipBegin(person.getInternshipBegin());
         tempPerson.setInternshipEnd(person.getInternshipEnd());
         tempPerson.setPracticeBegin(person.getPracticeBegin());
