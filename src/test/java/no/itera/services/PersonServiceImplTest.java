@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
@@ -60,9 +61,9 @@ public class PersonServiceImplTest {
 
     @Test
     public void checkAllPersonsDeletion() {
-        when(daoMock.findAll()).thenReturn(Arrays.asList(new Person(1), new Person(2)));
+        when(daoMock.findAllByOrderByIdAsc()).thenReturn(Arrays.asList(new Person(1), new Person(2)));
         assertTrue(0 < personService.getAll().spliterator().getExactSizeIfKnown());
-        when(daoMock.findAll()).thenReturn(Arrays.asList());
+        when(daoMock.findAllByOrderByIdAsc()).thenReturn(Arrays.asList());
         assertEquals(0,(personService.getAll().spliterator().getExactSizeIfKnown()));
     }
 
@@ -89,8 +90,8 @@ public class PersonServiceImplTest {
 
     @Test
     public void checkExistingPersonSearch(){
-        AbstractPerson person = new Person(1);
-        when(daoMock.findAll(any(Specification.class))).thenReturn(Arrays.asList(person));
+        Person person = new Person(1);
+        when(daoMock.findAll(any(Specification.class),any(Sort.class))).thenReturn(Arrays.asList(person));
         assertEquals(person.toString(),personService.findAllPersons(new PersonSearch()).get(0).toString());
     }
 }

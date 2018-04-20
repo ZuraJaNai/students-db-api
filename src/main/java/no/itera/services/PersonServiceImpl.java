@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
@@ -42,7 +43,7 @@ public class PersonServiceImpl implements PersonService {
      */
     @Override
     public Iterable<Person> getAll() {
-        return personDao.findAll();
+        return personDao.findAllByOrderByIdAsc();
     }
 
     /**
@@ -54,7 +55,7 @@ public class PersonServiceImpl implements PersonService {
      */
     @Override
     public Page getAll(PageRequest pageRequest) {
-        return personDao.findAll(pageRequest);
+        return personDao.findAllByOrderByIdAsc(pageRequest);
     }
 
     /**
@@ -113,23 +114,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void updatePerson(int id, PersonData person) {
         Person tempPerson = this.getById(id);
-
-        if(StringUtils.isNoneEmpty(person.getLastName())){
-            tempPerson.setLastName(person.getLastName());
-        }
-        if(StringUtils.isNoneEmpty(person.getFirstName())){
-            tempPerson.setFirstName(person.getFirstName());
-        }
-        tempPerson.setPatronymic(person.getPatronymic());
-        tempPerson.setEmail(person.getEmail());
-        tempPerson.setYearOfStudy(person.getYearOfStudy());
-        tempPerson.setInternshipBegin(person.getInternshipBegin());
-        tempPerson.setInternshipEnd(person.getInternshipEnd());
-        tempPerson.setPracticeBegin(person.getPracticeBegin());
-        tempPerson.setPracticeEnd(person.getPracticeEnd());
-        tempPerson.setJobBegin(person.getJobBegin());
-        tempPerson.setJobEnd(person.getJobEnd());
-        tempPerson.setComment(person.getComment());
+        tempPerson.updatePersonData(person);
         personDao.save(tempPerson);
     }
 
@@ -237,7 +222,7 @@ public class PersonServiceImpl implements PersonService {
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
-        });
+        },new Sort(Sort.Direction.ASC,"id"));
     }
 
     /**

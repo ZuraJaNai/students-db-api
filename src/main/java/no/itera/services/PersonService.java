@@ -39,7 +39,7 @@ public interface PersonService {
      * @param filter  object with fields that are a criteria (if not null or empty)
      * @return List of persons,which suits to the criteria
      */
-    List<Person> findAllPersons(PersonSearch filter);
+    Iterable<Person> findAllPersons(PersonSearch filter);
 
     /**
      * Method to find out if Person with specified id exists in database
@@ -102,6 +102,6 @@ public interface PersonService {
      */
     List<PersonData> transformPersonsToOutputFormat(List<Person> personList);
 
-    public List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList);
+    List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList);
 
 }
