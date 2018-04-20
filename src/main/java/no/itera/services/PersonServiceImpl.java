@@ -113,25 +113,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void updatePerson(int id, PersonData person) {
         Person tempPerson = this.getById(id);
-
-        if(StringUtils.isNoneEmpty(person.getLastName())){
-            tempPerson.setLastName(person.getLastName());
-        }
-        if(StringUtils.isNoneEmpty(person.getFirstName())){
-            tempPerson.setFirstName(person.getFirstName());
-        }
-        tempPerson.setPatronymic(person.getPatronymic());
-        tempPerson.setEmail(person.getEmail());
-        if(StringUtils.isNoneEmpty(person.getYearOfStudy())) {
-            tempPerson.setYearOfStudy(person.getYearOfStudy());
-        }
-        tempPerson.setInternshipBegin(person.getInternshipBegin());
-        tempPerson.setInternshipEnd(person.getInternshipEnd());
-        tempPerson.setPracticeBegin(person.getPracticeBegin());
-        tempPerson.setPracticeEnd(person.getPracticeEnd());
-        tempPerson.setJobBegin(person.getJobBegin());
-        tempPerson.setJobEnd(person.getJobEnd());
-        tempPerson.setComment(person.getComment());
+        tempPerson.updatePersonData(person);
         personDao.save(tempPerson);
     }
 

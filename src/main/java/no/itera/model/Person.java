@@ -1,5 +1,7 @@
 package no.itera.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -30,6 +32,28 @@ public class Person extends AbstractPerson{
 
     public Person() {
 
+    }
+
+    public void updatePersonData(AbstractPerson person){
+
+        if(StringUtils.isNoneEmpty(person.getLastName())){
+            this.setLastName(person.getLastName());
+        }
+        if(StringUtils.isNoneEmpty(person.getFirstName())){
+            this.setFirstName(person.getFirstName());
+        }
+        this.setPatronymic(person.getPatronymic());
+        this.setEmail(person.getEmail());
+        if(StringUtils.isNoneEmpty(person.getYearOfStudy())) {
+            this.setYearOfStudy(person.getYearOfStudy());
+        }
+        this.setInternshipBegin(person.getInternshipBegin());
+        this.setInternshipEnd(person.getInternshipEnd());
+        this.setPracticeBegin(person.getPracticeBegin());
+        this.setPracticeEnd(person.getPracticeEnd());
+        this.setJobBegin(person.getJobBegin());
+        this.setJobEnd(person.getJobEnd());
+        this.setComment(person.getComment());
     }
 
     public void addAttachment(Attachment attachment) {

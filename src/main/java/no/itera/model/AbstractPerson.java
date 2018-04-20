@@ -241,7 +241,6 @@ public abstract class AbstractPerson implements Serializable{
         return id;
     }
 
-
     @Override
     public String toString() {
         StringBuilder info = new StringBuilder();
