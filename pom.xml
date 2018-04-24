@@ -146,6 +146,14 @@
             <artifactId>postgresql</artifactId>
             <version>9.4.1212</version>
         </dependency>
+
+        <!--For working with Excel files-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.13</version>
+        </dependency>
+
     </dependencies>
 
 
