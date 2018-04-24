@@ -1,5 +1,7 @@
 package no.itera.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -12,8 +14,7 @@ public class AttachmentContent implements Serializable{
     @Column(name = "FILE_ID",updatable = false, nullable = false)
     private int id;
 
-    @Column(name = "CONTENT")
-    @Lob
+    @Type(type="org.hibernate.type.BinaryType")
     private byte[] content;
 
 
