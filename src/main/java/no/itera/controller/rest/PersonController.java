@@ -1,17 +1,13 @@
 package no.itera.controller.rest;
 
-import no.itera.model.AbstractPerson;
 import no.itera.model.Person;
 import no.itera.model.PersonData;
 import no.itera.model.PersonResponse;
 import no.itera.services.PersonService;
 import no.itera.util.CustomErrorType;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,9 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.Year;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -137,47 +131,28 @@ public class PersonController {
         if(file.isEmpty()){
             return new ResponseEntity<>("File is empty " + file.getOriginalFilename(),HttpStatus.OK);
         }
+        File excelFile = null;
+        boolean isFileCreated = false;
         try {
-            File excelFile = new File(file.getOriginalFilename());
-            excelFile.createNewFile();
-            FileOutputStream fileOutputStream = new FileOutputStream(excelFile);
-            fileOutputStream.write(file.getBytes());
-            fileOutputStream.close();
-
-            Workbook workbook = WorkbookFactory.create(excelFile);
-            Sheet studentsSheet = workbook.getSheetAt(0);
-            DataFormatter dataFormatter = new DataFormatter();
-
-            for (Row row: studentsSheet) {
-                if(dataFormatter.formatCellValue(row.getCell(0)).matches("[0-9]+")){
-                    if(dataFormatter.formatCellValue(row.getCell(1)).matches("[^\\x00-\\x7F]+.*")){
-                        Person person = new Person();
-                        String[] fullName = dataFormatter.formatCellValue(row.getCell(1)).split(" ");
-                        person.setLastName(fullName[0]);
-                        if(StringUtils.isNoneEmpty(fullName[1])){
-                            person.setFirstName(fullName[1]);
-                        }
-                        else {
-                            person.setFirstName(" ");
-                        }
-                        String email = dataFormatter.formatCellValue(row.getCell(2));
-                        if(email.matches("[\\w]+@[\\w]+.[\\w]+")){
-                            person.setEmail(email);
-                        }
-                        person.setYearOfStudy(Year.now().toString());
-                        personService.addPerson(person);
-                    }
-                }
-            }
-
-
-
+            excelFile = new File(file.getOriginalFilename());
+            isFileCreated = excelFile.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
-            e.printStackTrace();
+            logger.error("IOException " + e.getMessage());
+        }
+        finally {
+            if(!isFileCreated){
+                return new ResponseEntity<>(file.getOriginalFilename()+" not imported",
+                        HttpStatus.NOT_ACCEPTABLE);
+            }
         }
 
+
+        try(FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
+            fileOutputStream.write(file.getBytes());
+            personService.importFromExcel(excelFile);
+        } catch (IOException | InvalidFormatException e) {
+            logger.error("Exception " + e.getMessage());
+        }
         return new ResponseEntity<>(file.getOriginalFilename()+" imported",HttpStatus.OK);
     }
 

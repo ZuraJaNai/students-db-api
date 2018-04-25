@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @ApiModel(value="PersonSearch")
-public class PersonSearch implements Serializable {
+public class PersonSearch{
 
     private String lastName;
 
