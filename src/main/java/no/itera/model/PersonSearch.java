@@ -28,7 +28,7 @@ public class PersonSearch{
     private SearchDate internshipDate;
 
     @ApiModelProperty(allowableValues = "true, false")
-    private boolean internship;
+    private String internship;
 
     @ApiModelProperty(example = "01.2018")
 
@@ -36,14 +36,14 @@ public class PersonSearch{
     private SearchDate practiceDate;
 
     @ApiModelProperty(allowableValues = "true, false")
-    private boolean practice;
+    private String practice;
 
     @ApiModelProperty(example = "01.2018")
     @JsonDeserialize(using = CustomSearchDateDeserializer.class)
     private SearchDate jobDate;
 
     @ApiModelProperty(allowableValues = "true, false")
-    private boolean job;
+    private String job;
 
     private String comment;
 
@@ -85,16 +85,16 @@ public class PersonSearch{
 
     public void setInternshipDate(SearchDate internshipDate) {
         if(internshipDate != null){
-            this.internship = true;
+            this.internship = "true";
         }
             this.internshipDate = internshipDate;
     }
 
-    public boolean isInternship() {
+    public String isInternship() {
         return internship;
     }
 
-    public void setInternship(boolean internship) {
+    public void setInternship(String internship) {
         this.internship = internship;
     }
 
@@ -104,16 +104,16 @@ public class PersonSearch{
 
     public void setPracticeDate(SearchDate practiceDate) {
         if(practiceDate != null){
-            this.practice = true;
+            this.practice = "true";
         }
             this.practiceDate =  practiceDate;
     }
 
-    public boolean isPractice() {
+    public String isPractice() {
         return practice;
     }
 
-    public void setPractice(boolean practice) {
+    public void setPractice(String practice) {
         this.practice = practice;
     }
 
@@ -123,16 +123,16 @@ public class PersonSearch{
 
     public void setJobDate(SearchDate jobDate) {
         if(jobDate != null){
-            this.job = true;
+            this.job = "true";
         }
             this.jobDate =  jobDate;
     }
 
-    public boolean isJob() {
+    public String isJob() {
         return job;
     }
 
-    public void setJob(boolean job) {
+    public void setJob(String job) {
         this.job = job;
     }
 

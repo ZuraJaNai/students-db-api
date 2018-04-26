@@ -167,17 +167,17 @@ public class PersonServiceImpl implements PersonService {
             predicates = this.checkString(predicates,cb,root,filter.getEmail(),EMAIL_PARAM);
             predicates = this.checkString(predicates,cb,root,filter.getComment(),COMMENT_PARAM);
 
-            if (filter.isInternship()) {
+            if (Boolean.valueOf(filter.isInternship())) {
                 predicates = this.checkDate(predicates,cb,root,filter.getInternshipDate(),
                         INTERNSHIP_BEGIN_PARAM,INTERNSHIP_END_PARAM);
             }
 
-            if (filter.isJob()) {
+            if (Boolean.valueOf(filter.isJob())) {
                 predicates = this.checkDate(predicates,cb,root,filter.getJobDate(),
                         JOB_BEGIN_PARAM,JOB_END_PARAM);
             }
 
-            if (filter.isPractice()) {
+            if (Boolean.valueOf(filter.isPractice())) {
                 predicates = this.checkDate(predicates,cb,root,filter.getPracticeDate(),
                         PRACTICE_BEGIN_PARAM,PRACTICE_END_PARAM);
             }
