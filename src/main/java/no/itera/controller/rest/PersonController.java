@@ -149,8 +149,12 @@ public class PersonController {
         try(FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
             fileOutputStream.write(file.getBytes());
             personService.importFromExcel(excelFile);
+            fileOutputStream.flush();
         } catch (IOException | InvalidFormatException e) {
             logger.error("Exception " + e.getMessage());
+        }
+        finally {
+            excelFile.delete();
         }
         return new ResponseEntity<>(file.getOriginalFilename()+" imported",HttpStatus.OK);
     }
