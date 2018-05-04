@@ -283,5 +283,6 @@ public class PersonServiceImpl implements PersonService {
                 this.addPerson(person);
             }
         }
+        workbook.close();
     }
 }

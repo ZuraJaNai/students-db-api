@@ -132,15 +132,14 @@ public class PersonController {
             return new ResponseEntity<>("File is empty " + file.getOriginalFilename(),HttpStatus.OK);
         }
         File excelFile = null;
-        boolean isFileCreated = false;
         try {
             excelFile = new File(file.getOriginalFilename());
-            isFileCreated = excelFile.createNewFile();
+            excelFile.createNewFile();
         } catch (IOException e) {
             logger.error("IOException " + e.getMessage());
         }
         finally {
-            if(!isFileCreated){
+            if(excelFile == null){
                 return new ResponseEntity<>(file.getOriginalFilename()+" not imported",
                         HttpStatus.NOT_ACCEPTABLE);
             }
