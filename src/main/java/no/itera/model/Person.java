@@ -9,6 +9,8 @@ import java.util.List;
 @Table(name = "PERSONS")
 public class Person extends AbstractPerson{
 
+    @Transient
+    public static final String DEFAULT = "default";
 
     @OneToOne(targetEntity = Attachment.class,cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Attachment photo;
@@ -25,9 +27,9 @@ public class Person extends AbstractPerson{
     }
 
     public Person(int id){
-        super(id,"default","default","default","default",
-                "default",null,null,null
-                ,null,null,null,"default");
+        super(id,DEFAULT,DEFAULT,DEFAULT,DEFAULT,
+                DEFAULT,null,null,null
+                ,null,null,null,DEFAULT);
     }
 
     public Person() {

@@ -3,6 +3,8 @@ package no.itera.services;
 import no.itera.dao.PersonDao;
 import no.itera.model.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +12,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
+import java.io.File;
+import java.io.IOException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,17 +29,17 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonDao personDao;
 
-    private static String LAST_NAME_PARAM = "lastName";
-    private static String FIRST_NAME_PARAM = "firstName";
-    private static String EMAIL_PARAM = "email";
-    private static String YEAR_OF_STUDY_PARAM = "yearOfStudy";
-    private static String INTERNSHIP_BEGIN_PARAM = "internshipBegin";
-    private static String INTERNSHIP_END_PARAM = "internshipEnd";
-    private static String PRACTICE_BEGIN_PARAM = "practiceBegin";
-    private static String PRACTICE_END_PARAM = "practiceEnd";
-    private static String JOB_BEGIN_PARAM = "jobBegin";
-    private static String JOB_END_PARAM = "jobEnd";
-    private static String COMMENT_PARAM = "comment";
+    private static final String LAST_NAME_PARAM = "lastName";
+    private static final String FIRST_NAME_PARAM = "firstName";
+    private static final String EMAIL_PARAM = "email";
+    private static final String YEAR_OF_STUDY_PARAM = "yearOfStudy";
+    private static final String INTERNSHIP_BEGIN_PARAM = "internshipBegin";
+    private static final String INTERNSHIP_END_PARAM = "internshipEnd";
+    private static final String PRACTICE_BEGIN_PARAM = "practiceBegin";
+    private static final String PRACTICE_END_PARAM = "practiceEnd";
+    private static final String JOB_BEGIN_PARAM = "jobBegin";
+    private static final String JOB_END_PARAM = "jobEnd";
+    private static final String COMMENT_PARAM = "comment";
 
     /**
      * Method to get all persons from the database
@@ -152,77 +157,62 @@ public class PersonServiceImpl implements PersonService {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            if (StringUtils.isNoneEmpty(filter.getLastName())) {
-                predicates.add(cb.like(cb.lower(root.get(LAST_NAME_PARAM)),
-                        filter.getLastName().toLowerCase() + "%"));
-            }
-
-            if (StringUtils.isNoneEmpty(filter.getFirstName())) {
-                predicates.add(cb.like(cb.lower(root.get(FIRST_NAME_PARAM)),
-                        "%" + filter.getFirstName().toLowerCase() + "%"));
-            }
-
-
-            if (StringUtils.isNoneEmpty(filter.getEmail())) {
-                predicates.add(cb.like(cb.lower(root.get(EMAIL_PARAM)),
-                        "%" + filter.getEmail().toLowerCase() + "%"));
-            }
-
             if (filter.getYearOfStudy() != null) {
                 predicates.add(root.get(YEAR_OF_STUDY_PARAM).in(filter.getYearOfStudy()));
 
             }
 
-            if (filter.isInternship()) {
-                if (filter.getInternshipDate().getType() == SearchDateType.SINGLE) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(INTERNSHIP_BEGIN_PARAM), filter.getInternshipDate().getDateOne()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(INTERNSHIP_END_PARAM), filter.getInternshipDate().getDateOne()),
-                            cb.isNull(root.get(INTERNSHIP_END_PARAM))));
-                } else if(filter.getInternshipDate().getType() == SearchDateType.DOUBLE) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(INTERNSHIP_BEGIN_PARAM), filter.getInternshipDate().getDateTwo()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(INTERNSHIP_END_PARAM), filter.getInternshipDate().getDateOne()),
-                            cb.isNull(root.get(INTERNSHIP_END_PARAM))));
-                } else {
-                    predicates.add(cb.isNotNull(root.get(INTERNSHIP_BEGIN_PARAM)));
-                }
+            predicates = this.checkString(predicates,cb,root,filter.getLastName(),LAST_NAME_PARAM);
+            predicates = this.checkString(predicates,cb,root,filter.getFirstName(),FIRST_NAME_PARAM);
+            predicates = this.checkString(predicates,cb,root,filter.getEmail(),EMAIL_PARAM);
+            predicates = this.checkString(predicates,cb,root,filter.getComment(),COMMENT_PARAM);
+
+            if (Boolean.valueOf(filter.isInternship())) {
+                predicates = this.checkDate(predicates,cb,root,filter.getInternshipDate(),
+                        INTERNSHIP_BEGIN_PARAM,INTERNSHIP_END_PARAM);
             }
 
-            if (filter.isPractice()) {
-                if (filter.getPracticeDate().getType() == SearchDateType.SINGLE) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(PRACTICE_BEGIN_PARAM), filter.getPracticeDate().getDateOne()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(PRACTICE_END_PARAM), filter.getPracticeDate().getDateOne()),
-                            cb.isNull(root.get(PRACTICE_END_PARAM))));
-                } else if(filter.getPracticeDate().getType() == SearchDateType.DOUBLE) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(PRACTICE_BEGIN_PARAM), filter.getPracticeDate().getDateTwo()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(PRACTICE_END_PARAM), filter.getPracticeDate().getDateOne()),
-                            cb.isNull(root.get(PRACTICE_END_PARAM))));
-                } else {
-                    predicates.add(cb.isNotNull(root.get(PRACTICE_BEGIN_PARAM)));
-                }
+            if (Boolean.valueOf(filter.isJob())) {
+                predicates = this.checkDate(predicates,cb,root,filter.getJobDate(),
+                        JOB_BEGIN_PARAM,JOB_END_PARAM);
             }
 
-            if (filter.isJob()) {
-                if (filter.getJobDate().getType() == SearchDateType.SINGLE) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(JOB_BEGIN_PARAM), filter.getJobDate().getDateOne()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(JOB_END_PARAM), filter.getJobDate().getDateOne()),
-                            cb.isNull(root.get(JOB_END_PARAM))));
-                } else if(filter.getJobDate().getType() == SearchDateType.DOUBLE) {
-                    predicates.add(cb.lessThanOrEqualTo(root.get(JOB_BEGIN_PARAM), filter.getJobDate().getDateTwo()));
-                    predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(JOB_END_PARAM), filter.getJobDate().getDateOne()),
-                            cb.isNull(root.get(JOB_END_PARAM))));
-
-                } else {
-                    predicates.add(cb.isNotNull(root.get(JOB_BEGIN_PARAM)));
-                }
-            }
-
-            if (StringUtils.isNoneEmpty(filter.getComment())) {
-                predicates.add(cb.like(cb.lower(root.get(COMMENT_PARAM)),
-                        "%" + filter.getComment().toLowerCase() + "%"));
+            if (Boolean.valueOf(filter.isPractice())) {
+                predicates = this.checkDate(predicates,cb,root,filter.getPracticeDate(),
+                        PRACTICE_BEGIN_PARAM,PRACTICE_END_PARAM);
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         },new Sort(Sort.Direction.ASC,"id"));
+    }
+
+    private List<Predicate> checkString(List<Predicate> predicates, CriteriaBuilder cb,
+                                        Root<Person> root,String value,String param){
+        if (StringUtils.isNoneEmpty(value)) {
+            predicates.add(cb.like(cb.lower(root.get(param)),
+                    value.toLowerCase() + "%"));
+        }
+        return predicates;
+    }
+
+    private List<Predicate> checkDate(List<Predicate> predicates, CriteriaBuilder cb,
+                                        Root<Person> root,SearchDate value,
+                                      String paramBegin,String paramEnd){
+        if (value != null) {
+            if (value.getType() == SearchDateType.SINGLE) {
+                predicates.add(cb.lessThanOrEqualTo(root.get(paramBegin), value.getDateOne()));
+                predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(paramEnd), value.getDateOne()),
+                        cb.isNull(root.get(paramEnd))));
+            } else if (value.getType() == SearchDateType.DOUBLE) {
+                predicates.add(cb.lessThanOrEqualTo(root.get(paramBegin), value.getDateTwo()));
+                predicates.add(cb.or(cb.greaterThanOrEqualTo(root.get(paramEnd), value.getDateOne()),
+                        cb.isNull(root.get(paramEnd))));
+            }
+        }
+        else {
+            predicates.add(cb.isNotNull(root.get(paramBegin)));
+        }
+        return predicates;
     }
 
     /**
@@ -266,5 +256,33 @@ public class PersonServiceImpl implements PersonService {
             personOutputData.add(new PersonData(person));
         }
         return personOutputData;
+    }
+
+    public void importFromExcel(File excelFile) throws IOException, InvalidFormatException {
+        Workbook workbook = WorkbookFactory.create(excelFile);
+        Sheet studentsSheet = workbook.getSheetAt(0);
+        DataFormatter dataFormatter = new DataFormatter();
+
+        for (Row row: studentsSheet) {
+            if(dataFormatter.formatCellValue(row.getCell(0)).matches("[0-9]+") &&
+                dataFormatter.formatCellValue(row.getCell(1)).matches("[^\\x00-\\x7F]+.*")){
+                Person person = new Person();
+                String[] fullName = dataFormatter.formatCellValue(row.getCell(1)).split(" ");
+                person.setLastName(fullName[0]);
+                if(StringUtils.isNoneEmpty(fullName[1])){
+                    person.setFirstName(fullName[1]);
+                }
+                else {
+                    person.setFirstName(" ");
+                }
+                String email = dataFormatter.formatCellValue(row.getCell(2));
+                if(email.matches("[\\w]+@[\\w]+.[\\w]+")){
+                    person.setEmail(email);
+                }
+                person.setYearOfStudy(Year.now().toString());
+                this.addPerson(person);
+            }
+        }
+        workbook.close();
     }
 }
