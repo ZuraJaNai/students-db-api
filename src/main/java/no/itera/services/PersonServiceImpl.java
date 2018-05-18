@@ -258,31 +258,54 @@ public class PersonServiceImpl implements PersonService {
         return personOutputData;
     }
 
-    public void importFromExcel(File excelFile) throws IOException, InvalidFormatException {
+    public String importFromExcel(File excelFile) throws IOException, InvalidFormatException {
         Workbook workbook = WorkbookFactory.create(excelFile);
         Sheet studentsSheet = workbook.getSheetAt(0);
         DataFormatter dataFormatter = new DataFormatter();
+        Integer nameCell = null;
+        int startingRow = 0;
+        int emailCell = 0;
+        int studentsNum = 0;
 
         for (Row row: studentsSheet) {
-            if(dataFormatter.formatCellValue(row.getCell(0)).matches("[0-9]+") &&
-                dataFormatter.formatCellValue(row.getCell(1)).matches("[^\\x00-\\x7F]+.*")){
-                Person person = new Person();
-                String[] fullName = dataFormatter.formatCellValue(row.getCell(1)).split(" ");
-                person.setLastName(fullName[0]);
-                if(StringUtils.isNoneEmpty(fullName[1])){
-                    person.setFirstName(fullName[1]);
+            for (Cell cell : row) {
+                if (dataFormatter.formatCellValue(cell).equals("Name")) {
+                    nameCell = cell.getColumnIndex();
+                    startingRow = cell.getRowIndex() + 1;
                 }
-                else {
-                    person.setFirstName(" ");
+                if (dataFormatter.formatCellValue(cell).equals("Email")) {
+                    emailCell = cell.getColumnIndex();
                 }
-                String email = dataFormatter.formatCellValue(row.getCell(2));
-                if(email.matches("[\\w]+@[\\w]+.[\\w]+")){
-                    person.setEmail(email);
+            }
+        }
+        if(nameCell == null){
+            workbook.close();
+            return "Students not found";
+        }
+        else {
+            for (int i = startingRow; i <= studentsSheet.getLastRowNum(); i++) {
+                Row row = studentsSheet.getRow(i);
+                if(dataFormatter.formatCellValue(row.getCell(nameCell)).matches("[^\\x00-\\x7F]+.*")){
+                    Person person = new Person();
+                    String[] fullName = dataFormatter.formatCellValue(row.getCell(1)).split(" ");
+                    person.setLastName(fullName[0]);
+                    if(StringUtils.isNoneEmpty(fullName[1])){
+                        person.setFirstName(fullName[1]);
+                    }
+                    else {
+                        person.setFirstName(" ");
+                    }
+                    String email = dataFormatter.formatCellValue(row.getCell(emailCell));
+                    if(email.matches("[\\w]+@[\\w]+.[\\w]+")){
+                        person.setEmail(email);
+                    }
+                    person.setYearOfStudy(Year.now().toString());
+                    this.addPerson(person);
+                    studentsNum++;
                 }
-                person.setYearOfStudy(Year.now().toString());
-                this.addPerson(person);
             }
         }
         workbook.close();
+        return String.format("%d students added",studentsNum);
     }
 }

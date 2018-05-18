@@ -108,6 +108,6 @@ public interface PersonService {
 
     List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList);
 
-    void importFromExcel(File excelFile) throws IOException, InvalidFormatException;
+    String importFromExcel(File excelFile) throws IOException, InvalidFormatException;
 
 }

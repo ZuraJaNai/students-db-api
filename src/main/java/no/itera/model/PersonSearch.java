@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 import no.itera.util.CustomSearchDateDeserializer;
 import no.itera.util.CustomSearchYearOfStudyDeserializer;
 
-import java.io.Serializable;
 import java.util.List;
 
 @ApiModel(value="PersonSearch")

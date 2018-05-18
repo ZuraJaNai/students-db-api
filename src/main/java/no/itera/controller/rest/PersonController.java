@@ -128,27 +128,26 @@ public class PersonController {
     @RequestMapping(value = "/person/import", method = RequestMethod.POST)
     public ResponseEntity<String> importPersonsFromExcel(@RequestParam("file") MultipartFile file){
         logger.debug("Importing from excel file {}", file.getOriginalFilename());
+        boolean created = false;
+        String message = "";
         if(file.isEmpty()){
             return new ResponseEntity<>("File is empty " + file.getOriginalFilename(),HttpStatus.OK);
         }
         File excelFile = null;
         try {
             excelFile = new File(file.getOriginalFilename());
-            excelFile.createNewFile();
+            created = excelFile.createNewFile();
         } catch (IOException e) {
             logger.error("IOException " + e.getMessage());
         }
-        finally {
-            if(excelFile == null){
-                return new ResponseEntity<>(file.getOriginalFilename()+" not imported",
-                        HttpStatus.NOT_ACCEPTABLE);
-            }
+        if(!created){
+            return new ResponseEntity<>(file.getOriginalFilename()+" not imported",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
-
 
         try(FileOutputStream fileOutputStream = new FileOutputStream(excelFile)) {
             fileOutputStream.write(file.getBytes());
-            personService.importFromExcel(excelFile);
+            message = personService.importFromExcel(excelFile);
             fileOutputStream.flush();
         } catch (IOException | InvalidFormatException e) {
             logger.error("Exception " + e.getMessage());
@@ -156,7 +155,7 @@ public class PersonController {
         finally {
             excelFile.delete();
         }
-        return new ResponseEntity<>(file.getOriginalFilename()+" imported",HttpStatus.OK);
+        return new ResponseEntity<>(file.getOriginalFilename()+" imported. " + message,HttpStatus.OK);
     }
 
     /**
