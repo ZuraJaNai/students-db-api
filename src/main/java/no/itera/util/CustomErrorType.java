@@ -1,6 +1,6 @@
 package no.itera.util;
 
-public class CustomErrorType {
+public class CustomErrorType extends Throwable {
     private String errorMessage;
 
     public CustomErrorType(String errorMessage){

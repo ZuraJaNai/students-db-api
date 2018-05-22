@@ -2,6 +2,7 @@ package no.itera.services;
 
 import no.itera.dao.PersonDao;
 import no.itera.model.*;
+import no.itera.util.CustomErrorType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -16,7 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.lang.Math.toIntExact;
 
@@ -258,54 +262,69 @@ public class PersonServiceImpl implements PersonService {
         return personOutputData;
     }
 
-    public String importFromExcel(File excelFile) throws IOException, InvalidFormatException {
+    public void importFromExcel(File excelFile) throws IOException, InvalidFormatException, CustomErrorType {
         Workbook workbook = WorkbookFactory.create(excelFile);
         Sheet studentsSheet = workbook.getSheetAt(0);
         DataFormatter dataFormatter = new DataFormatter();
-        Integer nameCell = null;
-        int startingRow = 0;
-        int emailCell = 0;
-        int studentsNum = 0;
+        int startingRow = studentsSheet.getFirstRowNum();
+        int endingRow = studentsSheet.getLastRowNum();
+        String[] columnNames = {"Full name", "Last name", "First name",
+                "Patronymic", "Email", "Year"};
+        Map<String, Integer> columns = new HashMap<String, Integer>();
 
-        for (Row row: studentsSheet) {
+        while (!(columns.containsKey("Full name") || columns.containsKey("Last name"))) {
+            Row row = studentsSheet.getRow(startingRow++);
             for (Cell cell : row) {
-                if (dataFormatter.formatCellValue(cell).equals("Name")) {
-                    nameCell = cell.getColumnIndex();
-                    startingRow = cell.getRowIndex() + 1;
-                }
-                if (dataFormatter.formatCellValue(cell).equals("Email")) {
-                    emailCell = cell.getColumnIndex();
+                if(Stream.of(columnNames).anyMatch(name -> name.equals(dataFormatter.formatCellValue(cell)))){
+                    columns.put(dataFormatter.formatCellValue(cell), cell.getColumnIndex());
                 }
             }
         }
-        if(nameCell == null){
+
+        if(!columns.containsKey("Full name") && !columns.containsKey("Last name")){
             workbook.close();
-            return "Students not found";
+            throw new CustomErrorType("Students not found");
         }
-        else {
-            for (int i = startingRow; i <= studentsSheet.getLastRowNum(); i++) {
-                Row row = studentsSheet.getRow(i);
-                if(dataFormatter.formatCellValue(row.getCell(nameCell)).matches("[^\\x00-\\x7F]+.*")){
-                    Person person = new Person();
-                    String[] fullName = dataFormatter.formatCellValue(row.getCell(1)).split(" ");
+        for (int i = startingRow; i < endingRow; i++) {
+            Row row = studentsSheet.getRow(i);
+
+            if (dataFormatter.formatCellValue(row.getCell(row.getFirstCellNum())).isEmpty()) {
+                endingRow = i;
+            } else {
+                Person person = new Person();
+
+                if (columns.containsKey("Full name")) {
+                    String[] fullName = dataFormatter.formatCellValue(row.getCell(columns.get("Full name"))).split(" ");
                     person.setLastName(fullName[0]);
-                    if(StringUtils.isNoneEmpty(fullName[1])){
+                    if (StringUtils.isNoneEmpty(fullName[1])) {
                         person.setFirstName(fullName[1]);
-                    }
-                    else {
+                    } else {
                         person.setFirstName(" ");
                     }
-                    String email = dataFormatter.formatCellValue(row.getCell(emailCell));
-                    if(email.matches("[\\w]+@[\\w]+.[\\w]+")){
-                        person.setEmail(email);
-                    }
-                    person.setYearOfStudy(Year.now().toString());
-                    this.addPerson(person);
-                    studentsNum++;
                 }
+
+                if (columns.containsKey("Last name")) {
+                    person.setLastName(dataFormatter.formatCellValue(row.getCell(columns.get("Last name"))));
+                }
+                if (columns.containsKey("First name")) {
+                    person.setFirstName(dataFormatter.formatCellValue(row.getCell(columns.get("First name"))));
+                }
+                if (columns.containsKey("Patronymic")) {
+                    person.setPatronymic(dataFormatter.formatCellValue(row.getCell(columns.get("Patronymic"))));
+                }
+                if (columns.containsKey("Email")) {
+                    person.setEmail(dataFormatter.formatCellValue(row.getCell(columns.get("Email"))));
+                }
+                if (columns.containsKey("Year")) {
+                    person.setYearOfStudy(dataFormatter.formatCellValue(row.getCell(columns.get("Year"))));
+                } else {
+                    person.setYearOfStudy(Year.now().toString());
+                }
+
+                this.addPerson(person);
             }
         }
         workbook.close();
-        return String.format("%d students added",studentsNum);
     }
+
 }
