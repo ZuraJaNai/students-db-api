@@ -1,6 +1,7 @@
 package no.itera.services;
 
 import no.itera.model.*;
+import no.itera.util.CustomErrorType;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -108,6 +109,6 @@ public interface PersonService {
 
     List<PersonData> transformPersonsToOutputFormat(Iterable<Person> personList);
 
-    void importFromExcel(File excelFile) throws IOException, InvalidFormatException;
+    void importFromExcel(File excelFile) throws IOException, InvalidFormatException, CustomErrorType;
 
 }

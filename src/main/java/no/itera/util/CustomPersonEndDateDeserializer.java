@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 public class CustomPersonEndDateDeserializer extends JsonDeserializer<LocalDate> {
 
