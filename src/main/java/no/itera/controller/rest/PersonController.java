@@ -22,6 +22,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +156,11 @@ public class PersonController {
             logger.error("Exception " + e.getMessage());
         }
         finally {
-            excelFile.delete();
+            try {
+                Files.delete(Paths.get(excelFile.getPath()));
+            } catch (IOException e) {
+                logger.error("Exception " + e.getMessage());
+            }
         }
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
