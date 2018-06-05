@@ -1,4 +1,4 @@
-package no.itera.util;
+package no.itera.util.excelImport;
 
 public class ExcelConstants {
     public static final String FULL_NAME = "Full name";
