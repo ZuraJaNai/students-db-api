@@ -111,4 +111,5 @@ public interface PersonService {
 
     void importFromExcel(File excelFile) throws IOException, InvalidFormatException, CustomErrorType;
 
+    void updateSeveralPersons(BulkChangePersonData data);
 }

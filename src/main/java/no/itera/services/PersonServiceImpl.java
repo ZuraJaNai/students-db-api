@@ -125,6 +125,16 @@ public class PersonServiceImpl implements PersonService {
         personDao.save(tempPerson);
     }
 
+    @Override
+    public void updateSeveralPersons(BulkChangePersonData data) {
+        List<Integer> personsId = data.getPersonsId();
+        for(int id: personsId){
+            Person tempPerson = this.getById(id);
+            tempPerson.bulkUpdatePersonData(data);
+            personDao.save(tempPerson);
+        }
+    }
+
     /**
      * Method to add attachment to defined Person
      * @param id  id of person for who to add attachment

@@ -58,6 +58,33 @@ public class Person extends AbstractPerson{
         this.setComment(person.getComment());
     }
 
+    public void bulkUpdatePersonData(BulkChangePersonData data){
+        if(data.getYearOfStudy() != null) {
+            this.setYearOfStudy(data.getYearOfStudy());
+        }
+        if(data.getInternshipBegin() != null) {
+            this.setInternshipBegin(data.getInternshipBegin());
+        }
+        if(data.getInternshipEnd() != null) {
+            this.setInternshipEnd(data.getInternshipEnd());
+        }
+        if(data.getPracticeBegin() != null) {
+            this.setPracticeBegin(data.getPracticeBegin());
+        }
+        if(data.getPracticeEnd() != null) {
+            this.setPracticeEnd(data.getPracticeEnd());
+        }
+        if(data.getJobBegin() != null) {
+            this.setJobBegin(data.getJobBegin());
+        }
+        if(data.getJobEnd() != null) {
+            this.setJobEnd(data.getJobEnd());
+        }
+        if(data.getComment() != null) {
+            this.setComment(data.getComment());
+        }
+    }
+
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
     }
