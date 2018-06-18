@@ -19,24 +19,9 @@ public class BulkChangePersonData {
 
     private LocalDate jobEnd;
 
-    private String comment;
-
     private List<Integer> personsId;
 
     public BulkChangePersonData(){}
-
-//    public BulkChangePersonData(String yearOfStudy, String comment,LocalDate internshipBegin, LocalDate internshipEnd,
-//                                LocalDate practiceBegin, LocalDate practiceEnd, LocalDate jobBegin, LocalDate jobEnd, List<Integer> personsId){
-//        this.yearOfStudy = yearOfStudy;
-//        this.internshipBegin = internshipBegin;
-//        this.internshipEnd = internshipEnd;
-//        this.practiceBegin = practiceBegin;
-//        this.practiceEnd = practiceEnd;
-//        this.jobBegin = jobBegin;
-//        this.jobEnd = jobEnd;
-//        this.comment = comment;
-//        this.personsId = personsId;
-//    }
 
     public String getYearOfStudy() {
         return yearOfStudy;
@@ -92,14 +77,6 @@ public class BulkChangePersonData {
 
     public void setJobEnd(LocalDate jobEnd) {
         this.jobEnd = jobEnd;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public List<Integer> getPersonsId() {
