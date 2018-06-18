@@ -80,9 +80,6 @@ public class Person extends AbstractPerson{
         if(data.getJobEnd() != null) {
             this.setJobEnd(data.getJobEnd());
         }
-        if(data.getComment() != null) {
-            this.setComment(data.getComment());
-        }
     }
 
     public void addAttachment(Attachment attachment) {
