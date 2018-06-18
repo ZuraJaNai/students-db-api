@@ -59,27 +59,15 @@ public class Person extends AbstractPerson{
     }
 
     public void bulkUpdatePersonData(BulkChangePersonData data){
-        if(data.getYearOfStudy() != null) {
+        if(StringUtils.isNoneEmpty(data.getYearOfStudy())) {
             this.setYearOfStudy(data.getYearOfStudy());
         }
-        if(data.getInternshipBegin() != null) {
-            this.setInternshipBegin(data.getInternshipBegin());
-        }
-        if(data.getInternshipEnd() != null) {
-            this.setInternshipEnd(data.getInternshipEnd());
-        }
-        if(data.getPracticeBegin() != null) {
-            this.setPracticeBegin(data.getPracticeBegin());
-        }
-        if(data.getPracticeEnd() != null) {
-            this.setPracticeEnd(data.getPracticeEnd());
-        }
-        if(data.getJobBegin() != null) {
-            this.setJobBegin(data.getJobBegin());
-        }
-        if(data.getJobEnd() != null) {
-            this.setJobEnd(data.getJobEnd());
-        }
+        this.setInternshipBegin(data.getInternshipBegin());
+        this.setInternshipEnd(data.getInternshipEnd());
+        this.setPracticeBegin(data.getPracticeBegin());
+        this.setPracticeEnd(data.getPracticeEnd());
+        this.setJobBegin(data.getJobBegin());
+        this.setJobEnd(data.getJobEnd());
     }
 
     public void addAttachment(Attachment attachment) {
