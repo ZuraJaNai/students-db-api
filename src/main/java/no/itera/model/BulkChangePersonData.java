@@ -7,17 +7,17 @@ public class BulkChangePersonData {
 
     private String yearOfStudy;
 
-    private LocalDate internshipBegin;
+    private String internshipBegin;
 
-    private LocalDate internshipEnd;
+    private String internshipEnd;
 
-    private LocalDate practiceBegin;
+    private String practiceBegin;
 
-    private LocalDate practiceEnd;
+    private String practiceEnd;
 
-    private LocalDate jobBegin;
+    private String jobBegin;
 
-    private LocalDate jobEnd;
+    private String jobEnd;
 
     private List<Integer> personsId;
 
@@ -31,51 +31,51 @@ public class BulkChangePersonData {
         this.yearOfStudy = yearOfStudy;
     }
 
-    public LocalDate getInternshipBegin() {
+    public String getInternshipBegin() {
         return internshipBegin;
     }
 
-    public void setInternshipBegin(LocalDate internshipBegin) {
+    public void setInternshipBegin(String internshipBegin) {
         this.internshipBegin = internshipBegin;
     }
 
-    public LocalDate getInternshipEnd() {
+    public String getInternshipEnd() {
         return internshipEnd;
     }
 
-    public void setInternshipEnd(LocalDate internshipEnd) {
+    public void setInternshipEnd(String internshipEnd) {
         this.internshipEnd = internshipEnd;
     }
 
-    public LocalDate getPracticeBegin() {
+    public String getPracticeBegin() {
         return practiceBegin;
     }
 
-    public void setPracticeBegin(LocalDate practiceBegin) {
+    public void setPracticeBegin(String practiceBegin) {
         this.practiceBegin = practiceBegin;
     }
 
-    public LocalDate getPracticeEnd() {
+    public String getPracticeEnd() {
         return practiceEnd;
     }
 
-    public void setPracticeEnd(LocalDate practiceEnd) {
+    public void setPracticeEnd(String practiceEnd) {
         this.practiceEnd = practiceEnd;
     }
 
-    public LocalDate getJobBegin() {
+    public String getJobBegin() {
         return jobBegin;
     }
 
-    public void setJobBegin(LocalDate jobBegin) {
+    public void setJobBegin(String jobBegin) {
         this.jobBegin = jobBegin;
     }
 
-    public LocalDate getJobEnd() {
+    public String getJobEnd() {
         return jobEnd;
     }
 
-    public void setJobEnd(LocalDate jobEnd) {
+    public void setJobEnd(String jobEnd) {
         this.jobEnd = jobEnd;
     }
 
