@@ -1,6 +1,5 @@
 package no.itera.model;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class BulkChangePersonData {
@@ -21,7 +20,9 @@ public class BulkChangePersonData {
 
     private List<Integer> personsId;
 
-    public BulkChangePersonData(){}
+    public BulkChangePersonData(){
+        //empty constructor needed for initialization
+    }
 
     public String getYearOfStudy() {
         return yearOfStudy;

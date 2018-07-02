@@ -1,4 +1,4 @@
-package no.itera.util.excelImport;
+package no.itera.util.excelimport;
 
 import no.itera.model.Person;
 
