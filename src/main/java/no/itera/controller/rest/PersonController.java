@@ -1,5 +1,6 @@
 package no.itera.controller.rest;
 
+import no.itera.model.BulkChangePersonData;
 import no.itera.model.Person;
 import no.itera.model.PersonData;
 import no.itera.model.PersonResponse;
@@ -184,6 +185,13 @@ public class PersonController {
         }
         personService.updatePerson(id, personData);
         return new ResponseEntity<>(currentPerson, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/person", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateSeveralPersons(@RequestBody BulkChangePersonData data) {
+        logger.info("Updating persons with id {}", data.getPersonsId().toString());
+        personService.updateSeveralPersons(data);
+        return new ResponseEntity<>("Successfully updated", HttpStatus.OK);
     }
 
     /**

@@ -1,8 +1,11 @@
 package no.itera.model;
 
+import no.itera.util.CustomPersonEndDateDeserializer;
+import no.itera.util.DateConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -56,6 +59,58 @@ public class Person extends AbstractPerson{
         this.setJobBegin(person.getJobBegin());
         this.setJobEnd(person.getJobEnd());
         this.setComment(person.getComment());
+    }
+
+    public void bulkUpdatePersonData(BulkChangePersonData data){
+        if(StringUtils.isNoneEmpty(data.getYearOfStudy())) {
+            this.setYearOfStudy(data.getYearOfStudy());
+        }
+        if(StringUtils.isNoneBlank(data.getInternshipBegin())) {
+            this.setInternshipBegin(this.getDateOfString(data.getInternshipBegin(), true));
+        }
+        else if(data.getInternshipBegin() == null){
+            this.setInternshipBegin(null);
+        }
+        if(StringUtils.isNoneBlank(data.getInternshipEnd())) {
+            this.setInternshipEnd(this.getDateOfString(data.getInternshipEnd(), false));
+        }
+        else if(data.getInternshipEnd() == null){
+            this.setInternshipEnd(null);
+        }
+        if(StringUtils.isNoneBlank(data.getPracticeBegin())) {
+            this.setPracticeBegin(this.getDateOfString(data.getPracticeBegin(), true));
+        }
+        else if(data.getPracticeBegin() == null){
+            this.setPracticeBegin(null);
+        }
+        if(StringUtils.isNoneBlank(data.getPracticeEnd())) {
+            this.setPracticeEnd(this.getDateOfString(data.getPracticeEnd(), false));
+        }
+        else if(data.getPracticeEnd() == null){
+            this.setPracticeEnd(null);
+        }
+        if(StringUtils.isNoneBlank(data.getJobBegin())) {
+            this.setJobBegin(this.getDateOfString(data.getJobBegin(), true));
+        }
+        else if(data.getJobBegin() == null){
+            this.setJobBegin(null);
+        }
+        if(StringUtils.isNoneBlank(data.getJobEnd())) {
+            this.setJobEnd(this.getDateOfString(data.getJobEnd(), false));
+        }
+        else if(data.getJobEnd() == null){
+            this.setJobEnd(null);
+        }
+    }
+
+    private LocalDate getDateOfString(String dateString,boolean startDate){
+        LocalDate date = LocalDate.parse(dateString, DateConstants.dateFormatterDeserialization);
+        if(startDate){
+            return date;
+        }
+        else {
+            return date.withDayOfMonth(date.lengthOfMonth());
+        }
     }
 
     public void addAttachment(Attachment attachment) {
