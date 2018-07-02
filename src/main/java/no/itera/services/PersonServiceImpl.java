@@ -3,8 +3,8 @@ package no.itera.services;
 import no.itera.dao.PersonDao;
 import no.itera.model.*;
 import no.itera.util.CustomErrorType;
-import no.itera.util.excelImport.ExcelConstants;
-import no.itera.util.excelImport.PersonBuilder;
+import no.itera.util.excelimport.ExcelConstants;
+import no.itera.util.excelimport.PersonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -271,34 +271,34 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public void importFromExcel(File excelFile) throws IOException, InvalidFormatException, CustomErrorType {
-        PersonBuilder personBuilder;
-        Workbook workbook = WorkbookFactory.create(excelFile);
-        Sheet studentsSheet = workbook.getSheetAt(0);
-        DataFormatter dataFormatter = new DataFormatter();
-        int startingRow = studentsSheet.getFirstRowNum();
-        int endingRow = studentsSheet.getLastRowNum();
-        Map<String, Integer> columns = this.getExcelNumbersOfColumns(studentsSheet,dataFormatter);
+        try(Workbook workbook = WorkbookFactory.create(excelFile)){
+            PersonBuilder personBuilder;
+            Sheet studentsSheet = workbook.getSheetAt(0);
+            DataFormatter dataFormatter = new DataFormatter();
+            int startingRow = studentsSheet.getFirstRowNum();
+            int endingRow = studentsSheet.getLastRowNum();
+            Map<String, Integer> columns = this.getExcelNumbersOfColumns(studentsSheet,dataFormatter);
 
-        if(!columns.containsKey(ExcelConstants.FULL_NAME) && !columns.containsKey(ExcelConstants.LAST_NAME)){
-            workbook.close();
-            throw new CustomErrorType("Students not found");
-        }
-        for (int i = startingRow+1; i < endingRow; i++) {
-            Row row = studentsSheet.getRow(i);
-
-            if (dataFormatter.formatCellValue(row.getCell(row.getFirstCellNum())).isEmpty()) {
-               break;
+            if(!columns.containsKey(ExcelConstants.FULL_NAME) && !columns.containsKey(ExcelConstants.LAST_NAME)){
+                workbook.close();
+                throw new CustomErrorType("Students not found");
             }
-            personBuilder = new PersonBuilder(row);
+            for (int i = startingRow+1; i < endingRow; i++) {
+                Row row = studentsSheet.getRow(i);
 
-            for (Map.Entry<String,Integer> column:
-                 columns.entrySet()) {
-                personBuilder.addParameter(column.getKey(),column.getValue());
+                if (dataFormatter.formatCellValue(row.getCell(row.getFirstCellNum())).isEmpty()) {
+                    break;
+                }
+                personBuilder = new PersonBuilder(row);
+
+                for (Map.Entry<String,Integer> column:
+                        columns.entrySet()) {
+                    personBuilder.addParameter(column.getKey(),column.getValue());
+                }
+
+                this.addPerson(personBuilder.getPerson());
             }
-
-            this.addPerson(personBuilder.getPerson());
         }
-        workbook.close();
     }
 
     private Map<String,Integer> getExcelNumbersOfColumns(Sheet studentsSheet, DataFormatter dataFormatter){

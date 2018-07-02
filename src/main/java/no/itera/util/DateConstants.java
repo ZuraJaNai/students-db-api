@@ -6,7 +6,9 @@ import java.time.format.DateTimeFormatterBuilder;
 import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 
 public final class DateConstants {
-    private DateConstants(){}
+    private DateConstants(){
+        throw new IllegalStateException("Utility class");
+    }
 
     public static final DateTimeFormatter dateFormatterDeserialization = new DateTimeFormatterBuilder()
             .appendPattern("MM.yyyy")

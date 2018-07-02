@@ -1,6 +1,5 @@
 package no.itera.model;
 
-import no.itera.util.CustomPersonEndDateDeserializer;
 import no.itera.util.DateConstants;
 import org.apache.commons.lang3.StringUtils;
 
