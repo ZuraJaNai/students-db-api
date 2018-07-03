@@ -18,6 +18,7 @@ import javax.persistence.criteria.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.toIntExact;
@@ -246,11 +247,13 @@ public class PersonServiceImpl implements PersonService {
      * @return List of PersonData objects
      */
     public List<PersonData> transformPersonsToOutputFormat(List<Person> personList){
-        List<PersonData> personOutputData = new ArrayList<>();
-        for (AbstractPerson person :
-                personList) {
-            personOutputData.add(new PersonData(person));
-        }
+//        List<PersonData> personOutputData = new ArrayList<>();
+//        for (AbstractPerson person :
+//                personList) {
+//            personOutputData.add(new PersonData(person));
+//        }
+        List<PersonData> personOutputData = personList.stream()
+                .map((person) -> new PersonData(person)).collect(Collectors.toList());
         return personOutputData;
     }
 
