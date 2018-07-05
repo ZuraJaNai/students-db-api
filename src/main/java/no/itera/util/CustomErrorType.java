@@ -7,7 +7,7 @@ public class CustomErrorType extends Throwable {
         this.errorMessage = errorMessage;
     }
 
-    public String getErrorMessage() {
+    public String getMessage() {
         return errorMessage;
     }
 }

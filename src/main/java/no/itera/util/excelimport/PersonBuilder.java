@@ -10,16 +10,8 @@ import java.util.Map;
 
 public class PersonBuilder {
 
-    private static Map<String,PersonParameter> parameters;
-    private Person person;
-    private Row row;
-    private DataFormatter dataFormatter;
-
-    public PersonBuilder(Row row){
-        this.row = row;
-        this.person = new Person();
-        this.dataFormatter = new DataFormatter();
-        parameters = new HashMap<>();
+    private static Map<String,PersonParameter> parameters = new HashMap<>();
+    static {
         parameters.put(ExcelConstants.FULL_NAME, (parameter, person) -> {
             String[] fullName = parameter.split(" ");
             person.setLastName(fullName[0]);
@@ -51,17 +43,26 @@ public class PersonBuilder {
             return person;
         });
     }
+    private Person newPerson;
+    private Row row;
+    private DataFormatter dataFormatter;
+
+    public PersonBuilder(Row row){
+        this.row = row;
+        this.newPerson = new Person();
+        this.dataFormatter = new DataFormatter();
+    }
 
     public Person getPerson() {
-        if(StringUtils.isEmpty(person.getYearOfStudy())){
-            person.setYearOfStudy(Year.now().toString());
+        if(StringUtils.isEmpty(newPerson.getYearOfStudy())){
+            newPerson.setYearOfStudy(Year.now().toString());
         }
-        return this.person;
+        return this.newPerson;
     }
 
     public void addParameter(String key, Integer value) {
         PersonParameter parameter = parameters.get(key);
-        person = parameter.addParameterToPersonAndReturn(
-                dataFormatter.formatCellValue(row.getCell(value)),this.person);
+        newPerson = parameter.addParameterToPersonAndReturn(
+                dataFormatter.formatCellValue(row.getCell(value)),this.newPerson);
     }
 }

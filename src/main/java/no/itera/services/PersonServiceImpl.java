@@ -18,6 +18,7 @@ import javax.persistence.criteria.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.toIntExact;
@@ -246,11 +247,13 @@ public class PersonServiceImpl implements PersonService {
      * @return List of PersonData objects
      */
     public List<PersonData> transformPersonsToOutputFormat(List<Person> personList){
-        List<PersonData> personOutputData = new ArrayList<>();
-        for (AbstractPerson person :
-                personList) {
-            personOutputData.add(new PersonData(person));
-        }
+//        List<PersonData> personOutputData = new ArrayList<>();
+//        for (AbstractPerson person :
+//                personList) {
+//            personOutputData.add(new PersonData(person));
+//        }
+        List<PersonData> personOutputData = personList.stream()
+                .map((person) -> new PersonData(person)).collect(Collectors.toList());
         return personOutputData;
     }
 
@@ -280,7 +283,6 @@ public class PersonServiceImpl implements PersonService {
             Map<String, Integer> columns = this.getExcelNumbersOfColumns(studentsSheet,dataFormatter);
 
             if(!columns.containsKey(ExcelConstants.FULL_NAME) && !columns.containsKey(ExcelConstants.LAST_NAME)){
-                workbook.close();
                 throw new CustomErrorType("Students not found");
             }
             for (int i = startingRow+1; i < endingRow; i++) {
@@ -303,14 +305,14 @@ public class PersonServiceImpl implements PersonService {
 
     private Map<String,Integer> getExcelNumbersOfColumns(Sheet studentsSheet, DataFormatter dataFormatter){
         Map<String, Integer> columns = new HashMap<>();
-        int startingRow = studentsSheet.getFirstRowNum();
+        int rowNum = studentsSheet.getFirstRowNum();
 
         String[] columnNames = {ExcelConstants.FULL_NAME, ExcelConstants.LAST_NAME,
                 ExcelConstants.FIRST_NAME, ExcelConstants.PATRONYMIC,
                 ExcelConstants.EMAIL, ExcelConstants.YEAR};
 
-        while (!(columns.containsKey(ExcelConstants.FULL_NAME) || columns.containsKey(ExcelConstants.LAST_NAME))) {
-            Row row = studentsSheet.getRow(startingRow++);
+        while (rowNum < studentsSheet.getLastRowNum()) {
+            Row row = studentsSheet.getRow(rowNum++);
             for (Cell cell : row) {
                 if(Stream.of(columnNames).anyMatch(name -> name.equals(dataFormatter.formatCellValue(cell)))){
                     columns.put(dataFormatter.formatCellValue(cell), cell.getColumnIndex());
