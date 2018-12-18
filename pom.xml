@@ -152,6 +152,14 @@
             <version>9.4.1212</version>
         </dependency>
 
+        <!-- Local DB-->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+
+
         <!--For working with Excel files-->
         <dependency>
             <groupId>org.apache.poi</groupId>
