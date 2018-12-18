@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
-import no.itera.util.CustomPersonBeginDateDeserializer;
-import no.itera.util.CustomPersonEndDateDeserializer;
-import no.itera.util.CustomPersonBeginDateSerializer;
-import no.itera.util.CustomPersonEndDateSerializer;
+import no.itera.util.jackson.CustomPersonBeginDateDeserializer;
+import no.itera.util.jackson.CustomPersonEndDateDeserializer;
+import no.itera.util.jackson.CustomPersonBeginDateSerializer;
+import no.itera.util.jackson.CustomPersonEndDateSerializer;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 

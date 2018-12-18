@@ -3,8 +3,8 @@ package no.itera.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import no.itera.util.CustomSearchDateDeserializer;
-import no.itera.util.CustomSearchYearOfStudyDeserializer;
+import no.itera.util.jackson.CustomSearchDateDeserializer;
+import no.itera.util.jackson.CustomSearchYearOfStudyDeserializer;
 
 import java.util.List;
 

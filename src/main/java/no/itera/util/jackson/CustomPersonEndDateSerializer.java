@@ -1,19 +1,20 @@
-package no.itera.util;
+package no.itera.util.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import no.itera.util.DateConstants;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class CustomPersonBeginDateSerializer extends StdSerializer<LocalDate> {
+public class CustomPersonEndDateSerializer extends StdSerializer<LocalDate> {
 
-    public CustomPersonBeginDateSerializer() {
+    public CustomPersonEndDateSerializer() {
         this(null);
     }
 
-    public CustomPersonBeginDateSerializer(Class<LocalDate> t) {
+    public CustomPersonEndDateSerializer(Class<LocalDate> t) {
         super(t);
     }
 

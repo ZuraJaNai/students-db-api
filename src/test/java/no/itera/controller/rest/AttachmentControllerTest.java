@@ -43,7 +43,6 @@ public class AttachmentControllerTest {
     @MockBean
     private AttachmentServiceImpl attachmentService;
 
-
     @Test
     public void addNewAttachmentToPerson() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file","fileName",

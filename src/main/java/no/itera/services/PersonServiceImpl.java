@@ -285,7 +285,7 @@ public class PersonServiceImpl implements PersonService {
             if(!columns.containsKey(ExcelConstants.FULL_NAME) && !columns.containsKey(ExcelConstants.LAST_NAME)){
                 throw new CustomErrorType("Students not found");
             }
-            for (int i = startingRow+1; i < endingRow; i++) {
+            for (int i = startingRow+1; i <= endingRow; i++) {
                 Row row = studentsSheet.getRow(i);
 
                 if (dataFormatter.formatCellValue(row.getCell(row.getFirstCellNum())).isEmpty()) {
