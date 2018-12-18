@@ -57,5 +57,5 @@ captures/
 # Windows files 
 Thumbs.db
 
-#jopa
+#generated classes
 target/
